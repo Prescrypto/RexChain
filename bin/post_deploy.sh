@@ -11,11 +11,11 @@ else
 fi
 
 # Load Fixtures
-if [ $LOAD_FIXTURES == True ]; then
-  echo "=> Loading fixtures..."
-  python ./cryptosign/manage.py loaddata ./cryptosign/fixtures/initial_data.json
-else
-  echo "=> Not loading fixtures!"
-fi
+# if [ $LOAD_FIXTURES == True ]; then
+#   echo "=> Loading fixtures..."
+#   python ./cryptosign/manage.py loaddata ./cryptosign/fixtures/initial_data.json
+# else
+#   echo "=> Not loading fixtures!"
+# fi
 
-echo "=> Finish postdeploy..."
+# echo "=> Finish postdeploy..."
