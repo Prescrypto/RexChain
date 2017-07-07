@@ -1,4 +1,4 @@
-# PrescryptoChain - a blockchain implementation
+# PrescryptChain - a Python - NoSQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain, but none of the original code remains.
 
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide as concise and simple implementation of a blockchain as possible.
@@ -19,7 +19,7 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 ### Quick start
 (set up two connected nodes and mine 1 block)
 ```
-cd ./PrescryptoChain
+cd ./PrescryptChain
 python -m virtualenv venv/pychain
 source venv/pychain/bin/activate
 pip install requirements.txt
