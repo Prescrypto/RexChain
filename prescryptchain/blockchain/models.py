@@ -80,9 +80,9 @@ class Prescription(models.Model):
 
     def create_raw_msg(self):
         # Create raw html and encode
-        # msg =
-        # self.raw_html_msg = msg.encode('utf-8')
-        # self.save()
+        msg = "" # Fix later
+        self.raw_html_msg = msg.encode('utf-8')
+        self.save()
 
     def __str__(self):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
