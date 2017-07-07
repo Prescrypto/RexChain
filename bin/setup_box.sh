@@ -9,7 +9,7 @@ sudo pip install -U pip
 echo "Installing postgresql"
 sudo apt-get install -y libpq-dev postgresql postgresql-contrib libxml2-dev libxslt1-dev zlib1g-dev build-essential libssl-dev libffi-dev
 # Create database if not exist
-psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'mydb'" | grep -q 1 || psql -U postgres -c "CREATE DATABASE mydb"
+sudo -i -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname = 'mydb'" | grep -q 1 || sudo -i -u postgres psql -c "CREATE DATABASE mydb"
 
 # Create user
 echo "Creating user and granting privileges"
