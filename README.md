@@ -19,7 +19,7 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 ### Quick start
 (set up two connected nodes and mine 1 block)
 ```
-cd ./PrescryptoChain
+cd ./PrescryptChain
 python -m virtualenv venv/pychain
 source venv/pychain/bin/activate
 pip install requirements.txt
