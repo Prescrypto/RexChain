@@ -11,4 +11,3 @@ psycopg2==2.7.1
 django-filter==1.0.4
 djangorestframework==3.6.3
 Markdown==2.6.8
-
