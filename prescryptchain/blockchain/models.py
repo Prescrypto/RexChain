@@ -45,7 +45,6 @@ class Block(models.Model):
     #         message = AEScipher.decrypt(message)
     #     return message
 
-
     def __str__(self):
         return hash_m
 
