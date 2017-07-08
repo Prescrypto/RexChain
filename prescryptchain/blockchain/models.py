@@ -22,7 +22,7 @@ from .utils import (
 
 class BlockManager(mdoels.ModelManager):
     ''' Model Manager for Blocks '''
-    def create_block(self, id,  previousHash, timestamp, data, block_hash, *args, **kwargs):
+    def create_block(self, id,  previousHash, timestamp, data, block_hash):
         if previousHash == "0":
             new_block = self.get_genesis_block()
             return new_block
@@ -36,7 +36,7 @@ class BlockManager(mdoels.ModelManager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, block_data, *args, **kwargs)
+    def generate_next_block(self, block_data)
         # Generete a new block
         previous_block = self.queryset().last()
         next_index = previous_block.id + 1
@@ -53,6 +53,8 @@ class Block(models.Model):
     hash_block = models.CharField(max_length=255, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    objects = BlockManager()
+
     @cached_property
     def raw_size(self):
         # get the size of the raw html
@@ -61,13 +63,13 @@ class Block(models.Model):
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
-        localised_date = self.created_at
+        localised_date = self.timestamp
         if not settings.DEBUG:
             localised_date = localised_date - timedelta(hours=6)
         return DateFormat(localised_date).format(format_time)
 
     def __str__(self):
-        return hash
+        return hash_block
 
 
 class PrescriptionManager(models.ManagerModel):
@@ -121,8 +123,13 @@ class Prescription(models.Model):
         self.encrypt()
         super(Prescription, self).save()
 
-    def encrypt():
-        pass
+    def encrypt(self, message):
+        # Send message and Public key to encrypt
+        return encrypt_with_public_key(message, self.public_key)
+
+    def decrypt(self, message):
+        # Send message and Public key to encrypt
+        return encrypt_with_public_key(message, self.private_key)
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
