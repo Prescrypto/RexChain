@@ -17,13 +17,15 @@ import rsa
 (BEncryptionPublicKey, BEncryptionPrivateKey) = rsa.newkeys(512)
 (BSigningPrivateKey, BSigningPublicKey) = rsa.newkeys(512)
 
-# Encrypt
-cleartext="This is a secret text"
+# Encrypt with public keys
+cleartext="This is a name that no one can know"
+print cleartext
 encryptedtext=rsa.encrypt(cleartext, BEncryptionPublicKey)
 sentmessage=(encryptedtext)
+print sentmessage
 
-# Decrypt
-receivedmessage=sentmessage
+# Decrypt with private keys
+receivedmessage=sentmessage # received message is the sentmessage from above
 receivedencryptedtext=(receivedmessage)
 receivedcleartext=rsa.decrypt(receivedencryptedtext, BEncryptionPrivateKey)
 
