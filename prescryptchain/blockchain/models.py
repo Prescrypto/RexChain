@@ -141,6 +141,7 @@ class Medication(ValidateOnSaveMixin, models.Model):
     presentation = models.CharField(
         blank=True, max_length=255,
     )
+    instructions = models.TextField(blank=True, max_length=10000, default="")
     frequency = models.CharField(blank=True, max_length=255, default="")
     dose = models.CharField(blank=True, max_length=255, default="")
     bought = models.BooleanField(default=False)
