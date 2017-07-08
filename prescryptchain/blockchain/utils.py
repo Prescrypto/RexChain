@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 # AESCipher
-from core.utils import AESCipher
+# from core.utils import AESCipher
 ## Hash lib
 import hashlib
 from datetime import timedelta, datetime
@@ -9,43 +9,27 @@ import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
 import rsa
 
-# User A
-(AEncryptionPublicKey, AEncryptionPrivateKey) = rsa.newkeys(512)
-(ASigningPrivateKey, ASigningPublicKey) = rsa.newkeys(512)
+# Returns a tuple with Private and Public keys
+def get_new_asym_keys():
+    return rsa.newkeys(512)
 
-# User B
-(BEncryptionPublicKey, BEncryptionPrivateKey) = rsa.newkeys(512)
-(BSigningPrivateKey, BSigningPublicKey) = rsa.newkeys(512)
+# Encrypt with public key
+def encrypt_with_public_key(message, EncryptionPublicKey):
+    encryptedtext=rsa.encrypt(message, EncryptionPublicKey)
+    return encryptedtext
 
-# Encrypt with public keys
-cleartext="This is a name that no one can know"
-print cleartext
-encryptedtext=rsa.encrypt(cleartext, BEncryptionPublicKey)
-sentmessage=(encryptedtext)
-print sentmessage
-
-# Decrypt with private keys
-receivedmessage=sentmessage # received message is the sentmessage from above
-receivedencryptedtext=(receivedmessage)
-receivedcleartext=rsa.decrypt(receivedencryptedtext, BEncryptionPrivateKey)
-
-print receivedcleartext
-
-# Helpful example
-def encrypt(self, signatures):
-    # Encrypt the hash, using AES
-    # Receives signatures array
-    message = self.hash
-    for sign in signatures:
-        AEScipher = AESCipher(sign["hash"])
-        message = AEScipher.encrypt(message)
-    self.signature = message
-
-def decrypt(self):
-    # Returns the signature hash
-    message = self.signature
-    signatures = self.signatures.all()
-    for sign in signatures[::-1]:
-        AEScipher = AESCipher(sign.hash) # Accesing Signature property
-        message = AEScipher.decrypt(message)
+# Decrypt with private key
+def decrypt_with_private_key(encryptedtext, EncryptionPrivateKey):
+    message =rsa.decrypt(encryptedtext, EncryptionPrivateKey)
     return message
+
+# A simple implementation
+def test(message):
+    print "This is the original message: "+message
+    (EncryptionPublicKey, EncryptionPrivateKey) = get_new_asym_keys()
+    # Encrypt with public keys
+    encryptedtext = encrypt_with_public_key(message, EncryptionPublicKey)
+    print "This is the encrypted message: "+encryptedtext
+    # Decrypt with private keys
+    decrypted_message = decrypt_with_private_key(encryptedtext, EncryptionPrivateKey)
+    print "This is the decrypted message: "+decrypted_message
