@@ -129,7 +129,7 @@ class Prescription(models.Model):
 
     def decrypt(self, message):
         # Send message and Public key to encrypt
-        return encrypt_with_public_key(message, self.private_key)
+        return decrypt_with_private_key(message, self.private_key)
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
