@@ -8,6 +8,7 @@ from datetime import timedelta, datetime
 import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
 import rsa
+import md5
 
 # Returns a tuple with Private and Public keys
 def get_new_asym_keys():
