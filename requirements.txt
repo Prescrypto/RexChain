@@ -9,8 +9,9 @@ psycopg2==2.7.1
 
 # DRF
 django-filter==1.0.4
-djangorestframework==3.6.3
 Markdown==2.6.8
+djangorestframework==3.6.3
+
 
 # crypto
 pycrypto==2.6.1
