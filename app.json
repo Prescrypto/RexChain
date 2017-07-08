@@ -1,0 +1,55 @@
+{
+  "name": "Prescrypt Chain",
+  "description": "Made Cryptography to Mexican Health Environ",
+  "scripts": {
+    "postdeploy": "bin/post_deploy.sh"
+  },
+  "env": {
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "HEROKU_PARENT_APP_NAME": {
+      "required": true
+    },
+    "AUTO_MIGRATE": {
+      "required": true
+    },
+    "SECRET_KEY": {
+      "required": true
+    },
+    "DEBUG_STATE": {
+      "required": true
+    },
+    "PRODUCTION": {
+      "required": true
+    },
+    "DJANGO_SETTINGS_MODULE": {
+      "required": true
+    },
+    "DISABLE_COLLECTSTATIC": {
+      "required": true
+    },
+
+    "LOAD_FIXTURES": "True"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "papertrail",
+    "heroku-postgresql",
+    {
+      "plan": "deployhooks:http",
+      "options": {
+        "url": "https://hooks.zapier.com/hooks/catch/583174/t6paiu/"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

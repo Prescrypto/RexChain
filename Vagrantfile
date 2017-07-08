@@ -21,10 +21,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "pycryptoChain"
 
   # Open ports:
+  # 5432  - Postgres
   # 27017 - Mongo
   # 6379 - Redis
   # 8000 - Django
-  [27017, 6379, 8000].each do |p|
+  [5432, 27017, 6379, 8000].each do |p|
     config.vm.network :forwarded_port, guest: p, host: p
   end
 
