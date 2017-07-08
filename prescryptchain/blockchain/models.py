@@ -7,6 +7,7 @@ from datetime import timedelta, datetime
 import unicodedata
 # Django Libs
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 # AESCipher
@@ -23,6 +24,7 @@ class Block(models.Model):
     hash_anterior = models.CharField(max_length=255, default="")
     hash = models.CharField(max_length=255, default="")
     created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
     @cached_property
     def raw_size(self):
         # get the size of the raw html
@@ -87,6 +89,7 @@ class Prescription(models.Model):
     bought = models.BooleanField(default=False)
     # Main
     signature = models.CharField(max_length=255, default="")
+    data = JSONField()
 
     # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
     def sign(self):
@@ -132,8 +135,27 @@ class Prescription(models.Model):
 
 
 @python_2_unicode_compatible
-class Medication(ValidateOnSaveMixin, models.Model):
-    prescription = models.ForeignKey('prescriptions.Prescription',
+class Medic(models.Model):
+    public_key = models.CharField(max_length=255, default="", unique=True)
+    name = models.CharField(default="", max_length=255)
+    username = models.CharField(default="", max_length=50)
+    email = models.EmailField(unique=True)
+    cedula_prof = models.CharField(default="", max_length=255)
+    alma_mater = models.CharField(default="" , max_length=50, blank=True)
+    date_of_birth = models.DateField(default=datetime.date.now())
+    phone = models.CharField(max_length=20, default="", blank=True)
+    contact = models.CharField(max_length=255, default="", blank=True)
+    specialty_no = models.CharField(max_length=80, default="", blank=True)
+    specialty = models.CharField(max_length=80, default="")
+    data = JSONField()
+
+    def __str__(self):
+        return public_key
+
+
+@python_2_unicode_compatible
+class Medication(models.Model):
+    prescription = models.ForeignKey('blockchain.Prescription',
         related_name='medications'
         )
     active = models.CharField(blank=True, max_length=255, default="")
