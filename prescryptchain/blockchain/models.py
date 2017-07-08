@@ -20,7 +20,7 @@ from .utils import (
 )
 
 
-class BlockManager(mdoels.ModelManager):
+class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
     def create_block(self, id,  previousHash, timestamp, data, block_hash):
         if previousHash == "0":
@@ -36,7 +36,7 @@ class BlockManager(mdoels.ModelManager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, block_data)
+    def generate_next_block(self, block_data):
         # Generete a new block
         previous_block = self.queryset().last()
         next_index = previous_block.id + 1
@@ -72,11 +72,9 @@ class Block(models.Model):
         return hash_block
 
 
-class PrescriptionManager(models.ManagerModel):
-    ''' Prescription Model Manager for prescriptions '''
-    def create(self, public_key, private_key, data, *args, **kwargs):
-
-
+# class PrescriptionManager(models.ManagerModel):
+#     ''' Prescription Model Manager for prescriptions '''
+#     def create(self, public_key, private_key, data, *args, **kwargs):
 
 
 # Simplified Rx Model
@@ -141,13 +139,15 @@ class Prescription(models.Model):
     @cached_property
     def raw_size(self):
         # get the size of the raw html
-        size = len(self.medic_public_key)+len(self.patient_public_key)+
-        len(self.diagnosis)+len(self.location)+
-        len(self.raw_msg)+len(self.location_lat)+
-        len(self.location_lon)+len(self.details)+
-        len(self.extras)+len(self.signature)+
-        len(self.public_key)+int(self.bought)+
-        len(self.get_formatted_date())  * 8
+        size = (
+            len(self.medic_public_key)+len(self.patient_public_key)+
+            len(self.diagnosis)+len(self.location)+
+            len(self.raw_msg)+len(self.location_lat)+
+            len(self.location_lon)+len(self.details)+
+            len(self.extras)+len(self.signature)+
+            len(self.public_key)+int(self.bought)+
+            len(self.get_formatted_date())  * 8
+        )
         return size
 
     def __str__(self):

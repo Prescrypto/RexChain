@@ -15,3 +15,6 @@ djangorestframework==3.6.3
 # crypto
 pycrypto==2.6.1
 rsa==3.4.2
+
+# Others
+django-jet==1.0.6
