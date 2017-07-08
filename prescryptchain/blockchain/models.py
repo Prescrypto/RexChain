@@ -22,10 +22,19 @@ from .utils import (
 
 class BlockManager(mdoels.ModelManager):
     ''' Model Manager for Blocks '''
-    def create(self, previousHash, timestamp, data, rx_hash, *args, **kwargs):
+    def create_block(self, id,  previousHash, timestamp, data, block_hash, *args, **kwargs):
         if previousHash == "0":
-            make_semilla(timestamp, data, hash, *args, **kwargs)
+            new_block = self.get_genesis_block()
+            return new_block
+        else:
+            new_block = Block.create(hash_anterior=previousHash, timestamp=timestamp, hash_block=block_hash)
+            return new_block
 
+    def get_genesis_block(self):
+        # Get the genesis arbitrary block of the blockchain only once in life
+        genesis_block = Block.create(0, "0", 1465154705, "My genesis block!!", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        genesis_block.save()
+        return genesis_block
 
     def generate_next_block(self, block_data, *args, **kwargs)
         # Generete a new block
