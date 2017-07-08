@@ -17,8 +17,6 @@ from core.utils import AESCipher
 from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
 
-
-
 @python_2_unicode_compatible
 class Block(models.Model):
     hash_anterior = models.CharField(max_length=255, default="")
@@ -71,7 +69,7 @@ class Block(models.Model):
 class Prescription(models.Model):
     # Cryptographically enabled fields
     public_key = models.CharField(max_length=2000, default="")
-    private_key = models.CharField(max_length=2000, default="")
+    private_key = models.CharField(max_length=2000, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
     medic_name = models.CharField(blank=True, max_length=255, default="")
     medic_cedula = models.CharField(blank=True, max_length=255, default="")
