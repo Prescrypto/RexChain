@@ -14,7 +14,11 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
 
 # Our methods
-from .utils import un_savify_key, un_savify_key, encrypt_with_public_key, decrypt_with_private_key
+from .utils import (
+    un_savify_key, un_savify_key,
+    encrypt_with_public_key, decrypt_with_private_key,
+    calculate_hash
+)
 
 
 class BlockManager(mdoels.ModelManager):
@@ -24,17 +28,28 @@ class BlockManager(mdoels.ModelManager):
             make_semilla(timestamp, data, hash, *args, **kwargs)
 
 
+    def generate_next_block(self, block_data, *args, **kwargs)
+        # Generete a new block
+        previous_block = self.queryset().last()
+        next_index = previous_block.id + 1
+        next_timestamp = datetime.date.now()
+        next_hash = calculate_hash(next_index, previous_block.hash_block, next_timestamp, block_data)
+        new_block = self.create(next_index, previous_block.hash_block, next_timestamp, block_data, nextHash)
+        new_block.save()
+        return new_block
+
+
 
 @python_2_unicode_compatible
 class Block(models.Model):
     hash_anterior = models.CharField(max_length=255, default="")
-    hash = models.CharField(max_length=255, default="")
-    created_at = models.DateTimeField(default=timezone.now, db_index=True)
+    hash_block = models.CharField(max_length=255, default="")
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
 
     @cached_property
     def raw_size(self):
         # get the size of the raw html
-        size = len(self.hash_anterior)+len(self.hash)+len(self.get_formatted_date())  * 8
+        size = len(self.hash_anterior)+len(self.hash_block)+len(self.get_formatted_date())  * 8
         return size
 
     def get_formatted_date(self, format_time='d/m/Y'):
@@ -70,7 +85,7 @@ class Prescription(models.Model):
     diagnosis = models.CharField(max_length=255, default="")
     ### Public fields (not encrypted)
     # Misc
-    timestamp = models.DateTimeField(default=datetime.now, db_index=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
     raw_msg = models.TextField(max_length=10000, default="") # Anything can be stored here
     location_lat = models.FloatField(default=0) # For coordinates

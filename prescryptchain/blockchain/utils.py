@@ -25,7 +25,7 @@ def savify_key(EncryptionPublicKey):
     pickld_key = cPickle.dumps(EncryptionPublicKey)
     return bin2hex(pickld_key)
 
-def calculateHash(index, previousHash, timestamp, data, *args, **kwargs):
+def calculate_hash(index, previousHash, timestamp, data, *args, **kwargs):
     # Calculate hash
     hash_obj = hashlib.sha256(index + previousHash + timestamp + data)
     return hash_object.hexdigest()
