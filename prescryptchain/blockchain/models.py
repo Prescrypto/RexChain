@@ -68,11 +68,13 @@ class Block(models.Model):
 @python_2_unicode_compatible
 class Prescription(models.Model):
     # Cryptographically enabled fields
-    medic_public_key = models.CharField(max_length=255, default="")
-    patient_public_key = models.CharField(max_length=255, default="")
+    public_key = models.CharField(max_length=255, default="")
+    ### Patient (encrypted)
+    medic_name = models.CharField(blank=True, max_length=255, default="")
+    patient_name = models.CharField(blank=True, max_length=255, default="")
+    patient_age = models.CharField(blank=True, max_length=255, default="")
     diagnosis = models.CharField(max_length=255, default="")
-
-    ### Public fields
+    ### Public fields (not encrypted)
     # Misc
     timestamp = models.DateTimeField(default=datetime.now, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
@@ -85,9 +87,6 @@ class Prescription(models.Model):
     bought = models.BooleanField(default=False)
     # Main
     signature = models.CharField(max_length=255, default="")
-
-
-    public_key = models.CharField(max_length=255, default="")
 
     # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
     def sign(self):
