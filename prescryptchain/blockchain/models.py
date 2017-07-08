@@ -12,7 +12,6 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
-
 # Our methods
 from .utils import (
     un_savify_key, un_savify_key,
@@ -37,7 +36,6 @@ class BlockManager(mdoels.ModelManager):
         new_block = self.create(next_index, previous_block.hash_block, next_timestamp, block_data, nextHash)
         new_block.save()
         return new_block
-
 
 
 @python_2_unicode_compatible
@@ -75,7 +73,7 @@ class PrescriptionManager(models.ManagerModel):
 class Prescription(models.Model):
     # Cryptographically enabled fields
     public_key = models.CharField(max_length=2000, default="")
-    private_key = models.CharField(max_length=2000, default="")
+    private_key = models.CharField(max_length=2000, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
     medic_name = models.CharField(blank=True, max_length=255, default="")
     medic_cedula = models.CharField(blank=True, max_length=255, default="")

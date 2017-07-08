@@ -58,6 +58,7 @@ def test(message):
     print "This is the decrypted message: "+decrypted_message
 
 # convert str to hex
+# This needs to be used to save the messages and keys
 def bin2hex(binStr):
     return binascii.hexlify(binStr)
 # convert hex to str
