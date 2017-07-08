@@ -10,12 +10,17 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
-# AESCipher
-from core.utils import AESCipher
-# Create your models here.
-
 from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
+# Our methods
+from .utils import un_savify_key, un_savify_key, encrypt_with_public_key, decrypt_with_private_key
+
+
+class BlockManager(mdoels.ModelManager):
+    ''' Model Manager for Blocks '''
+    def create(self, previousHash, timestamp, data, rx_hash, *args, **kwargs):
+        if previousHash == "0":
+            make_semilla(timestamp, data, hash, *args, **kwargs)
 
 @python_2_unicode_compatible
 class Block(models.Model):
@@ -29,30 +34,6 @@ class Block(models.Model):
         size = len(self.hash_anterior)+len(self.hash)+len(self.get_formatted_date())  * 8
         return size
 
-    # ======== Maybe this is useful????
-    # # Hashes the request payload with utf-8 encoding
-    # def sign(self, sum_payload):
-    #     hash_object = hashlib.sha256(sum_payload)
-    #     self.hash = hash_object.hexdigest()
-    #     self.save()
-
-    # def encrypt(self, signatures):
-    #     # Encrypt the hash, using AES
-    #     # Receives signatures array
-    #     message = self.hash
-    #     for sign in signatures:
-    #         AEScipher = AESCipher(sign["hash"])
-    #         message = AEScipher.encrypt(message)
-    #     self.signature = message
-
-    # def decrypt(self):
-    #     # Returns the signature hash
-    #     message = self.signature
-    #     signatures = self.signatures.all()
-    #     for sign in signatures[::-1]:
-    #         AEScipher = AESCipher(sign.hash) # Accesing Signature property
-    #         message = AEScipher.decrypt(message)
-    #     return message
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
         localised_date = self.created_at
@@ -62,6 +43,13 @@ class Block(models.Model):
 
     def __str__(self):
         return hash
+
+
+class PrescriptionManager(models.ManagerModel):
+    ''' Prescription Model Manager for prescriptions '''
+    def create(self, public_key, private_key, data, *args, **kwargs):
+
+
 
 
 # Simplified Rx Model

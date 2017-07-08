@@ -25,6 +25,12 @@ def savify_key(EncryptionPublicKey):
     pickld_key = cPickle.dumps(EncryptionPublicKey)
     return bin2hex(pickld_key)
 
+def calculateHash(index, previousHash, timestamp, data, *args, **kwargs):
+    # Calculate hash
+    hash_obj = hashlib.sha256(index + previousHash + timestamp + data)
+    return hash_object.hexdigest()
+
+
 # Give it a hex saved string, returns a Key object ready to use
 def un_savify_key(HexPickldKey):
     bin_str_key = hex2bin(HexPickldKey)
