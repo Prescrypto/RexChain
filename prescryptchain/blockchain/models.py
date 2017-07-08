@@ -20,13 +20,13 @@ from django.utils.dateformat import DateFormat
 
 @python_2_unicode_compatible
 class Block(models.Model):
-    hash_n = models.CharField(max_length=255, default="")
-    hash_m = models.CharField(max_length=255, default="")
+    hash_anterior = models.CharField(max_length=255, default="")
+    hash = models.CharField(max_length=255, default="")
     created_at = models.DateTimeField(default=timezone.now, db_index=True)
     @cached_property
     def raw_size(self):
         # get the size of the raw html
-        size = len(self.hash_n)+len(self.hash_m)+len(self.get_formatted_date())  * 8
+        size = len(self.hash_anterior)+len(self.hash)+len(self.get_formatted_date())  * 8
         return size
 
     # ======== Maybe this is useful????
@@ -61,8 +61,8 @@ class Block(models.Model):
         return DateFormat(localised_date).format(format_time)
 
     def __str__(self):
-        return hash_m
-        
+        return hash
+
 
 # Simplified Rx Model
 @python_2_unicode_compatible
@@ -124,7 +124,7 @@ class Prescription(models.Model):
         len(self.location_lon)+len(self.details)+
         len(self.extras)+len(self.signature)+
         len(self.public_key)+int(self.bought)+
-        len(self.get_formatted_date())  * 8 
+        len(self.get_formatted_date())  * 8
         return size
 
     def __str__(self):
@@ -147,11 +147,11 @@ class Medication(ValidateOnSaveMixin, models.Model):
     drug_upc = models.CharField(blank=True, max_length=255, default="", db_index=True)
 
     public_key = models.CharField(max_length=255, default="")
-        
+
     def save(self):
         self.encrypt()
         super(Prescription, self).save()
-        
+
     def encrypt():
         pass
 
@@ -169,7 +169,7 @@ class Patient(models.Model):
     def save(self):
         self.encrypt()
         super(Patient, self).self()
-        
+
     def encrypt(self):
         pass
 
