@@ -1,7 +1,24 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:100,400,700');
+@import url('https://fonts.googleapis.com/css?family=PT+Mono');
 body{
     background: #232526;
     background: -webkit-linear-gradient(to right, #414345, #232526);
     background: linear-gradient(to right, #414345, #232526);
     color: #fff;
+    font-family: "Roboto Mono";
+}
+.bg-blank{
+    background: #fff;
+}
+.title-font{
+    font-family: "PT Mono", "Open Sans";
+    font-size: 1.5em;
+    text-decoration: none;
+}
+.title-font a:hover{
+    text-decoration: none;
+}
+.navbar-default {
+    background-color: #fff;
+    border-color: #fff;
 }
