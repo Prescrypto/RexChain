@@ -14,4 +14,4 @@ djangorestframework==3.6.3
 
 # crypto
 pycrypto==2.6.1
-
+rsa==3.4.2

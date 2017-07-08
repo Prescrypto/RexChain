@@ -15,7 +15,7 @@
     {% block cssblock %}
     {% endblock cssblock %}
 </head>
-<body>
+<body class="bg-portrait">
   <header class="container-fluid bg-blank">
     <article class="row">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
@@ -28,7 +28,7 @@
               <li><a href="#">Contacto</a></li>
               <li><a href="https://prescrypto.wordpress.com" target="_blank">Blog</a></li>
               <li>
-                <form method="GET" class="navbar-form navbar-left" role="search">
+                <form method="GET" action="" class="navbar-form navbar-left" role="search">
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="Rx Hash">
                   </div>
@@ -41,6 +41,13 @@
       </div>
     </article>
   </header>
+  <section class="container-fluid">
+    <div class="row hero bg-blue-sky">
+      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+        {% block subtitle %}<h2>Bienvenido a la blockchain de prescripciones médicas electronicas en México</h2>{% endblock subtitle %}
+      </div>
+    </div>
+  </section>
   {% block content %}
   {% endblock content %}
   <footer>

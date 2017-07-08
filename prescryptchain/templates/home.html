@@ -1,11 +1,69 @@
 {% extends "base.html" %}
+{# Block HOME #}
 {% block content %}
-  <section class="container-fluid">
-    <article class="row">
-      <div class="col-xs-12">
-        <h1>Prescrypto Chain</h1>
+  {# last 5 blocks #}
+  <section class="container-fluid bg-midnight">
+    <div class="row padding-2em">
+      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <section class="row">
+          <article class="col-xs-12 col-lg-3"><h3>BLOCKS RECIENTES</h3> </article>
+          <article class="col-xs-12 col-lg-1"></article>
+            <article class="col-xs-12 col-lg-8">
+              <table id="crypto-table" class="table table-striped">
+                <tr>
+                  <td>Tamaño</td>
+                  <td>Hash</td>
+                  <td class="text-center">Cuándo</td>
+                </tr>
+                {% for rx in prescriptions %}
+                  <tr>
+                    <td><a href="/preview/?hash={{rx.signature}}"> {{ rx.raw_size }} bytes</a></td>
+                    <td class="text-center hidden-xs"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
+                    <td class="text-center visible-xs-block signature-mobile"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
+                    <td class="text-center"><a href="/preview/?hash={{rx.signature}}"><span class="blue-font">{{ rx.created_at|timesince }}</span></a></td>
+                  </tr>
+                {% endfor %}
+
+              </table>
+            </article>
+          <div class="col-xs-12">
+            <hr />
+          </div>
+        </section>
       </div>
-    </article>
+    </div>
+  </section>
+  {# last 5 rx #}
+  <section class="container-fluid bg-midnight">
+    <div class="row padding-2em">
+      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <section class="row">
+          <article class="col-xs-12 col-lg-3"><h3>PRESCRIPCIONES RECIENTES</h3> </article>
+          <article class="col-xs-12 col-lg-1"></article>
+            <article class="col-xs-12 col-lg-8">
+              <table id="crypto-table" class="table table-striped">
+                <tr>
+                  <td>Tamaño</td>
+                  <td>Hash</td>
+                  <td class="text-center">Cuándo</td>
+                </tr>
+                {% for rx in prescriptions %}
+                  <tr>
+                    <td><a href="/preview/?hash={{rx.signature}}"> {{ rx.raw_size }} bytes</a></td>
+                    <td class="text-center hidden-xs"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
+                    <td class="text-center visible-xs-block signature-mobile"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
+                    <td class="text-center"><a href="/preview/?hash={{rx.signature}}"><span class="blue-font">{{ rx.created_at|timesince }}</span></a></td>
+                  </tr>
+                {% endfor %}
+
+              </table>
+            </article>
+          <div class="col-xs-12">
+            <hr />
+          </div>
+        </section>
+      </div>
+    </div>
   </section>
 {% endblock content %}
 
