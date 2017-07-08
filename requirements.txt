@@ -12,3 +12,5 @@ django-filter==1.0.4
 djangorestframework==3.6.3
 Markdown==2.6.8
 
+# crypto
+pycrypto==2.6.1
