@@ -58,7 +58,6 @@ class Block(models.Model):
         localised_date = self.created_at
         if not settings.DEBUG:
             localised_date = localised_date - timedelta(hours=6)
-
         return DateFormat(localised_date).format(format_time)
 
     def __str__(self):
