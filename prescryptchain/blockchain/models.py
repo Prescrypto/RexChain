@@ -70,9 +70,12 @@ class Block(models.Model):
 @python_2_unicode_compatible
 class Prescription(models.Model):
     # Cryptographically enabled fields
-    public_key = models.CharField(max_length=255, default="")
-    ### Patient (encrypted)
+    public_key = models.CharField(max_length=2000, default="")
+    private_key = models.CharField(max_length=2000, default="")
+    ### Patient and Medic data (encrypted)
     medic_name = models.CharField(blank=True, max_length=255, default="")
+    medic_cedula = models.CharField(blank=True, max_length=255, default="")
+    medic_hospital = models.CharField(blank=True, max_length=255, default="")
     patient_name = models.CharField(blank=True, max_length=255, default="")
     patient_age = models.CharField(blank=True, max_length=255, default="")
     diagnosis = models.CharField(max_length=255, default="")
@@ -133,26 +136,6 @@ class Prescription(models.Model):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
         return signature
 
-
-@python_2_unicode_compatible
-class Medic(models.Model):
-    public_key = models.CharField(max_length=255, default="", unique=True)
-    name = models.CharField(default="", max_length=255)
-    username = models.CharField(default="", max_length=50)
-    email = models.EmailField(unique=True)
-    cedula_prof = models.CharField(default="", max_length=255)
-    alma_mater = models.CharField(default="" , max_length=50, blank=True)
-    date_of_birth = models.DateField(default=datetime.date.now())
-    phone = models.CharField(max_length=20, default="", blank=True)
-    contact = models.CharField(max_length=255, default="", blank=True)
-    specialty_no = models.CharField(max_length=80, default="", blank=True)
-    specialty = models.CharField(max_length=80, default="")
-    data = JSONField()
-
-    def __str__(self):
-        return public_key
-
-
 @python_2_unicode_compatible
 class Medication(models.Model):
     prescription = models.ForeignKey('blockchain.Prescription',
@@ -179,29 +162,3 @@ class Medication(models.Model):
 
     def __str__(self):
         return drug_upc
-
-@python_2_unicode_compatible
-class Patient(models.Model):
-    """docstring for Patient"""
-    name = models.CharField(max_length=255)
-    email = models.EmailFild()
-    dob = models.DateTimeField(default=now())#fecha actual
-    public_key = models.CharField(max_length=255, default="")
-
-    def save(self):
-        self.encrypt()
-        super(Patient, self).self()
-
-    def encrypt(self):
-        pass
-
-    def decrypt(self, key):
-        return ""
-
-    def __str__(self):
-        return drug_upc
-
-
-class BlockPrescription(models.Model):
-    block = models.ForeignKey("Block", blank=True, null=True)
-    prescription= models.ForeignKey("Prescription", unique= True)
