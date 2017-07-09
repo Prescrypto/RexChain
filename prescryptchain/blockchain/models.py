@@ -147,8 +147,7 @@ class Prescription(models.Model):
     def raw_size(self):
         # get the size of the raw rx
         size = (
-            len(self.diagnosis)+len(self.location)+
-            len(self.location_lat)+len(self.signature)
+            len(self.diagnosis)+len(self.location)+len(self.signature)
         )
         return size
 
