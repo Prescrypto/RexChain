@@ -113,7 +113,14 @@ class Prescription(models.Model):
 
     def create_raw_msg(self):
         # Create raw html and encode
-        msg = "" # Fix later
+        msg = (
+            self.medic_name +
+            self.medic_cedula +
+            self.medic_hospital +
+            self.patient_name +
+            self.patient_age +
+            self.diagnosis
+        )
         self.raw_html_msg = msg.encode('utf-8')
         self.save()
 
@@ -124,6 +131,7 @@ class Prescription(models.Model):
         self.patient_name = encrypt(self.patient_name, self.public_key)
         self.patient_age = encrypt(self.patient_age, self.public_key)
         self.diagnosis = encrypt(self.diagnosis, self.public_key)
+        self.create_raw_msg()
         self.save()
         # Este es el fix
         super(Prescription, self).save()
