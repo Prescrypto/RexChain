@@ -2,10 +2,12 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from blockchain.models import Prescription
 
 
 def home(request):
-    return render(request, "home.html", {})
+    rxs = Prescription.objects.all().order_by('-timestamp')
+    return render(request, "home.html", {"prescriptions" : rxs })
 
 
 def block_detail(request, block_hash):

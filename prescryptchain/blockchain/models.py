@@ -16,7 +16,7 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, un_savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash
+    calculate_hash, bin2hex
 )
 
 
