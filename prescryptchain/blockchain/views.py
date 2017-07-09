@@ -8,15 +8,15 @@ from blockchain.forms import NewPrescriptionForm
 # Create new prescription view, this is the biz
 
 class AddPrescriptionView(View):
-    template = 'new_rx.html'
+    template = 'blockchain/blockchain/new_rx.html'
 
     def get(self, request, *args, **kwargs):
-        template = 'new_rx.html'
+        template = 'blockchain/new_rx.html'
         form = NewPrescriptionForm
         return render(request, template ,{"form": form,})
 
     def post(self, request, *args, **kwargs):
-        template = 'new_rx.html'
+        template = 'blockchain/new_rx.html'
         form = NewPrescriptionForm(request.POST)
         if form.is_valid():
             print "yes"
