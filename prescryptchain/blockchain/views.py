@@ -9,10 +9,12 @@ from blockchain.forms import NewPrescriptionForm
 
 class AddPrescriptionView(CreateView):
     template = 'new_rx.html'
-    def get:
+
+    def get(self, request, *args, **kwargs):
         form = NewPrescriptionForm
         return render(request, template ,{"form": form,})
-    def post:
+
+    def post(self, request, *args, **kwargs):
         form = NewPrescriptionForm(request.POST)
         if form.is_valid():
             print "yes"
