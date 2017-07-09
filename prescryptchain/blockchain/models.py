@@ -120,6 +120,10 @@ class Prescription(models.Model):
     def save(self):
         self.medic_name = encrypt(self.medic_name, self.public_key)
         self.medic_cedula = encrypt(self.medic_name, self.public_key)
+        self.medic_hospital = encrypt(self.medic_hospital, self.public_key)
+        self.patient_name = encrypt(self.patient_name, self.public_key)
+        self.patient_age = encrypt(self.patient_age, self.public_key)
+        self.diagnosis = encrypt(self.diagnosis, self.public_key)
         # Este es el fix
         super(Prescription, self).save()
 
