@@ -6,13 +6,9 @@
 {% block title %}<title>Crear Prescripción</title>{% endblock %}
 
 {% block content %}
-  <div class="btn-local spacer">
-    <a style='float: left;' href="/basics">Regresar</a>
-    <!-- <a style='float: right;' href="/basics/create">Agregar</a> -->
-  </div>
   <hr>
   <p style='font-weight: bold;'>¡Por favor no pongas acentos!</p>
-  <form action="" method="post">{% csrf_token %}
+  <form action="" style="color: black; padding-left: 100px;" method="post">{% csrf_token %}
     {{ form.as_p }}
      <input class="btn btn-primary" type="submit" value="Guardar" />
   </form>

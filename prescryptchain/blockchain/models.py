@@ -69,7 +69,7 @@ class Block(models.Model):
         return DateFormat(localised_date).format(format_time)
 
     def __str__(self):
-        return hash_block
+        return self.hash_block
 
 
 # class PrescriptionManager(models.ManagerModel):
@@ -160,7 +160,7 @@ class Prescription(models.Model):
 
     def __str__(self):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
-        return signature
+        return self.signature
 
 @python_2_unicode_compatible
 class Medication(models.Model):
@@ -187,4 +187,4 @@ class Medication(models.Model):
         pass
 
     def __str__(self):
-        return drug_upc
+        return self.drug_upc
