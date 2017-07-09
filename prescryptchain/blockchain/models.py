@@ -132,7 +132,7 @@ class Prescription(models.Model):
         self.patient_age = encrypt(self.patient_age, self.public_key)
         self.diagnosis = encrypt(self.diagnosis, self.public_key)
         self.create_raw_msg()
-        self.save()
+        self.sign()
         # Este es el fix
         super(Prescription, self).save()
 
