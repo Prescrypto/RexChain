@@ -16,7 +16,7 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, un_savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash
+    calculate_hash, bin2hex
 )
 
 
@@ -125,12 +125,12 @@ class Prescription(models.Model):
         self.save()
 
     def save(self):
-        self.medic_name = encrypt_with_public_key(self.medic_name, self.public_key)
-        self.medic_cedula = encrypt_with_public_key(self.medic_cedula, self.public_key)
-        self.medic_hospital = encrypt_with_public_key(self.medic_hospital, self.public_key)
-        self.patient_name = encrypt_with_public_key(self.patient_name, self.public_key)
-        self.patient_age = encrypt_with_public_key(self.patient_age, self.public_key)
-        self.diagnosis = encrypt_with_public_key(self.diagnosis, self.public_key)
+        self.medic_name = bin2hex(encrypt_with_public_key(self.medic_name, self.public_key))
+        self.medic_cedula = bin2hex(encrypt_with_public_key(self.medic_cedula, self.public_key)
+        self.medic_hospital = bin2hex(encrypt_with_public_key(self.medic_hospital, self.public_key)
+        self.patient_name = bin2hex(encrypt_with_public_key(self.patient_name, self.public_key))
+        self.patient_age = bin2hex(encrypt_with_public_key(self.patient_age, self.public_key))
+        self.diagnosis = bin2hex(encrypt_with_public_key(self.diagnosis, self.public_key))
         self.create_raw_msg()
         self.sign()
         # Este es el fix
