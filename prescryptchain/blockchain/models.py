@@ -145,15 +145,10 @@ class Prescription(models.Model):
 
     @cached_property
     def raw_size(self):
-        # get the size of the raw html
+        # get the size of the raw rx
         size = (
-            # len(self.medic_public_key)+len(self.patient_public_key)+
             len(self.diagnosis)+len(self.location)+
-            len(self.raw_msg)+len(self.location_lat)+
-            len(self.location_lon)+len(self.details)+
-            len(self.extras)+len(self.signature)+
-            len(self.public_key)+int(self.bought)+
-            len(self.get_formatted_date())  * 8
+            len(self.location_lat)+len(self.signature)
         )
         return size
 
