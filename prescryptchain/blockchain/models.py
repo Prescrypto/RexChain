@@ -124,6 +124,7 @@ class Prescription(models.Model):
         self.patient_name = encrypt(self.patient_name, self.public_key)
         self.patient_age = encrypt(self.patient_age, self.public_key)
         self.diagnosis = encrypt(self.diagnosis, self.public_key)
+        self.save()
         # Este es el fix
         super(Prescription, self).save()
 
