@@ -94,7 +94,7 @@ class Prescription(models.Model):
     # Misc
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
-    raw_msg = models.TextField(max_length=10000, default="") # Anything can be stored here
+    raw_msg = models.TextField(max_length=10000, blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(default=0) # For coordinates
     location_lon = models.FloatField(default=0)
     # Rx Specific
