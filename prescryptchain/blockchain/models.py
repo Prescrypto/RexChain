@@ -147,7 +147,7 @@ class Prescription(models.Model):
     def raw_size(self):
         # get the size of the raw html
         size = (
-            len(self.medic_public_key)+len(self.patient_public_key)+
+            # len(self.medic_public_key)+len(self.patient_public_key)+
             len(self.diagnosis)+len(self.location)+
             len(self.raw_msg)+len(self.location_lat)+
             len(self.location_lon)+len(self.details)+
