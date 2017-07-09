@@ -118,16 +118,10 @@ class Prescription(models.Model):
         self.save()
 
     def save(self):
-        self.encrypt()
+        self.medic_name = encrypt(self.medic_name, self.public_key)
+        self.medic_cedula = encrypt(self.medic_name, self.public_key)
+        # Este es el fix
         super(Prescription, self).save()
-
-    def encrypt(self, message):
-        # Send message and Public key to encrypt
-        return encrypt_with_public_key(message, self.public_key)
-
-    def decrypt(self, message):
-        # Send message and Public key to encrypt
-        return decrypt_with_private_key(message, self.private_key)
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
@@ -136,6 +130,7 @@ class Prescription(models.Model):
             localised_date = localised_date - timedelta(hours=6)
 
         return DateFormat(localised_date).format(format_time)
+
     @cached_property
     def raw_size(self):
         # get the size of the raw html
