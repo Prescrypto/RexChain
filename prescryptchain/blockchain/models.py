@@ -103,7 +103,6 @@ class Prescription(models.Model):
     bought = models.BooleanField(default=False)
     # Main
     signature = models.CharField(max_length=255, blank=True, default="")
-    data = JSONField()
 
     # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
     def sign(self):
