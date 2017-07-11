@@ -14,9 +14,9 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
 # Our methods
 from .utils import (
-    un_savify_key, un_savify_key,
+    un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex
+    calculate_hash, bin2hex, get_new_asym_keys
 )
 
 
@@ -81,7 +81,7 @@ class Block(models.Model):
 @python_2_unicode_compatible
 class Prescription(models.Model):
     # Cryptographically enabled fields
-    public_key = models.CharField(max_length=2000, default="")
+    public_key = models.CharField(max_length=2000, blank=True, default="")
     private_key = models.CharField(max_length=2000, blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
     medic_name = models.CharField(blank=True, max_length=255, default="")
@@ -108,7 +108,7 @@ class Prescription(models.Model):
     def sign(self):
         hash_object = hashlib.sha256(self.raw_msg)
         self.signature = hash_object.hexdigest()
-        self.save()
+
 
     def create_raw_msg(self):
         # Create raw html and encode
@@ -121,19 +121,25 @@ class Prescription(models.Model):
             self.diagnosis
         )
         self.raw_msg = msg.encode('utf-8')
-        self.save()
+
 
     def save(self, *args, **kwargs):
-        # self.medic_name = encrypt_with_public_key(self.medic_name, self.public_key)
-        # self.medic_cedula = encrypt_with_public_key(self.medic_cedula, self.public_key)
-        # self.medic_hospital = encrypt_with_public_key(self.medic_hospital, self.public_key)
-        # self.patient_name = encrypt_with_public_key(self.patient_name, self.public_key)
-        # self.patient_age = encrypt_with_public_key(self.patient_age, self.public_key)
-        # self.diagnosis = encrypt_with_public_key(self.diagnosis, self.public_key)
-        # self.create_raw_msg()
-        # self.sign()
-        # Este es el fix
+        # This call the super method save saving all clean data first
+        if self.pk is None:
+            (pub_key, priv_key) = get_new_asym_keys()
+            self.public_key = savify_key(pub_key)
+            self.private_key = savify_key(priv_key)
+            self.medic_name = bin2hex(encrypt_with_public_key(self.medic_name.encode("utf-8"), pub_key))
+            self.medic_cedula = bin2hex(encrypt_with_public_key(self.medic_cedula.encode("utf-8"), pub_key))
+            self.medic_hospital = bin2hex(encrypt_with_public_key(self.medic_hospital.encode("utf-8"), pub_key))
+            self.patient_name = bin2hex(encrypt_with_public_key(self.patient_name.encode("utf-8"), pub_key))
+            self.patient_age = bin2hex(encrypt_with_public_key(self.patient_age.encode("utf-8"), pub_key))
+            self.diagnosis = bin2hex(encrypt_with_public_key(self.diagnosis.encode("utf-8"), pub_key))
+            self.create_raw_msg()
+            self.sign()
+
         super(Prescription, self).save(*args, **kwargs)
+
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
