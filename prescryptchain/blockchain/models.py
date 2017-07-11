@@ -82,7 +82,7 @@ class Block(models.Model):
 class Prescription(models.Model):
     # Cryptographically enabled fields
     public_key = models.CharField(max_length=2000, default="")
-    private_key = models.CharField(max_length=2000, default="") # Aquí puedes guardar el PrivateKey para desencriptar
+    private_key = models.CharField(max_length=2000, blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
     medic_name = models.CharField(blank=True, max_length=255, default="")
     medic_cedula = models.CharField(blank=True, max_length=255, default="")
@@ -95,8 +95,8 @@ class Prescription(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
     raw_msg = models.TextField(max_length=10000, blank=True, default="") # Anything can be stored here
-    location_lat = models.FloatField(default=0) # For coordinates
-    location_lon = models.FloatField(default=0)
+    location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
+    location_lon = models.FloatField(null=True, blank=True, default=0)
     # Rx Specific
     details = models.TextField(blank=True, max_length=10000, default="")
     extras = models.TextField(blank=True, max_length=10000, default="")
@@ -120,10 +120,10 @@ class Prescription(models.Model):
             self.patient_age +
             self.diagnosis
         )
-        self.raw_html_msg = msg.encode('utf-8')
+        self.raw_msg = msg.encode('utf-8')
         self.save()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # self.medic_name = encrypt_with_public_key(self.medic_name, self.public_key)
         # self.medic_cedula = encrypt_with_public_key(self.medic_cedula, self.public_key)
         # self.medic_hospital = encrypt_with_public_key(self.medic_hospital, self.public_key)
@@ -133,7 +133,7 @@ class Prescription(models.Model):
         # self.create_raw_msg()
         # self.sign()
         # Este es el fix
-        super(Prescription, self).save()
+        super(Prescription, self).save(*args, **kwargs)
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
@@ -153,7 +153,7 @@ class Prescription(models.Model):
 
     def __str__(self):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
-        return self.signature
+        return self.medic_name
 
 @python_2_unicode_compatible
 class Medication(models.Model):

@@ -9,6 +9,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     ''' Custom Prescription Admin  '''
     search_fields = ['id']
     list_per_page = 25
+    fields = ('id','public_key', 'medic_name', 'patient_name','timestamp')
     # inlines = [MedicationInline, ]
 
 
