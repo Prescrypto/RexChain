@@ -155,7 +155,7 @@ class Prescription(models.Model):
         size = (
             len(self.diagnosis)+len(self.location)+len(self.signature)
         )
-        return size
+        return size * 8
 
     def __str__(self):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO

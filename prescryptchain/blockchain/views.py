@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.views.generic import View, CreateView, ListView
-from django.shortcuts import render
-from blockchain.forms import NewPrescriptionForm
-from django.http import HttpResponseRedirect
-import hashlib
 
-# Create your views here.
-# Create new prescription view, this is the biz
+# Python libs
+import hashlib
+# Django packages
+from django.shortcuts import render, redirect
+from django.views.generic import View, CreateView, ListView
+# Our Models
+from .forms import NewPrescriptionForm
+from .models import Prescription
+
+
 
 class AddPrescriptionView(View):
+    ''' Simple Rx Form '''
     template = 'blockchain/blockchain/new_rx.html'
 
     def get(self, request, *args, **kwargs):
@@ -27,4 +31,21 @@ class AddPrescriptionView(View):
             rx.signature = hash_object.hexdigest()
             rx.save()
 
-        return HttpResponseRedirect('/')
+        return redirect('/')
+
+
+def rx_detail(request, hash_rx=False):
+    ''' Get a hash and return the rx '''
+    if hash_rx:
+        template = "blockchain/rx_detail.html"
+        try:
+            rx = Prescription.objects.get(signature=hash_rx)
+            context = {"prescription" : rx }
+            return render(request, template, context)
+        except Exception as e:
+            print("Error found: %s, type: %s" % (e, type(e)))
+
+    return redirect("/")
+
+
+

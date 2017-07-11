@@ -18,7 +18,7 @@ from rest_framework.documentation import include_docs_urls
 
 # Our Models
 from .views import home
-from blockchain.views import AddPrescriptionView
+from blockchain.views import AddPrescriptionView, rx_detail
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^api/v1/', include('api.urls')),
     url(r'^$', home, name='home'),
     url(r'^new_rx/', AddPrescriptionView.as_view(), name="AddRx"),
+    url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail")
 ]
 
 # Show images stored local in dev

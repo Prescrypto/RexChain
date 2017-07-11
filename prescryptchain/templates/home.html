@@ -17,10 +17,10 @@
                 </tr>
                 {% for rx in prescriptions %}
                   <tr>
-                    <td><a href="/preview/?hash={{rx.signature}}"> {{ rx.raw_size }} bytes</a></td>
-                    <td class="text-center hidden-xs"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
-                    <td class="text-center visible-xs-block signature-mobile"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
-                    <td class="text-center"><a href="/preview/?hash={{rx.signature}}"><span class="blue-font">{{ rx.timestamp|timesince }}</span></a></td>
+                    <td><a href="/hash/{{ rx.signature }}/"> {{ rx.raw_size }} bytes</a></td>
+                    <td class="text-center hidden-xs"><a href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
+                    <td class="text-center visible-xs-block signature-mobile"><a href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
+                    <td class="text-center"><a href="/hash/{{ rx.signature }}/"><span class="blue-font">{{ rx.timestamp|timesince }}</span></a></td>
                   </tr>
                 {% endfor %}
 
@@ -49,10 +49,10 @@
                 </tr>
                 {% for rx in prescriptions %}
                   <tr>
-                    <td><a href="/preview/?hash={{rx.signature}}"> {{ rx.raw_size }} bytes</a></td>
-                    <td class="text-center hidden-xs"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
-                    <td class="text-center visible-xs-block signature-mobile"><a href="/preview/?hash={{rx.signature}}">{{ rx.signature }}</a></td>
-                    <td class="text-center"><a href="/preview/?hash={{rx.signature}}"><span class="blue-font">{{ rx.timestamp|timesince }}</span></a></td>
+                    <td><a href="/hash/{{ rx.signature }}/"> {{ rx.raw_size }} bytes</a></td>
+                    <td class="text-center hidden-xs"><a href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
+                    <td class="text-center visible-xs-block signature-mobile"><a href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
+                    <td class="text-center"><a href="/hash/{{rx.signature}}/"><span class="blue-font">{{ rx.timestamp|timesince }}</span></a></td>
                   </tr>
                 {% endfor %}
 
