@@ -8,14 +8,14 @@
 {% block content %}
   {# RX Detail #}
   <section class="container-fluid">
-    <div class="row">
+    <div class="row padding-2em">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
           <div class="col-xs-12 col-lg-6">
             {# Rx info #}
             <table id="crypto-table" class="table table-striped">
               <tr>
-                <td colspan="2">Detalles</td>
+                <td colspan="2"><strong>Detalles</strong></td>
               </tr>
               {# for field in prescription #}
                 <tr>
@@ -58,14 +58,17 @@
             {#Hashes info#}
             <table id="crypto-table" class="table table-striped">
               <tr>
-                <td colspan="2">Hashes</td>
+                <td colspan="2"><strong>Hashes</strong></td>
               </tr>
-              {% for field, value in prescription.items %}
-                <tr>
-                  <td><a href="/hash/{{ rx.signature }}/"> {{ rx.raw_size }} bytes</a></td>
-                  <td class="text-center hidden-xs"><a href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
-                </tr>
-              {% endfor %}
+              <tr>
+                  <td>Hash:</td>
+                  <td>{{ rx.signature }}</td>
+              </tr>
+              <tr>
+                  <td>Hash Anterior:</td>
+                  <td><a href="/hash/{{hash_before}}">{{ hash_before }}</a></td>
+              </tr>
+
             </table>
 
           </div>
