@@ -36,6 +36,9 @@ class AddPrescriptionView(View):
 
 def rx_detail(request, hash_rx=False):
     ''' Get a hash and return the rx '''
+    if request.GET.get("hash_rx", False):
+        hash_rx = request.GET.get("hash_rx")
+
     if hash_rx:
         template = "blockchain/rx_detail.html"
         try:
@@ -46,10 +49,3 @@ def rx_detail(request, hash_rx=False):
             print("Error found: %s, type: %s" % (e, type(e)))
 
     return redirect("/")
-
-def search_hash(request, q):
-    ''' Search Rx by hash '''
-    pass
-
-
-

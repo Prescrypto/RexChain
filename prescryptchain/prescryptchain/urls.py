@@ -28,7 +28,8 @@ urlpatterns = [
     url(r'^api/v1/', include('api.urls')),
     url(r'^$', home, name='home'),
     url(r'^new_rx/', AddPrescriptionView.as_view(), name="AddRx"),
-    url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail")
+    url(r'^hash/$', rx_detail, name="rx_search"),
+    url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail"),
 ]
 
 # Show images stored local in dev
