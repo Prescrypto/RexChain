@@ -157,6 +157,17 @@ class Prescription(models.Model):
         )
         return size * 8
 
+    @cached_property
+    def get_before_hash(self, count=1):
+        ''' Get before hash prescription '''
+        try:
+            rx_before = Prescription.objects.get(id=(self.id - count))
+            return rx_before.signature
+
+        except Exception as e:
+            self.get_before_hash(count = count + 1)
+
+
     def __str__(self):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
         return self.medic_name

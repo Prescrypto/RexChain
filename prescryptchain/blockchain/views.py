@@ -40,18 +40,12 @@ def rx_detail(request, hash_rx=False):
         hash_rx = request.GET.get("hash_rx")
 
     if hash_rx:
-        template = "blockchain/rx_detail.html"
         context = {}
         try:
             rx = Prescription.objects.get(signature=hash_rx)
             context["rx"] = rx
-            try:
-                hash_before = Prescription.objects.get(id=(rx.id -1))
-                context["hash_before"] = hash_before.signature
-            except Exception as e:
-                print("Error found: %s, type: %s" % (e, type(e)))
+            return render(request, "blockchain/rx_detail.html", context)
 
-            return render(request, template, context)
         except Exception as e:
             print("Error found: %s, type: %s" % (e, type(e)))
 
