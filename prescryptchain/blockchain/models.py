@@ -160,6 +160,9 @@ class Prescription(models.Model):
     @cached_property
     def get_before_hash(self, count=1):
         ''' Get before hash prescription '''
+        if self.id == 1:
+            # number one prescription
+            return self.signature
         try:
             rx_before = Prescription.objects.get(id=(self.id - count))
             return rx_before.signature
