@@ -47,5 +47,9 @@ def rx_detail(request, hash_rx=False):
 
     return redirect("/")
 
+def search_hash(request, q):
+    ''' Search Rx by hash '''
+    pass
+
 
 
