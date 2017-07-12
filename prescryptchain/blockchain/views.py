@@ -41,10 +41,16 @@ def rx_detail(request, hash_rx=False):
 
     if hash_rx:
         template = "blockchain/rx_detail.html"
+        context = {}
         try:
             rx = Prescription.objects.get(signature=hash_rx)
-            hash_before = Prescription.objects.get(id=(rx.id -1))
-            context = {"rx" : rx , "hash_before": hash_before.signature}
+            context["rx"] = rx
+            try:
+                hash_before = Prescription.objects.get(id=(rx.id -1))
+                context["hash_before"] = hash_before.signature
+            except Exception as e:
+                print("Error found: %s, type: %s" % (e, type(e)))
+
             return render(request, template, context)
         except Exception as e:
             print("Error found: %s, type: %s" % (e, type(e)))
