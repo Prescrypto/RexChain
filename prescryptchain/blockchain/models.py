@@ -7,6 +7,7 @@ from datetime import timedelta, datetime
 import unicodedata
 # Django Libs
 from django.db import models
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
@@ -19,38 +20,45 @@ from .utils import (
     calculate_hash, bin2hex, get_new_asym_keys
 )
 
+# Setting block size
+BLOCK_SIZE = settings.BLOCK_SIZE
+
 
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
-    def create_block(self, id,  previousHash, timestamp, data, block_hash):
+    def create_block(self, previousHash="0"):
+        # Do initial block or create next block
         if previousHash == "0":
-            new_block = self.get_genesis_block()
-            return new_block
+            return self.get_genesis_block()
+
         else:
-            new_block = Block.create(hash_anterior=previousHash, timestamp=timestamp, hash_block=block_hash)
-            return new_block
+            return self.generate_next_block()
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
-        genesis_block = Block.create(0, "0", 1465154705, "My genesis block!!", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        genesis_block = Block.create(hash_block="816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, block_data):
+    def generate_next_block(self):
         # Generete a new block
-        previous_block = self.queryset().last()
-        next_index = previous_block.id + 1
-        next_timestamp = datetime.date.now()
-        next_hash = calculate_hash(next_index, previous_block.hash_block, next_timestamp, block_data)
-        new_block = self.create(next_index, previous_block.hash_block, next_timestamp, block_data, nextHash)
+
+        new_block = self.create()
+        new_block.save()
+
+        previous_block = self.get_before_hash()
+
+        new_block.hash_block = calculate_hash(new_block.id, previous_block.hash_block, new_block.timestamp, new_block.get_block_data())
+
         new_block.save()
         return new_block
 
 
 @python_2_unicode_compatible
 class Block(models.Model):
-    hash_anterior = models.CharField(max_length=255, default="")
-    hash_block = models.CharField(max_length=255, default="")
+    ''' Our Model for Blocks '''
+    # Id block
+    hash_block = models.CharField(max_length=255, blank=True, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
 
     objects = BlockManager()
@@ -58,8 +66,24 @@ class Block(models.Model):
     @cached_property
     def raw_size(self):
         # get the size of the raw html
-        size = len(self.hash_anterior)+len(self.hash_block)+len(self.get_formatted_date())  * 8
+        size = (len(self.get_before_hash())+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
+
+    def get_block_data():
+        # Get the sum of hashes of last prescriptions in block size
+        sum_hashes = ""
+        try:
+            prescriptions = Prescription.objects.all()[:BLOCK_SIZE]
+
+            for rx in prescriptions:
+                sum_hashes += rx.signature
+
+            return sum_hashes
+
+        except Exception as e:
+            print("Error was found: %s" % e)
+            return ""
+
 
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
@@ -67,6 +91,19 @@ class Block(models.Model):
         if not settings.DEBUG:
             localised_date = localised_date - timedelta(hours=6)
         return DateFormat(localised_date).format(format_time)
+
+    @cached_property
+    def get_before_hash(self, count=1):
+        ''' Get before hash block '''
+        if self.id == 1:
+            # number one block
+            return "0"
+        try:
+            block_before = Block.objects.get(id=(self.id - count))
+            return block_before.signature
+
+        except Exception as e:
+            self.get_before_hash(count = count + 1)
 
     def __str__(self):
         return self.hash_block

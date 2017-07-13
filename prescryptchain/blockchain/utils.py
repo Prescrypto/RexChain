@@ -25,7 +25,7 @@ def savify_key(EncryptionPublicKey):
     pickld_key = cPickle.dumps(EncryptionPublicKey)
     return bin2hex(pickld_key)
 
-def calculate_hash(index, previousHash, timestamp, data, *args, **kwargs):
+def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
     hash_obj = hashlib.sha256(index + previousHash + timestamp + data)
     return hash_object.hexdigest()
@@ -56,6 +56,7 @@ def test(message):
     # Decrypt with private keys
     decrypted_message = decrypt_with_private_key(encryptedtext, EncryptionPrivateKey)
     print "This is the decrypted message: "+decrypted_message
+
 
 # convert str to hex
 # This needs to be used to save the messages and keys

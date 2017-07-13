@@ -26,6 +26,8 @@ PRODUCTION = ast.literal_eval(os.environ['PRODUCTION'])
 
 ALLOWED_HOSTS = ['*'] # temporary
 
+BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
+
 
 # Application definition
 
