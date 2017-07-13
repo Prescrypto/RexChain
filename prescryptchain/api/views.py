@@ -21,7 +21,22 @@ class PrescriptionSerializer(serializers.ModelSerializer):
     """ Prescription serializer """
     class Meta:
         model = Prescription
-        fields = '__all__'
+        fields = (
+            'id',
+            'medic_name',
+            'medic_cedula',
+            'medic_hospital',
+            'patient_name',
+            'patient_age',
+            'diagnosis',
+            'location',
+            'timestamp',
+            'signature',
+            'get_before_hash',
+            'raw_size'
+
+        )
+        read_only_fields = ('id', 'timestamp')
 
 
 class PrescriptionViewSet(viewsets.ModelViewSet):

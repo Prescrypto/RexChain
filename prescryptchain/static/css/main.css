@@ -63,3 +63,9 @@ body{
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.a_white{
+    color: #fff;
+}
+.a_white:hover{
+    color: #4384c3;
+}
