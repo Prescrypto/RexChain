@@ -26,13 +26,14 @@ BLOCK_SIZE = settings.BLOCK_SIZE
 
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
-    def create_block(self, previous_hash="0"):
+    def create_block(self):
         # Do initial block or create next block
-        if previous_hash == "0":
+        last_block = Block.objects.last()
+        if last_block is None:
             return self.get_genesis_block()
 
         else:
-            return self.generate_next_block()
+            return self.generate_next_block(hash_before=last_block.hash_block)
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
@@ -40,14 +41,14 @@ class BlockManager(models.Manager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self):
+    def generate_next_block(self, hash_before):
         # Generete a new block
 
         new_block = self.create()
         new_block.save()
 
-        previous_block = self.get_before_hash()
-        new_block.hash_block = calculate_hash(new_block.id, previous_block.hash_block, str(new_block.timestamp), new_block.get_block_data())
+
+        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), new_block.get_block_data())
         new_block.save()
 
         return new_block
@@ -65,7 +66,7 @@ class Block(models.Model):
     @cached_property
     def raw_size(self):
         # get the size of the raw html
-        size = (len(self.get_before_hash())+len(self.hash_block)+ len(self.get_formatted_date())) * 8
+        size = (len(self.get_before_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
 
     def get_block_data():
@@ -96,13 +97,16 @@ class Block(models.Model):
         ''' Get before hash block '''
         if self.id == 1:
             # number one block
-            return "0"
-        try:
-            block_before = Block.objects.get(id=(self.id - count))
-            return block_before.signature
+            return 0
+        elif self.id > 1:
+            try:
+                block_before = Block.objects.get(id=(self.id - count))
+                return block_before.hash_block
 
-        except Exception as e:
-            self.get_before_hash(count = count + 1)
+            except Exception as e:
+                self.get_before_hash(count = count + 1)
+        else:
+            return 0
 
     def __str__(self):
         return self.hash_block
@@ -164,7 +168,7 @@ class Prescription(models.Model):
             self.medic_cedula = bin2hex(encrypt_with_public_key(self.medic_cedula.encode("utf-8"), pub_key))
             self.medic_hospital = bin2hex(encrypt_with_public_key(self.medic_hospital.encode("utf-8"), pub_key))
             self.patient_name = bin2hex(encrypt_with_public_key(self.patient_name.encode("utf-8"), pub_key))
-            self.patient_age = bin2hex(encrypt_with_public_key(self.patient_age.encode("utf-8"), pub_key))
+            self.patient_age = bin2hex(encrypt_with_public_key(str(self.patient_age).encode("utf-8"), pub_key))
             self.diagnosis = bin2hex(encrypt_with_public_key(self.diagnosis.encode("utf-8"), pub_key))
             self.create_raw_msg()
             self.sign()
