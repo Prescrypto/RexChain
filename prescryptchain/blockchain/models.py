@@ -59,6 +59,7 @@ class Block(models.Model):
     # Id block
     hash_block = models.CharField(max_length=255, blank=True, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    data = JSONField(default={}, blank=True)
 
     objects = BlockManager()
 
@@ -68,14 +69,15 @@ class Block(models.Model):
         size = (len(self.get_before_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
 
-    def get_block_data():
+    def get_block_data(self):
         # Get the sum of hashes of last prescriptions in block size
         sum_hashes = ""
         try:
-            prescriptions = Prescription.objects.all()[:BLOCK_SIZE]
-
+            prescriptions = Prescription.objects.all().order_by('-timestamp')[:BLOCK_SIZE]
+            self.data["hashes"] = []
             for rx in prescriptions:
                 sum_hashes += rx.signature
+                self.data["hashes"].append(rx.signature)
 
             return sum_hashes
 
@@ -171,6 +173,7 @@ class Prescription(models.Model):
             self.create_raw_msg()
             self.sign()
 
+
         super(Prescription, self).save(*args, **kwargs)
 
 
@@ -190,7 +193,7 @@ class Prescription(models.Model):
             len(self.location) + len(self.signature) +
             len(self.medic_name) + len(self.medic_cedula) +
             len(self.medic_hospital) + len(self.patient_name) +
-            len(self.patient_age)
+            len(self.patient_age) + len(str(self.get_formatted_date()))
         )
         return size * 8
 
