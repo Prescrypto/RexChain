@@ -26,9 +26,9 @@ BLOCK_SIZE = settings.BLOCK_SIZE
 
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
-    def create_block(self, previousHash="0"):
+    def create_block(self, previous_hash="0"):
         # Do initial block or create next block
-        if previousHash == "0":
+        if previous_hash == "0":
             return self.get_genesis_block()
 
         else:
@@ -36,7 +36,7 @@ class BlockManager(models.Manager):
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
-        genesis_block = Block.create(hash_block="816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        genesis_block = Block.objects.create(hash_block="816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
         genesis_block.save()
         return genesis_block
 
@@ -47,10 +47,9 @@ class BlockManager(models.Manager):
         new_block.save()
 
         previous_block = self.get_before_hash()
-
-        new_block.hash_block = calculate_hash(new_block.id, previous_block.hash_block, new_block.timestamp, new_block.get_block_data())
-
+        new_block.hash_block = calculate_hash(new_block.id, previous_block.hash_block, str(new_block.timestamp), new_block.get_block_data())
         new_block.save()
+
         return new_block
 
 
@@ -107,11 +106,6 @@ class Block(models.Model):
 
     def __str__(self):
         return self.hash_block
-
-
-# class PrescriptionManager(models.ManagerModel):
-#     ''' Prescription Model Manager for prescriptions '''
-#     def create(self, public_key, private_key, data, *args, **kwargs):
 
 
 # Simplified Rx Model
