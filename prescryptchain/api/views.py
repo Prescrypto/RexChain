@@ -31,7 +31,7 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        return Prescription.objects.all().order_by('-created_at')
+        return Prescription.objects.all().order_by('-timestamp')
 
 
 # add patient filter by email, after could modify with other

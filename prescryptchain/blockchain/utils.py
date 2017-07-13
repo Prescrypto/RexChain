@@ -27,7 +27,7 @@ def savify_key(EncryptionPublicKey):
 
 def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
-    hash_obj = hashlib.sha256(index + previousHash + timestamp + data)
+    hash_obj = hashlib.sha256(index + previousHash + timestamp.encode("utf-8") + data)
     return hash_object.hexdigest()
 
 

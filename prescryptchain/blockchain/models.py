@@ -47,7 +47,6 @@ class BlockManager(models.Manager):
         new_block = self.create()
         new_block.save()
 
-
         new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), new_block.get_block_data())
         new_block.save()
 
@@ -99,14 +98,13 @@ class Block(models.Model):
             # number one block
             return 0
         elif self.id > 1:
+            # look for hash before
             try:
                 block_before = Block.objects.get(id=(self.id - count))
                 return block_before.hash_block
 
             except Exception as e:
                 self.get_before_hash(count = count + 1)
-        else:
-            return 0
 
     def __str__(self):
         return self.hash_block
