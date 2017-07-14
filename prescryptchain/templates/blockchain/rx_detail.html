@@ -75,4 +75,28 @@
         </div>
     </div>
   </section>
+  <section class="container-fluid padding-2em bg-midnight">
+    <div class="row padding-2em">
+      <article class="col-xs-12 col-lg-8 col-lg-offset-2">
+        ¿Tienes la clave privada para esta receta? Puedes visualizarla de manera segura aquí
+        <button id="visualize-button" class="btn btn-primary btn-lg" type="button">Visualizar!</button>
+        <div id="encrypt-box" class="hidden padding-2em">
+          <form action="" method="" >
+            <div class="form-group">
+              <textarea rows="4" class="form-control" name="private-key-chain" placeholder="Pega tu clave privada aquí" required value="{{ hex_key }}"></textarea>
+              <button id="decrypt-button" class="btn btn-primary btn-lg" type="submit">Desencriptar!</button>
+            </div>
+          </form>
+        </div>
+      </article>
+    </div>
+  </section>
 {% endblock content %}
+
+{% block jsblock %}
+  <script>
+    $("#visualize-button").click(function() {
+      $("#encrypt-box").toggleClass("hidden");
+    });
+  </script>
+{% endblock jsblock %}
