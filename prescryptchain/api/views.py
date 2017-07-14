@@ -36,7 +36,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'raw_size'
 
         )
-        read_only_fields = ('id', 'timestamp')
+        read_only_fields = ('id', 'timestamp', 'signature',)
 
 
 class PrescriptionViewSet(viewsets.ModelViewSet):

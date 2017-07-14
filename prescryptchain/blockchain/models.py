@@ -160,7 +160,9 @@ class Prescription(models.Model):
 
     def save(self, *args, **kwargs):
         # This call the super method save saving all clean data first
+        new_rx = False
         if self.pk is None:
+            new_rx = True
             (pub_key, priv_key) = get_new_asym_keys()
             self.public_key = savify_key(pub_key)
             self.private_key = savify_key(priv_key)
@@ -173,8 +175,13 @@ class Prescription(models.Model):
             self.create_raw_msg()
             self.sign()
 
-
         super(Prescription, self).save(*args, **kwargs)
+
+        if new_rx:
+            # Post save check if the rx made a new block
+            if self.id % BLOCK_SIZE == 0:
+                print ("make a block")
+
 
 
     def get_formatted_date(self, format_time='d/m/Y'):
