@@ -50,8 +50,21 @@
   </section>
   {% block content %}
   {% endblock content %}
-  <footer>
+  {# Footer Section #}
+  <footer class="container-fluid bg-midnight">
+    <div class="row padding-2em">
 
+      <article class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <div class="row">
+          <article class="col-xs-12">
+            <hr />
+          </article>
+          <article class="col-xs-12">
+            <p class="pull-right">We're <span title="Powered" class="glyphicon glyphicon-flash animated powered"></span> by <span class="font-blue">Prescrypto</span></p>
+          </article>
+        </div>
+      </article>
+    </div>
   </footer>
 
   <script src="{% static "js/vendor/jquery-3.2.1.min.js" %}"></script>
