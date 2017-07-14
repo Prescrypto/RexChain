@@ -30,7 +30,8 @@ class BlockManager(models.Manager):
         # Do initial block or create next block
         last_block = Block.objects.last()
         if last_block is None:
-            return self.get_genesis_block()
+            genesis = self.get_genesis_block()
+            return self.generate_next_block(hash_before=genesis_block.hash_block)
 
         else:
             return self.generate_next_block(hash_before=last_block.hash_block)
@@ -180,7 +181,9 @@ class Prescription(models.Model):
         if new_rx:
             # Post save check if the rx made a new block
             if self.id % BLOCK_SIZE == 0:
-                print ("make a block")
+                # Here is where create the block
+                Block.objects.create_block()
+
 
 
 
