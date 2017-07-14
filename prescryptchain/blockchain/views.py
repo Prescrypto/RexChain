@@ -47,7 +47,7 @@ def rx_detail(request, hash_rx=False):
             return render(request, "blockchain/rx_detail.html", context)
 
         except Exception as e:
-            print("Error found: %s, type: %s" % (e, type(e)))
+            return redirect("/block/?block_hash=%s" % hash_rx)
 
     return redirect("/")
 
