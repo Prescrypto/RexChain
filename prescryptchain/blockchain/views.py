@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView
 # Our Models
 from .forms import NewPrescriptionForm
-from .models import Prescription
+from .models import Prescription, Block
 
 
 
@@ -45,6 +45,24 @@ def rx_detail(request, hash_rx=False):
             rx = Prescription.objects.get(signature=hash_rx)
             context["rx"] = rx
             return render(request, "blockchain/rx_detail.html", context)
+
+        except Exception as e:
+            print("Error found: %s, type: %s" % (e, type(e)))
+
+    return redirect("/")
+
+
+def block_detail(request, block_hash=False):
+    ''' Get a hash and return the block '''
+    if request.GET.get("block_hash", False):
+        block_hash = request.GET.get("block_hash")
+
+    if block_hash:
+        context = {}
+        try:
+            block = Block.objects.get(hash_block=block_hash)
+            context["block_object"] = block
+            return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:
             print("Error found: %s, type: %s" % (e, type(e)))

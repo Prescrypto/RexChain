@@ -17,10 +17,10 @@
                 </tr>
                 {% for rx_block in rx_blocks %}
                   <tr>
-                    <td><a class="a_white" href="/hash/{{ rx_block.hash_block }}/"> {{ rx_block.raw_size }} bytes</a></td>
-                    <td class="text-center hidden-xs"><a class="a_white" href="/hash/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-                    <td class="text-center visible-xs-block hash_block-mobile"><a class="a_white" href="/hash/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-                    <td class="text-center"><a href="/hash/{{ rx_block.hash_block }}/"><span class="blue-font">{{ rx_block.timestamp|timesince }}</span></a></td>
+                    <td><a class="a_white" href="/block/{{ rx_block.hash_block }}/"> {{ rx_block.raw_size }} bytes</a></td>
+                    <td class="text-center hidden-xs"><a class="a_white" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
+                    <td class="text-center visible-xs-block hash_block-mobile"><a class="a_white" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
+                    <td class="text-center"><a href="/block/{{ rx_block.hash_block }}/"><span class="blue-font">{{ rx_block.timestamp|timesince }}</span></a></td>
                   </tr>
                 {% endfor %}
 

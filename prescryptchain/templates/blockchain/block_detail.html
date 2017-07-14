@@ -3,8 +3,34 @@
   Block Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2>Blockchain detail</h2>
+  <h2>Block detail</h2>
 {% endblock subtitle %}
 {% block content %}
+
+<section class="container-fluid">
+  <div class="row padding-2em">
+    <article class="col-xs-12 col-lg-8 col-lg-offset-2 padding-2em">
+      <table id="crypto-table" class="table table-striped">
+        <tr>
+          <td colspan="2"><strong>Detalles</strong></td>
+        </tr>
+        <tr>
+          <td>Tamaño:</td>
+          <td>{{ block_object.raw_size }} bytes</td>
+        </tr>
+        <tr>
+          <td>Hash:</td>
+          <td>{{ block_object.hash_block }}</td>
+        </tr>
+        <tr>
+          <td>Hash anterior:</td>
+          <td><a href="/block/{{ block_object.get_before_hash }}">{{ block_object.get_before_hash }}</a></td>
+        </tr>
+    </article>
+    <article class="col-xs-12 col-lg-8 col-lg-offset-2 padding-2em">
+
+    </article>
+  </div>
+</section>
 
 {% endblock content %}
