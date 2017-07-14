@@ -9,7 +9,7 @@
 
 <section class="container-fluid">
   <div class="row padding-2em">
-    <article class="col-xs-12 col-lg-8 col-lg-offset-2 padding-2em">
+    <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
       <table id="crypto-table" class="table table-striped">
         <tr>
           <td colspan="2"><strong>Detalles</strong></td>
@@ -26,9 +26,20 @@
           <td>Hash anterior:</td>
           <td><a href="/block/{{ block_object.get_before_hash }}">{{ block_object.get_before_hash }}</a></td>
         </tr>
+      </table>
     </article>
-    <article class="col-xs-12 col-lg-8 col-lg-offset-2 padding-2em">
-
+    <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
+      <table id="crypto-table" class="table table-striped">
+        <tr>
+          <td colspan="2"><strong>Recetas en el bloque</strong></td>
+        </tr>
+        {% for hash in  block_object.data.hashes %}
+        <tr>
+          <td>Hash</td>
+          <td><a href="/hash/{{ hash }}">{{ hash }}</a></td>
+        </tr>
+        {% endfor %}
+      </table>
     </article>
   </div>
 </section>
