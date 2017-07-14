@@ -31,7 +31,7 @@ class BlockManager(models.Manager):
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
-            return self.generate_next_block(hash_before=genesis_block.hash_block)
+            return self.generate_next_block(hash_before=genesis.hash_block)
 
         else:
             return self.generate_next_block(hash_before=last_block.hash_block)
