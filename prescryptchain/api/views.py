@@ -33,8 +33,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'timestamp',
             'signature',
             'get_before_hash',
-            'raw_size'
-
+            'raw_size',
         )
         read_only_fields = ('id', 'timestamp', 'signature',)
 
