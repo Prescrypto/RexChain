@@ -99,7 +99,7 @@ class Block(models.Model):
         ''' Get before hash block '''
         if self.id == 1:
             # number one block
-            return 0
+            return "0"
         elif self.id > 1:
             # look for hash before
             try:
@@ -183,7 +183,6 @@ class Prescription(models.Model):
             if self.id % BLOCK_SIZE == 0:
                 # Here is where create the block
                 Block.objects.create_block()
-
 
 
 

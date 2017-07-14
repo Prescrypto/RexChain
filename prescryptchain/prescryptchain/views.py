@@ -2,12 +2,14 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from blockchain.models import Prescription
+from blockchain.models import Prescription, Block
 
 
 def home(request):
-    rxs = Prescription.objects.all().order_by('-timestamp')
-    return render(request, "home.html", {"prescriptions" : rxs })
+    LIMIT_SEARCH = 10
+    rxs = Prescription.objects.all().order_by('-timestamp')[:LIMIT_SEARCH]
+    blocks = Block.objects.all().order_by('-timestamp')[:LIMIT_SEARCH]
+    return render(request, "home.html", {"prescriptions" : rxs, "rx_blocks": blocks })
 
 
 def block_detail(request, block_hash):
