@@ -50,3 +50,32 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 
 # add patient filter by email, after could modify with other
 router.register(r'rx-endpoint', PrescriptionViewSet, 'prescription-endpoint')
+
+
+class BlockSerializer(serializers.ModelSerializer):
+    """ Prescription serializer """
+    class Meta:
+        model = Block
+        fields = (
+            'id',
+            'hash_block',
+            'get_before_hash',
+            'raw_size',
+            'data',
+            'timestamp',
+        )
+        read_only_fields = ('id', 'hash_block','timestamp','get_before_hash', 'raw_size', 'data', )
+
+
+class BlockViewSet(viewsets.ModelViewSet):
+    """ Prescription Viewset """
+    serializer_class = BlockSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        return Block.objects.all().order_by('-timestamp')
+
+
+# add patient filter by email, after could modify with other
+router.register(r'block', BlockViewSet, 'block-endpoint')
