@@ -22,7 +22,7 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 cd ./PrescryptChain
 python -m virtualenv venv/pychain
 source venv/pychain/bin/activate
-pip install requirements.txt
+pip install -r requirements.txt
 python manage.py runserver 8080
 python manage.py client-prescrypto-2 9090
 curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:8080/mineBlock
