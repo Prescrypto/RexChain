@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block title %}
   Rx Detail
 {% endblock title %}
@@ -92,9 +93,28 @@
 {% endblock content %}
 
 {% block jsblock %}
+  <script src="{% static "js/jsencrypt.min.js" %}"></script>
   <script>
     $("#visualize-button").click(function() {
       $("#encrypt-box").toggleClass("hidden");
     });
+    //DECRYPT FUNCTION BUTTON
+    $("#decrypt-button").click(function() {
+      decryptBase("#medic_name");
+      decryptBase("#medic_cedula");
+      decryptBase("#medic_hospital");
+      decryptBase("#patient_name");
+      decryptBase("#patient_age");
+      decryptBase("#diagnosis");
+    });
+
+    function decryptBase(baseTextID){
+      var encrypted = $(baseTextID).html();
+      // Decrypt with the private key...
+      var decrypt = new JSEncrypt();
+      decrypt.setPrivateKey($("#priv_key_id").val());
+      var uncrypted = decrypt.decrypt(encrypted);
+      $(baseTextID).html(uncrypted);
+    };
   </script>
 {% endblock jsblock %}
