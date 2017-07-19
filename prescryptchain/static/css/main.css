@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono:100,400,700');
-@import url('https://fonts.googleapis.com/css?family=PT+Mono:700');
+@import url('https://fonts.googleapis.com/css?family=PT+Mono');
 body{
     color: #fff;
+    font-family: "Roboto Mono";
+}
+p, a{
     font-family: "Roboto Mono";
 }
 .bg-blank{

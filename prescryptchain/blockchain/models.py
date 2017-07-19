@@ -158,6 +158,10 @@ class Prescription(models.Model):
             "diagnosis" : base64.b64encode(hex2bin(self.diagnosis))
         }
 
+    @cached_property
+    def get_priv_key(self):
+        key = un_savify_key(self.private_key)
+        return key.save_pkcs1(format="PEM")
 
     def create_raw_msg(self):
         # Create raw html and encode
