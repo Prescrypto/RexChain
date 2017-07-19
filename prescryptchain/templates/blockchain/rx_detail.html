@@ -23,32 +23,32 @@
                   <td>{{ rx.raw_size }} bytes</td>
                 </tr>
                 <tr>
-                  <td>Medic Name:</td>
-                  <td>{{ rx.medic_name }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Cedula:</td>
-                  <td>{{ rx.medic_cedula }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Hospital:</td>
-                  <td>{{ rx.medic_hospital }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Name:</td>
-                  <td>{{ rx.patient_name }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Age:</td>
-                  <td>{{ rx.patient_age }}</td>
-                </tr>
-                <tr>
                   <td>Timestamp:</td>
                   <td>{{ rx.timestamp }}</td>
                 </tr>
                 <tr>
+                  <td>Medic Name:</td>
+                  <td>{{ rx.get_data_base64.medic_name }}</td>
+                </tr>
+                <tr>
+                  <td>Medic Cedula:</td>
+                  <td>{{ rx.get_data_base64.medic_cedula }}</td>
+                </tr>
+                <tr>
+                  <td>Medic Hospital:</td>
+                  <td>{{ rx.get_data_base64.medic_hospital }}</td>
+                </tr>
+                <tr>
+                  <td>Patient Name:</td>
+                  <td>{{ rx.get_data_base64.patient_name }}</td>
+                </tr>
+                <tr>
+                  <td>Patient Age:</td>
+                  <td>{{ rx.get_data_base64.patient_age }}</td>
+                </tr>
+                <tr>
                   <td>Diagnostico:</td>
-                  <td>{{ rx.diagnosis}}</td>
+                  <td>{{ rx.get_data_base64.diagnosis}}</td>
                 </tr>
               {# endfor #}
               </table>

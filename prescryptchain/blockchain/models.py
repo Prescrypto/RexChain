@@ -2,6 +2,7 @@
 # Python Libs
 ## Hash lib
 import hashlib
+import base64
 from datetime import timedelta, datetime
 # Unicode shite
 import unicodedata
@@ -17,7 +18,7 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex, get_new_asym_keys
+    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys
 )
 
 # Setting block size
@@ -144,6 +145,18 @@ class Prescription(models.Model):
     def sign(self):
         hash_object = hashlib.sha256(self.raw_msg)
         self.signature = hash_object.hexdigest()
+
+    @cached_property
+    def get_data_base64(self):
+        # Return data of prescription on base64
+        return {
+            "medic_name" : base64.b64encode(hex2bin(self.medic_name)),
+            "medic_cedula" : base64.b64encode(hex2bin(self.medic_cedula)),
+            "medic_hospital" : base64.b64encode(hex2bin(self.medic_hospital)),
+            "patient_name" : base64.b64encode(hex2bin(self.patient_name)),
+            "patient_age" : base64.b64encode(hex2bin(self.patient_age)),
+            "diagnosis" : base64.b64encode(hex2bin(self.diagnosis))
+        }
 
 
     def create_raw_msg(self):
