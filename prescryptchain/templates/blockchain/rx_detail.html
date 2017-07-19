@@ -55,9 +55,6 @@
           </article>
 
           <article class="col-xs-12 col-lg-6">
-            <div class="hidden">
-              <p id="priv_key">{{rx.get_priv_key}}</p>
-            </div>
             {#Hashes info#}
             <table id="crypto-table" class="table table-striped">
               <tr>
@@ -85,7 +82,7 @@
         <button id="visualize-button" class="btn btn-primary btn-lg" type="button">Visualizar!</button>
         <div id="encrypt-box" class="hidden padding-2em">
             <div class="form-group">
-              <textarea rows="4" class="form-control" name="private-key-chain" placeholder="Pega tu clave privada aquí" required value="{{ hex_key }}"></textarea>
+              <textarea id="priv_key_id"rows="4" class="form-control" name="private-key-chain" placeholder="Pega tu clave privada aquí"></textarea>
               <button id="decrypt-button" class="btn btn-primary btn-lg" type="submit">Desencriptar!</button>
             </div>
         </div>

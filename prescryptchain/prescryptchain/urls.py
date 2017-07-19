@@ -18,7 +18,7 @@ from rest_framework.documentation import include_docs_urls
 
 # Our Models
 from .views import home
-from blockchain.views import AddPrescriptionView, rx_detail, block_detail
+from blockchain.views import AddPrescriptionView, rx_detail, block_detail, rx_priv_key
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^new_rx/', AddPrescriptionView.as_view(), name="AddRx"),
     url(r'^hash/$', rx_detail, name="rx_search"),
     url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail"),
+    url(r'^hash/(?P<hash_rx>\w+)/key$', rx_priv_key, name="rx_priv_key"),
     url(r'^block/$', block_detail, name="block_search"),
     url(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
 ]

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 # Python libs
 import hashlib
 # Django packages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView
 # Our Models
@@ -50,6 +51,15 @@ def rx_detail(request, hash_rx=False):
             return redirect("/block/?block_hash=%s" % hash_rx)
 
     return redirect("/")
+
+
+def rx_priv_key(request, hash_rx=False):
+    # Temporary way to show key just for test, remove later
+    try:
+        rx = Prescription.objects.get(signature=hash_rx)
+        return HttpResponse(rx.get_priv_key, content_type="text/plain")
+    except Exception as e:
+        return HttpResponse("Not Found", content_type="text/plain")
 
 
 def block_detail(request, block_hash=False):
