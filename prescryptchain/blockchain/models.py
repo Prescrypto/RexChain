@@ -62,7 +62,7 @@ class Block(models.Model):
     hash_block = models.CharField(max_length=255, blank=True, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     data = JSONField(default={}, blank=True)
-
+    merkleroot = models.CharField(max_length=255, default="")
     objects = BlockManager()
 
     @cached_property
@@ -194,7 +194,7 @@ class Prescription(models.Model):
             self.sign()
 
         super(Prescription, self).save(*args, **kwargs)
-
+        # THIS is where we create the next BLOCK
         if new_rx:
             # Post save check if the rx made a new block
             if self.id % BLOCK_SIZE == 0:
