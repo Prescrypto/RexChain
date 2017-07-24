@@ -3,6 +3,8 @@
 ## Hash lib
 import hashlib
 import base64
+import merkletools
+# Date
 from datetime import timedelta, datetime
 # Unicode shite
 import unicodedata
@@ -18,7 +20,7 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys
+    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
 )
 
 # Setting block size
@@ -48,8 +50,11 @@ class BlockManager(models.Manager):
 
         new_block = self.create()
         new_block.save()
-
-        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), new_block.get_block_data())
+        # SHTOPPPP
+        # import code; code.interact(local=locals())
+        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), new_block.get_block_data()["sum_hashes"])
+        # Add Merkle Root
+        new_block.merkleroot = new_block.get_block_data()["merkleroot"]
         new_block.save()
 
         return new_block
@@ -63,6 +68,7 @@ class Block(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     data = JSONField(default={}, blank=True)
     merkleroot = models.CharField(max_length=255, default="")
+
     objects = BlockManager()
 
     @cached_property
@@ -75,13 +81,14 @@ class Block(models.Model):
         # Get the sum of hashes of last prescriptions in block size
         sum_hashes = ""
         try:
-            prescriptions = Prescription.objects.all().order_by('-timestamp')[:BLOCK_SIZE]
+            prescriptions = Prescription.objects.all().order_by('-id')[:BLOCK_SIZE]
             self.data["hashes"] = []
             for rx in prescriptions:
                 sum_hashes += rx.signature
                 self.data["hashes"].append(rx.signature)
 
-            return sum_hashes
+            merkleroot = get_merkle_root(prescriptions)
+            return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
             print("Error was found: %s" % e)
@@ -140,6 +147,7 @@ class Prescription(models.Model):
     bought = models.BooleanField(default=False)
     # Main
     signature = models.CharField(max_length=255, blank=True, default="")
+    previous_hash = models.CharField(max_length=255, default="")
 
     # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
     def sign(self):
@@ -192,6 +200,11 @@ class Prescription(models.Model):
             self.diagnosis = bin2hex(encrypt_with_public_key(self.diagnosis.encode("utf-8"), pub_key))
             self.create_raw_msg()
             self.sign()
+            # Save previous hash
+            if Prescription.objects.last() is None:
+                self.previous_hash = "0"
+            else:
+                self.previous_hash = Prescription.objects.last().signature
 
         super(Prescription, self).save(*args, **kwargs)
         # THIS is where we create the next BLOCK
@@ -226,15 +239,7 @@ class Prescription(models.Model):
     @cached_property
     def get_before_hash(self, count=1):
         ''' Get before hash prescription '''
-        if self.id == 1:
-            # number one prescription
-            return self.signature
-        try:
-            rx_before = Prescription.objects.get(id=(self.id - count))
-            return rx_before.signature
-
-        except Exception as e:
-            self.get_before_hash(count = count + 1)
+        return self.previous_hash
 
 
     def __str__(self):
