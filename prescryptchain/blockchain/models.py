@@ -42,19 +42,19 @@ class BlockManager(models.Manager):
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
         genesis_block = Block.objects.create(hash_block="816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        genesis_block.hash_before = "0"
         genesis_block.save()
         return genesis_block
 
     def generate_next_block(self, hash_before):
         # Generete a new block
 
-        new_block = self.create()
+        new_block = self.create(previous_hash=hash_before)
         new_block.save()
-        # SHTOPPPP
-        # import code; code.interact(local=locals())
-        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), new_block.get_block_data()["sum_hashes"])
+        data_block = new_block.get_block_data()
+        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
-        new_block.merkleroot = new_block.get_block_data()["merkleroot"]
+        new_block.merkleroot = data_block["merkleroot"]
         new_block.save()
 
         return new_block
@@ -65,6 +65,7 @@ class Block(models.Model):
     ''' Our Model for Blocks '''
     # Id block
     hash_block = models.CharField(max_length=255, blank=True, default="")
+    previous_hash = models.CharField(max_length=255, blank=True, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     data = JSONField(default={}, blank=True)
     merkleroot = models.CharField(max_length=255, default="")
@@ -103,19 +104,9 @@ class Block(models.Model):
         return DateFormat(localised_date).format(format_time)
 
     @cached_property
-    def get_before_hash(self, count=1):
+    def get_before_hash(self):
         ''' Get before hash block '''
-        if self.id == 1:
-            # number one block
-            return "0"
-        elif self.id > 1:
-            # look for hash before
-            try:
-                block_before = Block.objects.get(id=(self.id - count))
-                return block_before.hash_block
-
-            except Exception as e:
-                self.get_before_hash(count = count + 1)
+        return self.previous_hash
 
     def __str__(self):
         return self.hash_block
