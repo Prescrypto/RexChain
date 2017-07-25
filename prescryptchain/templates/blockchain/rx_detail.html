@@ -54,11 +54,11 @@
               {# endfor #}
               {% for med in medications %}
                 <tr>
-                  <td>Medicamento:</td>
+                  <td>Medicamento {{ forloop.counter }}:</td>
                   <td id="medication">{{ med.presentation }}</td>
                 </tr>
                 <tr>
-                  <td>Instrucciones:</td>
+                  <td>Instrucciones {{ forloop.counter }}:</td>
                   <td id="instrucciones">{{ med.instructions }}</td>
                 </tr>
               {% endfor %}
