@@ -7,6 +7,7 @@ from datetime import timedelta, datetime
 import rsa
 import cPickle
 import binascii
+import qrcode
 # Unicode shite
 import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
@@ -97,3 +98,18 @@ def is_rx_in_block(target_rx, block):
     print proof
     return mtn.validate_proof(proof, target_rx.signature, block.merkleroot)
 
+
+def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
+    ''' Create a QR Code Image and return it '''
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image()
+    img.save(file_path)
+    with open(file_path, "rb") as f:
+        return f.read()
