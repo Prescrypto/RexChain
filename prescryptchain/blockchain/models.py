@@ -287,4 +287,4 @@ class Medication(models.Model):
     objects = MedicationManager()
 
     def __str__(self):
-        return self.drug_upc
+        return self.presentation

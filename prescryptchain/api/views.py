@@ -64,8 +64,6 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 class PrescriptionViewSet(viewsets.ModelViewSet):
     """ Prescription Viewset """
     serializer_class = PrescriptionSerializer
-    authentication_classes = (SessionAuthentication, BasicAuthentication, )
-    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         return Prescription.objects.all().order_by('-id')
@@ -93,8 +91,6 @@ class BlockSerializer(serializers.ModelSerializer):
 class BlockViewSet(viewsets.ModelViewSet):
     """ Prescription Viewset """
     serializer_class = BlockSerializer
-    authentication_classes = (SessionAuthentication, BasicAuthentication, )
-    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         return Block.objects.all().order_by('-timestamp')
