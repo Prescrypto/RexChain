@@ -112,6 +112,49 @@ class Block(models.Model):
         return self.hash_block
 
 
+class PrescriptionManager(models.Manager):
+    ''' Manager for prescriptions '''
+    def create_rx(self, data, **kwargs):
+
+        rx = self.create_raw_rx(data)
+
+        if "medications" in data and len(data["medications"]) != 0:
+            for med in data["medications"]:
+                Medication.objects.create_medication(prescription=rx, **med)
+
+        return rx
+
+    def create_raw_rx(self, data, **kwargs):
+        # This call the super method save saving all clean data first
+
+        (pub_key, priv_key) = get_new_asym_keys()
+        rx = self.create()
+        rx.public_key = savify_key(pub_key)
+        rx.private_key = savify_key(priv_key)
+        rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
+        rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
+        rx.medic_hospital = bin2hex(encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
+        rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
+        rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
+        rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
+        rx.create_raw_msg()
+        rx.sign()
+        # Save previous hash
+
+        if Prescription.objects.last() is None:
+            rx.previous_hash = "0"
+        else:
+            rx.previous_hash = Prescription.objects.last().signature
+
+        rx.save()
+
+        if rx.id % BLOCK_SIZE == 0:
+            # Here is where create the block
+            Block.objects.create_block()
+
+        return rx
+
+
 # Simplified Rx Model
 @python_2_unicode_compatible
 class Prescription(models.Model):
@@ -139,6 +182,8 @@ class Prescription(models.Model):
     # Main
     signature = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, default="")
+
+    objects = PrescriptionManager()
 
     # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
     def sign(self):
@@ -175,38 +220,6 @@ class Prescription(models.Model):
         self.raw_msg = msg.encode('utf-8')
 
 
-    def save(self, *args, **kwargs):
-        # This call the super method save saving all clean data first
-        new_rx = False
-        if self.pk is None:
-            new_rx = True
-            (pub_key, priv_key) = get_new_asym_keys()
-            self.public_key = savify_key(pub_key)
-            self.private_key = savify_key(priv_key)
-            self.medic_name = bin2hex(encrypt_with_public_key(self.medic_name.encode("utf-8"), pub_key))
-            self.medic_cedula = bin2hex(encrypt_with_public_key(self.medic_cedula.encode("utf-8"), pub_key))
-            self.medic_hospital = bin2hex(encrypt_with_public_key(self.medic_hospital.encode("utf-8"), pub_key))
-            self.patient_name = bin2hex(encrypt_with_public_key(self.patient_name.encode("utf-8"), pub_key))
-            self.patient_age = bin2hex(encrypt_with_public_key(str(self.patient_age).encode("utf-8"), pub_key))
-            self.diagnosis = bin2hex(encrypt_with_public_key(self.diagnosis.encode("utf-8"), pub_key))
-            self.create_raw_msg()
-            self.sign()
-            # Save previous hash
-            if Prescription.objects.last() is None:
-                self.previous_hash = "0"
-            else:
-                self.previous_hash = Prescription.objects.last().signature
-
-        super(Prescription, self).save(*args, **kwargs)
-        # THIS is where we create the next BLOCK
-        if new_rx:
-            # Post save check if the rx made a new block
-            if self.id % BLOCK_SIZE == 0:
-                # Here is where create the block
-                Block.objects.create_block()
-
-
-
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
         localised_date = self.timestamp
@@ -237,6 +250,25 @@ class Prescription(models.Model):
         # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
         return self.medic_name
 
+
+class MedicationManager(models.Manager):
+    ''' Manager to create Medication from API '''
+    def create_medication(self, prescription, **kwargs):
+        med = self.create(prescription = prescription)
+
+        if "presentation" in kwargs and "instructions" in kwargs:
+            med.presentation = kwargs["presentation"]
+            med.instructions = kwargs["instructions"]
+        else:
+            raise EmptyMedication()
+
+        if "drug_upc" in kwargs:
+            med.drug_upc = kwargs["drug_upc"]
+
+        med.save()
+        return med
+
+
 @python_2_unicode_compatible
 class Medication(models.Model):
     prescription = models.ForeignKey('blockchain.Prescription',
@@ -252,14 +284,7 @@ class Medication(models.Model):
     bought = models.BooleanField(default=False)
     drug_upc = models.CharField(blank=True, max_length=255, default="", db_index=True)
 
-    public_key = models.CharField(max_length=255, default="")
-
-    def save(self):
-        self.encrypt()
-        super(Prescription, self).save()
-
-    def encrypt():
-        pass
+    objects = MedicationManager()
 
     def __str__(self):
         return self.drug_upc

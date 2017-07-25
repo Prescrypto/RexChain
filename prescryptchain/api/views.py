@@ -17,8 +17,28 @@ from blockchain.models import Block, Prescription, Medication
 # Define router
 router = routers.DefaultRouter()
 
+
+class MedicationNestedSerializer(serializers.ModelSerializer):
+    """ Medication Nested in Prescription """
+    class Meta:
+        model = Medication
+        fields = ('id', 'presentation', 'instructions', 'drug_upc',)
+        read_only_fields = ('id',)
+        extra_kwargs = {
+            'presentation': { 'required': 'False', 'min_length': 4},
+            'instructions': { 'required': 'False', 'min_length': 4},
+            'drug_upc': { 'required': 'False'}
+        }
+
+
+
 class PrescriptionSerializer(serializers.ModelSerializer):
     """ Prescription serializer """
+    medications = MedicationNestedSerializer(
+        many=True, required=False,
+        help_text = "Medication Nested Serializer"
+    )
+
     class Meta:
         model = Prescription
         fields = (
@@ -29,6 +49,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'patient_name',
             'patient_age',
             'diagnosis',
+            'medications',
             'location',
             'timestamp',
             'signature',
@@ -36,6 +57,9 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'raw_size',
         )
         read_only_fields = ('id', 'timestamp', 'signature',)
+
+    def create(self, validated_data):
+        rx = Prescription.objects.create_rx(data)
 
 
 class PrescriptionViewSet(viewsets.ModelViewSet):
