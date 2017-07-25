@@ -20,3 +20,7 @@ pysha3==1.0b1
 
 # Others
 django-jet==1.0.6
+
+#QRCode
+Pillow==4.2.1
+qrcode==5.3
