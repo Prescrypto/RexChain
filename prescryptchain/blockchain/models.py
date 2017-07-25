@@ -258,17 +258,7 @@ class Prescription(models.Model):
 class MedicationManager(models.Manager):
     ''' Manager to create Medication from API '''
     def create_medication(self, prescription, **kwargs):
-        med = self.create(prescription = prescription)
-
-        if "presentation" in kwargs and "instructions" in kwargs:
-            med.presentation = kwargs["presentation"]
-            med.instructions = kwargs["instructions"]
-        else:
-            raise EmptyMedication()
-
-        if "drug_upc" in kwargs:
-            med.drug_upc = kwargs["drug_upc"]
-
+        med = self.create(prescription = prescription, **kwargs)
         med.save()
         return med
 
