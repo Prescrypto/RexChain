@@ -52,6 +52,12 @@
                   <td id="diagnosis">{{ rx.get_data_base64.diagnosis}}</td>
                 </tr>
               {# endfor #}
+              {% for med in rx.medications %}
+                <tr>
+                  <td>Medicament:</td>
+                  <td id="medication">{{ med.presentation }}</td>
+                </tr>
+              {% endfor %}
               </table>
           </article>
 
