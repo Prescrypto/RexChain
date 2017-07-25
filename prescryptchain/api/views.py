@@ -30,8 +30,6 @@ class MedicationNestedSerializer(serializers.ModelSerializer):
             'drug_upc': { 'required': 'False'}
         }
 
-
-
 class PrescriptionSerializer(serializers.ModelSerializer):
     """ Prescription serializer """
     medications = MedicationNestedSerializer(
@@ -59,7 +57,8 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'timestamp', 'signature',)
 
     def create(self, validated_data):
-        rx = Prescription.objects.create_rx(data)
+        rx = Prescription.objects.create_rx(data=validated_data)
+        return rx
 
 
 class PrescriptionViewSet(viewsets.ModelViewSet):
@@ -69,7 +68,7 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        return Prescription.objects.all().order_by('-timestamp')
+        return Prescription.objects.all().order_by('-id')
 
 
 # add patient filter by email, after could modify with other
