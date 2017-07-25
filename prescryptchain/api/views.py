@@ -51,10 +51,10 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'location',
             'timestamp',
             'signature',
-            'get_before_hash',
+            'previous_hash',
             'raw_size',
         )
-        read_only_fields = ('id', 'timestamp', 'signature',)
+        read_only_fields = ('id', 'timestamp', 'signature','previous_hash',)
 
     def create(self, validated_data):
         rx = Prescription.objects.create_rx(data=validated_data)
@@ -80,12 +80,12 @@ class BlockSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'hash_block',
-            'get_before_hash',
+            'previous_hash',
             'raw_size',
             'data',
             'timestamp',
         )
-        read_only_fields = ('id', 'hash_block','timestamp','get_before_hash', 'raw_size', 'data', )
+        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', )
 
 
 class BlockViewSet(viewsets.ModelViewSet):

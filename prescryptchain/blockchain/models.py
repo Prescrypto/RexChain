@@ -22,6 +22,7 @@ from .utils import (
     encrypt_with_public_key, decrypt_with_private_key,
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
 )
+from api.exceptions import EmptyMedication
 
 # Setting block size
 BLOCK_SIZE = settings.BLOCK_SIZE
@@ -137,6 +138,9 @@ class PrescriptionManager(models.Manager):
         rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
         rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
         rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
+
+        if "location" in data:
+            rx.location = data["location"]
         rx.create_raw_msg()
         rx.sign()
         # Save previous hash
