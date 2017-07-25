@@ -124,12 +124,12 @@ class Prescription(models.Model):
     medic_hospital = models.CharField(blank=True, max_length=255, default="")
     patient_name = models.CharField(blank=True, max_length=255, default="")
     patient_age = models.CharField(blank=True, max_length=255, default="")
-    diagnosis = models.CharField(max_length=255, default="")
+    diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
-    raw_msg = models.TextField(max_length=10000, blank=True, default="") # Anything can be stored here
+    raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
     location_lon = models.FloatField(null=True, blank=True, default=0)
     # Rx Specific
@@ -246,7 +246,7 @@ class Medication(models.Model):
     presentation = models.CharField(
         blank=True, max_length=255,
     )
-    instructions = models.TextField(blank=True, max_length=10000, default="")
+    instructions = models.TextField(blank=True, default="")
     frequency = models.CharField(blank=True, max_length=255, default="")
     dose = models.CharField(blank=True, max_length=255, default="")
     bought = models.BooleanField(default=False)
