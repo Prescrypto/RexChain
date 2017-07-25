@@ -10,6 +10,7 @@ from django.views.generic import View, CreateView, ListView
 # Our Models
 from .forms import NewPrescriptionForm
 from .models import Prescription, Block
+from .utils import get_qr_code
 
 
 
@@ -61,6 +62,19 @@ def rx_priv_key(request, hash_rx=False):
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
     except Exception as e:
         return HttpResponse("Not Found", content_type="text/plain")
+
+
+def qr_code(request, hash_rx=False):
+    # Temporary way to show qrcode just for test, remove later
+    try:
+        rx = Prescription.objects.get(signature=hash_rx)
+        img = get_qr_code(rx.get_priv_key)
+        return HttpResponse(img, content_type="image/jpeg"
+)
+    except Exception as e:
+        print("Error :%s, type(%s)" % (e, type(e)))
+        return HttpResponse("Not Found", content_type="text/plain")
+
 
 
 def block_detail(request, block_hash=False):
