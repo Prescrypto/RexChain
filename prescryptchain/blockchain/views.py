@@ -93,3 +93,19 @@ def block_detail(request, block_hash=False):
             print("Error found: %s, type: %s" % (e, type(e)))
 
     return redirect("/")
+
+def get_simplified_medication_json(medications):
+    medication_json = []
+    for medication in medications:
+        json = {}
+        json['instructions'] = medication.instructions
+        # # Sending std drug information in case it has
+        # json['standard_drug'] = medication.standard_drug
+        # json['drug_upc'] = medication.drug_upc
+        # Only if there's a drug
+        if medication.drug:
+            json['presentation'] = medication.drug.name+' ('+medication.drug.formula+')'
+        if medication.presentation:
+            json['presentation'] = medication.presentation
+        medication_json.append(json)
+    return medication_json[::-1] # This 'pythonesque' code reverts order of lists
