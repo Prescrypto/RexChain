@@ -245,7 +245,7 @@ class Prescription(models.Model):
         return size * 8
 
     @cached_property
-    def get_before_hash(self, count=1):
+    def get_before_hash(self):
         ''' Get before hash prescription '''
         return self.previous_hash
 
