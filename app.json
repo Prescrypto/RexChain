@@ -23,7 +23,7 @@
     "PRODUCTION": {
       "required": true
     },
-    "DJANGO_SETTINGS_MODULE": {
+    "BLOCK_SIZE": {
       "required": true
     },
     "DISABLE_COLLECTSTATIC": {

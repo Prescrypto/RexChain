@@ -3,6 +3,8 @@
 ## Hash lib
 import hashlib
 import base64
+import merkletools
+# Date
 from datetime import timedelta, datetime
 # Unicode shite
 import unicodedata
@@ -18,7 +20,7 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys
+    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
 )
 
 # Setting block size
@@ -40,16 +42,19 @@ class BlockManager(models.Manager):
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
         genesis_block = Block.objects.create(hash_block="816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        genesis_block.hash_before = "0"
         genesis_block.save()
         return genesis_block
 
     def generate_next_block(self, hash_before):
         # Generete a new block
 
-        new_block = self.create()
+        new_block = self.create(previous_hash=hash_before)
         new_block.save()
-
-        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), new_block.get_block_data())
+        data_block = new_block.get_block_data()
+        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
+        # Add Merkle Root
+        new_block.merkleroot = data_block["merkleroot"]
         new_block.save()
 
         return new_block
@@ -60,8 +65,10 @@ class Block(models.Model):
     ''' Our Model for Blocks '''
     # Id block
     hash_block = models.CharField(max_length=255, blank=True, default="")
+    previous_hash = models.CharField(max_length=255, blank=True, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     data = JSONField(default={}, blank=True)
+    merkleroot = models.CharField(max_length=255, default="")
 
     objects = BlockManager()
 
@@ -75,13 +82,14 @@ class Block(models.Model):
         # Get the sum of hashes of last prescriptions in block size
         sum_hashes = ""
         try:
-            prescriptions = Prescription.objects.all().order_by('-timestamp')[:BLOCK_SIZE]
+            prescriptions = Prescription.objects.all().order_by('-id')[:BLOCK_SIZE]
             self.data["hashes"] = []
             for rx in prescriptions:
                 sum_hashes += rx.signature
                 self.data["hashes"].append(rx.signature)
 
-            return sum_hashes
+            merkleroot = get_merkle_root(prescriptions)
+            return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
             print("Error was found: %s" % e)
@@ -96,19 +104,9 @@ class Block(models.Model):
         return DateFormat(localised_date).format(format_time)
 
     @cached_property
-    def get_before_hash(self, count=1):
+    def get_before_hash(self):
         ''' Get before hash block '''
-        if self.id == 1:
-            # number one block
-            return "0"
-        elif self.id > 1:
-            # look for hash before
-            try:
-                block_before = Block.objects.get(id=(self.id - count))
-                return block_before.hash_block
-
-            except Exception as e:
-                self.get_before_hash(count = count + 1)
+        return self.previous_hash
 
     def __str__(self):
         return self.hash_block
@@ -126,12 +124,12 @@ class Prescription(models.Model):
     medic_hospital = models.CharField(blank=True, max_length=255, default="")
     patient_name = models.CharField(blank=True, max_length=255, default="")
     patient_age = models.CharField(blank=True, max_length=255, default="")
-    diagnosis = models.CharField(max_length=255, default="")
+    diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
-    raw_msg = models.TextField(max_length=10000, blank=True, default="") # Anything can be stored here
+    raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
     location_lon = models.FloatField(null=True, blank=True, default=0)
     # Rx Specific
@@ -140,6 +138,7 @@ class Prescription(models.Model):
     bought = models.BooleanField(default=False)
     # Main
     signature = models.CharField(max_length=255, blank=True, default="")
+    previous_hash = models.CharField(max_length=255, default="")
 
     # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
     def sign(self):
@@ -192,9 +191,14 @@ class Prescription(models.Model):
             self.diagnosis = bin2hex(encrypt_with_public_key(self.diagnosis.encode("utf-8"), pub_key))
             self.create_raw_msg()
             self.sign()
+            # Save previous hash
+            if Prescription.objects.last() is None:
+                self.previous_hash = "0"
+            else:
+                self.previous_hash = Prescription.objects.last().signature
 
         super(Prescription, self).save(*args, **kwargs)
-
+        # THIS is where we create the next BLOCK
         if new_rx:
             # Post save check if the rx made a new block
             if self.id % BLOCK_SIZE == 0:
@@ -226,15 +230,7 @@ class Prescription(models.Model):
     @cached_property
     def get_before_hash(self, count=1):
         ''' Get before hash prescription '''
-        if self.id == 1:
-            # number one prescription
-            return self.signature
-        try:
-            rx_before = Prescription.objects.get(id=(self.id - count))
-            return rx_before.signature
-
-        except Exception as e:
-            self.get_before_hash(count = count + 1)
+        return self.previous_hash
 
 
     def __str__(self):
@@ -250,7 +246,7 @@ class Medication(models.Model):
     presentation = models.CharField(
         blank=True, max_length=255,
     )
-    instructions = models.TextField(blank=True, max_length=10000, default="")
+    instructions = models.TextField(blank=True, default="")
     frequency = models.CharField(blank=True, max_length=255, default="")
     dose = models.CharField(blank=True, max_length=255, default="")
     bought = models.BooleanField(default=False)

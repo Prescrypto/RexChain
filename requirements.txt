@@ -15,6 +15,12 @@ djangorestframework==3.6.3
 # crypto
 pycrypto==2.6.1
 rsa==3.4.2
+merkletools==1.0.2
+pysha3==1.0b1
 
 # Others
 django-jet==1.0.6
+
+#QRCode
+Pillow==4.2.1
+qrcode==5.3

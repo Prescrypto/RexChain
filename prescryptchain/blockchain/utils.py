@@ -7,6 +7,7 @@ from datetime import timedelta, datetime
 import rsa
 import cPickle
 import binascii
+import qrcode
 # Unicode shite
 import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
@@ -15,6 +16,7 @@ import md5
 from Crypto.PublicKey import RSA
 from Crypto.Util import asn1
 from base64 import b64decode
+import merkletools
 
 # Returns a tuple with Private and Public keys
 def get_new_asym_keys():
@@ -65,3 +67,49 @@ def bin2hex(binStr):
 # convert hex to str
 def hex2bin(hexStr):
     return binascii.unhexlify(hexStr)
+
+
+# Merkle root - gets a list of prescriptions and returns a merkle root
+def get_merkle_root(prescriptions):
+    # Generate merkle tree
+    mt = merkletools.MerkleTools() # Default is SHA256
+    # Build merkle tree with Rxs
+    for rx in prescriptions:
+        mt.add_leaf(rx.signature)
+    mt.make_tree();
+    # Just to check
+    print mt.get_leaf_count();
+    # get merkle_root and return
+    return mt.get_merkle_root();
+
+#  Proves a hash is in merkle root of block merkle tree
+def is_rx_in_block(target_rx, block):
+    #  We need to create a new tree and follow the path to get this proof
+    mtn = merkletools.MerkleTools()
+    rx_hashes = block.data["hashes"]
+    n = 0
+    for index, hash in enumerate(rx_hashes):
+        mtn.add_leaf(hash)
+        if target_rx.signature == hash:
+            n = index
+    # Make the tree and get the proof
+    mtn.make_tree()
+    proof = mtn.get_proof(n)
+    print proof
+    return mtn.validate_proof(proof, target_rx.signature, block.merkleroot)
+
+
+def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
+    ''' Create a QR Code Image and return it '''
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image()
+    img.save(file_path)
+    with open(file_path, "rb") as f:
+        return f.read()
