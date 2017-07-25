@@ -23,6 +23,9 @@
     "PRODUCTION": {
       "required": true
     },
+    "BLOCK_SIZE": {
+      "required": true
+    },
     "DISABLE_COLLECTSTATIC": {
       "required": true
     },
