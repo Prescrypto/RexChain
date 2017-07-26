@@ -141,6 +141,8 @@ class PrescriptionManager(models.Manager):
 
         if "location" in data:
             rx.location = data["location"]
+
+        rx.timestamp = data["timestamp"]
         rx.create_raw_msg()
         rx.sign()
         # Save previous hash
