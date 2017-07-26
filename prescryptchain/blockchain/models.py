@@ -145,10 +145,10 @@ class PrescriptionManager(models.Manager):
         rx.sign()
         # Save previous hash
 
-        if Prescription.objects.last() is None:
+        if self.last() is None:
             rx.previous_hash = "0"
         else:
-            rx.previous_hash = Prescription.objects.last().signature
+            rx.previous_hash = self.last().signature
 
         rx.save()
 
