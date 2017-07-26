@@ -35,7 +35,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         many=True, required=False,
         help_text = "Medication Nested Serializer"
     )
-    timestamp = serializers.DateTimeField(read_only=True)
+    timestamp = serializers.DateTimeField(read_only=False)
 
     class Meta:
         model = Prescription
