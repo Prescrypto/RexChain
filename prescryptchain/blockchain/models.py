@@ -129,7 +129,7 @@ class PrescriptionManager(models.Manager):
         # This call the super method save saving all clean data first
 
         (pub_key, priv_key) = get_new_asym_keys()
-        rx = self.create()
+        rx = Prescription()
         rx.public_key = savify_key(pub_key)
         rx.private_key = savify_key(priv_key)
         rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
@@ -144,11 +144,10 @@ class PrescriptionManager(models.Manager):
         rx.create_raw_msg()
         rx.sign()
         # Save previous hash
-
-        if Prescription.objects.last() is None:
+        if self.last() is None:
             rx.previous_hash = "0"
         else:
-            rx.previous_hash = Prescription.objects.last().signature
+            rx.previous_hash = self.last().signature
 
         rx.save()
 
@@ -251,8 +250,7 @@ class Prescription(models.Model):
 
 
     def __str__(self):
-        # podriamos reducirlo a solo nombre y poner los demas campos en el admin django! CHECAR  ESTO
-        return self.medic_name
+        return self.signature
 
 
 class MedicationManager(models.Manager):
