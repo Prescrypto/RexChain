@@ -35,6 +35,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         many=True, required=False,
         help_text = "Medication Nested Serializer"
     )
+    timestamp = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Prescription
@@ -53,7 +54,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'previous_hash',
             'raw_size',
         )
-        read_only_fields = ('id', 'timestamp', 'signature','previous_hash',)
+        read_only_fields = ('id', 'signature','previous_hash',)
 
     def create(self, validated_data):
         rx = Prescription.objects.create_rx(data=validated_data)
