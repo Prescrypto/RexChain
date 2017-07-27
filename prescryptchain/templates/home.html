@@ -52,7 +52,7 @@
                     <td><a class="a_white" href="/hash/{{ rx.signature }}/"> {{ rx.raw_size }} bytes</a></td>
                     <td class="text-center hidden-xs"><a class="a_white" href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
                     <td class="text-center visible-xs-block signature-mobile"><a class="a_white" href="/hash/{{ rx.signature }}/">{{ rx.signature }}</a></td>
-                    <td class="text-center"><a href="/hash/{{rx.signature}}/"><span class="blue-font">{{ rx.timestamp|timesince }}</span></a></td>
+                    <td class="text-center"><a href="/hash/{{rx.signature}}/"><span class="blue-font">{{ rx.timestamp }}</span></a></td>
                   </tr>
                 {% endfor %}
 
