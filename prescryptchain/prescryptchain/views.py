@@ -7,8 +7,8 @@ from blockchain.models import Prescription, Block
 
 def home(request):
     LIMIT_SEARCH = 10
-    rxs = Prescription.objects.all().order_by('-timestamp')[:LIMIT_SEARCH]
-    blocks = Block.objects.all().order_by('-timestamp')[:LIMIT_SEARCH]
+    rxs = Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH]
+    blocks = Block.objects.all().order_by('-id')[:LIMIT_SEARCH]
     return render(request, "home.html", {"prescriptions" : rxs, "rx_blocks": blocks })
 
 
