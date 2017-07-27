@@ -243,6 +243,9 @@ class Prescription(models.Model):
             len(self.medic_hospital) + len(self.patient_name) +
             len(self.patient_age) + len(str(self.get_formatted_date()))
         )
+        if self.medications.all() is not None:
+            for med in self.medications.all():
+                size += len(med.presentation) +len(med.instructions)
         return size * 8
 
     @cached_property
