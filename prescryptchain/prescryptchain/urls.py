@@ -30,11 +30,8 @@ urlpatterns = [
     # API
     url(r'^api/v1/', include('api.urls')),
     url(r'^$', home, name='home'),
-    url(r'^new_rx/', AddPrescriptionView.as_view(), name="AddRx"),
     url(r'^hash/$', rx_detail, name="rx_search"),
     url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail"),
-    url(r'^hash/(?P<hash_rx>\w+)/key$', rx_priv_key, name="rx_priv_key"),
-    url(r'^hash/(?P<hash_rx>\w+)/qrcode$', qr_code, name="rx_qr_code"),
     url(r'^block/$', block_detail, name="block_search"),
     url(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
 ]
