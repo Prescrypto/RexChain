@@ -14,18 +14,13 @@ Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lin
 * At the moment data is persisted in an SQL implementation
 * Access to the database is enabled by Asymetric Cryptography
 * Proof-of-work or proof-of-stake: This is the next step, a proof of work is a useful way to stop fake data from being created
-
+* After proof of work has been developed, a distributed version can be built
 
 ### Quick start
-(set up two connected nodes and mine 1 block)
+(set up node and mine 1 block)
 ```
-cd ./PrescryptChain
-python -m virtualenv venv/pychain
-source venv/pychain/bin/activate
-pip install -r requirements.txt
-python manage.py runserver 8080
-python manage.py client-prescrypto-2 9090
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:8080/mineBlock
+vagrant up
+get server running and start creating stuff
 ```
 
 
