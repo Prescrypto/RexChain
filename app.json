@@ -29,6 +29,9 @@
     "DISABLE_COLLECTSTATIC": {
       "required": true
     },
+    "SECURE_SSL_REDIRECT": {
+      "required": true
+    },
 
     "LOAD_FIXTURES": "True"
   },
