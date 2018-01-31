@@ -1,0 +1,6 @@
+*~
+*.pyc
+config/
+temp/
+.vagrant/
+prescryptchain/staticfiles/

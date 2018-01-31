@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}
+  Block Detail
+{% endblock title %}
+{% block subtitle %}
+  <h2>Block detail</h2>
+{% endblock subtitle %}
+{% block content %}
+
+<section class="container-fluid bg-midnight">
+  <div class="row padding-2em">
+    <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
+      <table id="crypto-table" class="table table-striped">
+        <tr>
+          <td colspan="2"><strong>Detalles</strong></td>
+        </tr>
+        <tr>
+          <td>Tamaño:</td>
+          <td>{{ block_object.raw_size }} bytes</td>
+        </tr>
+        <tr>
+          <td>Hash:</td>
+          <td>{{ block_object.hash_block }}</td>
+        </tr>
+        <tr>
+          <td>Hash anterior:</td>
+          <td><a href="/block/{{ block_object.get_before_hash }}">{{ block_object.get_before_hash }}</a></td>
+        </tr>
+        <tr>
+          <td>Timestam:</td>
+          <td>{{ block_object.timestamp }}</td>
+        </tr>
+      </table>
+    </article>
+    <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
+      <table id="crypto-table" class="table table-striped">
+        <tr>
+          <td colspan="2"><strong>Recetas en el bloque</strong></td>
+        </tr>
+        {% for hash in  block_object.data.hashes %}
+        <tr>
+          <td>Hash</td>
+          <td><a href="/hash/{{ hash }}">{{ hash }}</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </article>
+  </div>
+</section>
+
+{% endblock content %}

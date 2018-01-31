@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:100,400,700');
+@import url('https://fonts.googleapis.com/css?family=PT+Mono');
+body{
+    color: #fff;
+    font-family: "Roboto Mono";
+}
+p, a{
+    font-family: "Roboto Mono";
+}
+.bg-blank{
+    background: #fff;
+}
+.bg-portrait{
+    background: #757F9A;
+    background: -webkit-linear-gradient(to right, #D7DDE8, #757F9A);
+    background: linear-gradient(to right, #D7DDE8, #757F9A);
+}
+.bg-midnight{
+    background: #232526;
+    background: -webkit-linear-gradient(to right, #414345, #232526);
+    background: linear-gradient(to right, #414345, #232526);
+}
+.bg-blue-sky{
+    background: #56CCF2;
+    background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2);
+    background: linear-gradient(to right, #2F80ED, #56CCF2);
+
+}
+.title-font{
+    font-family: "PT Mono", "Open Sans";
+    font-size: 2.2em;
+    font-weight: 700;
+    text-decoration: none;
+}
+.title-font a:hover{
+    text-decoration: none;
+}
+.navbar{
+    margin-bottom: 10px;
+}
+.navbar-default {
+    background-color: #fff;
+    border-color: #fff;
+}
+.hero{
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-size: 3em;
+}
+.padding-2em{
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+.crypto-table{
+    color: #fff;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #5C5F63;
+    padding: 1em 1.5em;
+}
+.table > tbody > tr > td{
+    border-top: 0px;
+    padding: 1em 1.5em;
+    max-width:200px; /* Customise it accordingly */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.a_white{
+    color: #fff;
+}
+.a_white:hover{
+    color: #4384c3;
+}
+.font-blue{
+    color: #337ab7;
+}
+.powered{
+    color:#ffd800;
+
+}
+.powered:hover{
+    color:#3e3e3e;
+
+}
