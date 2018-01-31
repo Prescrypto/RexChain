@@ -1,0 +1,46 @@
+[
+{
+  "model": "auth.group",
+  "pk": 1,
+  "fields": {
+    "name": "ApiAccess",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$36000$kR1NcEY60frA$oJe7ia/N1gKSbixZnz6rK1J6AmN63399GFydEAMrrDc=",
+    "last_login": "2018-01-31T19:29:34.070Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "everardo@prescrypto.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2018-01-31T19:19:47.476Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$36000$ZXbe3mmED9RM$EjAK75Llo7lU0g5b1glfF/qt8fYkRBiRNV0fmREiGrA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jesus@prescrypto.com",
+    "first_name": "Jes\u00fas",
+    "last_name": "",
+    "email": "jesus@prescrypto.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2018-01-31T19:30:43Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
