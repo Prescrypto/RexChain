@@ -21,6 +21,12 @@ All the current implementations of blockchains are tightly coupled with the larg
 ```
 vagrant up
 get server running and start creating stuff
+vagrant ssh
+
+$ cd /vagrant/prescryptochain
+$ python manage.py migrate
+$ python manage.py loaddata ./fixtures/initial_data.json
+$ python manage.py runserver [::]:8000
 ```
 
 
