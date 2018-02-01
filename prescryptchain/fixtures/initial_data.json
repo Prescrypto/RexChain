@@ -31,7 +31,7 @@
   "fields": {
     "password": "pbkdf2_sha256$36000$ZXbe3mmED9RM$EjAK75Llo7lU0g5b1glfF/qt8fYkRBiRNV0fmREiGrA=",
     "last_login": null,
-    "is_superuser": false,
+    "is_superuser": true,
     "username": "jesus@prescrypto.com",
     "first_name": "Jes\u00fas",
     "last_name": "",
