@@ -64,8 +64,9 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 class PrescriptionViewSet(viewsets.ModelViewSet):
     """ Prescription Viewset """
-    authentication_classes = (TokenAuthentication, BasicAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    # Temporally without auth
+    # authentication_classes = (TokenAuthentication, BasicAuthentication, )
+    # permission_classes = (IsAuthenticated, )
     serializer_class = PrescriptionSerializer
 
     def get_queryset(self):
