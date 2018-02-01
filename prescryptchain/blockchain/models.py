@@ -138,11 +138,9 @@ class PrescriptionManager(models.Manager):
         rx.private_key = savify_key(priv_key)
 
         '''
-        # Begin pseudocode
+        # Get Public Key from API
         raw_pub_key = data.get("public_key")
         pub_key = un_savify_key(raw_pub_key)
-        rx.public_key = savify_key(pub_key)
-        ## End Pseudocode
 
         rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
         rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
