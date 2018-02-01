@@ -37,6 +37,10 @@ class PrescriptionSerializer(serializers.ModelSerializer):
     )
     timestamp = serializers.DateTimeField(read_only=False)
 
+    ## Add  Required public key string
+    # public_key = serializers.String(required=False, ...)
+    ## End
+
     class Meta:
         model = Prescription
         fields = (
