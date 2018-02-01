@@ -6,6 +6,7 @@ echo "=> Begin  postdeploy..."
 if [ $AUTO_MIGRATE == True ]; then
   echo "=> Loading fixtures..."
   python ./prescryptchain/manage.py migrate
+  python ./prescryptchain/manage.py loaddata ./prescryptchain/fixtures/initial_data.json
 else
   echo "=> Not apply automatically Migrations!"
 fi
