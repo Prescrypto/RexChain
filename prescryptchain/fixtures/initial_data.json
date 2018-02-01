@@ -11,10 +11,10 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$36000$kR1NcEY60frA$oJe7ia/N1gKSbixZnz6rK1J6AmN63399GFydEAMrrDc=",
+    "password": "pbkdf2_sha256$36000$ZXbe3mmED9RM$EjAK75Llo7lU0g5b1glfF/qt8fYkRBiRNV0fmREiGrA=",
     "last_login": "2018-01-31T19:29:34.070Z",
     "is_superuser": true,
-    "username": "admin",
+    "username": "everardo@prescrypto.com",
     "first_name": "",
     "last_name": "",
     "email": "everardo@prescrypto.com",
