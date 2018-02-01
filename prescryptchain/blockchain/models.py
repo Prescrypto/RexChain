@@ -139,7 +139,7 @@ class PrescriptionManager(models.Manager):
 
         '''
         # Begin pseudocode
-        raw_pub_key = data.get("pub_key")
+        raw_pub_key = data.get("public_key")
         pub_key = un_savify_key(raw_pub_key)
         rx.public_key = savify_key(pub_key)
         ## End Pseudocode
