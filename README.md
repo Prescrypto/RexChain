@@ -31,7 +31,6 @@ $ python manage.py runserver [::]:8000
 ```
 
 
-
 ### HTTP API
 ##### Get blockchain
 ```
