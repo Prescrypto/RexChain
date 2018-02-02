@@ -1,7 +1,8 @@
-# rxchain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain, but little original code remains.
+
+# rxchain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain and ported into Python, but no original code remains.
 
 ### Motivation
-All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding and implementing blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible.
+All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This leaves little room to implement different solutions. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible, completely designed around electronic medical prescriptions.
 
 
 ### What is blockchain
@@ -9,7 +10,7 @@ All the current implementations of blockchains are tightly coupled with the larg
 
 
 ### Key concepts of rxchain
- Prescrypt chain is focused on the specifics of cryptography (which can be linked to electronic identities) and immutability, achieved by Blocks that couple prescription's merkle trees and can verify integrity easily.
+ *rxchain* is focused on the specifics of cryptography (which can be linked to electronic identities) and immutability, achieved by Blocks that couple prescription's merkle trees and can verify integrity easily.
 * HTTP interface to control the node
 * At the moment it is a centralised chain of blocks, the block's merkle root can be anchored with Proof of Existence to any particular distributed Blockchain (in a similar way to Factom's white paper) (https://github.com/FactomProject/FactomDocs/blob/master/whitepaper.md)
 * At the moment data is persisted in an SQL implementation
@@ -39,4 +40,5 @@ curl http://localhost:8080/api/v1/block
 ##### Create block
 ```
 curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:8080/mineBlock
-``
+
+```

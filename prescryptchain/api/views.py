@@ -41,6 +41,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         model = Prescription
         fields = (
             'id',
+            'public_key',
             'medic_name',
             'medic_cedula',
             'medic_hospital',
@@ -63,6 +64,9 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
 class PrescriptionViewSet(viewsets.ModelViewSet):
     """ Prescription Viewset """
+    # Temporally without auth
+    # authentication_classes = (TokenAuthentication, BasicAuthentication, )
+    # permission_classes = (IsAuthenticated, )
     serializer_class = PrescriptionSerializer
 
     def get_queryset(self):
