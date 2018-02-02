@@ -22,6 +22,7 @@ from .utils import (
     encrypt_with_public_key, decrypt_with_private_key,
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
 )
+from .helpers import genesis_hash_generator
 from api.exceptions import EmptyMedication
 
 # Setting block size
@@ -42,7 +43,7 @@ class BlockManager(models.Manager):
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
-        genesis_block = Block.objects.create(hash_block="816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        genesis_block = Block.objects.create(hash_block=genesis_hash_generator());
         genesis_block.hash_before = "0"
         genesis_block.save()
         return genesis_block
@@ -131,12 +132,10 @@ class PrescriptionManager(models.Manager):
         rx = Prescription()
         '''
         # Here we need to scape the random genereted key for the payload public key
-
         (pub_key, priv_key) = get_new_asym_keys() # <- Random keys
 
         rx.public_key = savify_key(pub_key)
         rx.private_key = savify_key(priv_key)
-
         '''
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
@@ -271,7 +270,7 @@ class Prescription(models.Model):
 class MedicationManager(models.Manager):
     ''' Manager to create Medication from API '''
     def create_medication(self, prescription, **kwargs):
-        med = self.create(prescription = prescription, **kwargs)
+        med = self.create(prescription=prescription, **kwargs)
         med.save()
         return med
 
