@@ -1,4 +1,4 @@
-# rxchain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from PrescryptChain, but little original code remains.
+# rxchain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain, but little original code remains.
 
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding and implementing blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible.
@@ -6,6 +6,7 @@ All the current implementations of blockchains are tightly coupled with the larg
 
 ### What is blockchain
 [From Wikipedia](https://en.wikipedia.org/wiki/Blockchain_(database)) : Blockchain is a new database technology that maintains a continuously-growing list of records called blocks secured from tampering and revision. I encourage the reader to thoroughly understand the different key aspects of Blockchain technology form this article: https://medium.com/@sbmeunier/blockchain-technology-a-very-special-kind-of-distributed-database-e63d00781118
+
 
 ### Key concepts of rxchain
  Prescrypt chain is focused on the specifics of cryptography (which can be linked to electronic identities) and immutability, achieved by Blocks that couple prescription's merkle trees and can verify integrity easily.
@@ -38,5 +39,5 @@ curl http://localhost:8080/api/v1/block
 ```
 ##### Create block
 ```
-
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:8080/mineBlock
 ``

@@ -28,9 +28,9 @@ ALLOWED_HOSTS = ['*'] # temporary
 
 BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 
+
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
-
 
 # Application definition
 
