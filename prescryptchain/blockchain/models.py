@@ -156,6 +156,7 @@ class PrescriptionManager(models.Manager):
         # Save signature
         # Should verify stuff here
         print "try this"
+        print data
         print data.get("signature")
 
         rx.signature = data.get("signature")
