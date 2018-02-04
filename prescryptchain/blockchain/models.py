@@ -142,6 +142,9 @@ class PrescriptionManager(models.Manager):
         rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
         rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
 
+        # This is basically the address
+        rx.public_key = raw_pub_key
+
         if "location" in data:
             rx.location = data["location"]
 
