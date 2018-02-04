@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+i# -*- encoding: utf-8 -*-
 """
 Django settings for prescryptchain project.
 
@@ -28,6 +28,8 @@ ALLOWED_HOSTS = ['*'] # temporary
 
 BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 
+# Proof of existence specific (interface with ETH ledger)
+BLOCKCYPHER_API_TOKEN = os.environ['BLOCKCYPHER_API_TOKEN']
 
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
