@@ -75,7 +75,7 @@ def get_merkle_root(prescriptions):
     mt = merkletools.MerkleTools() # Default is SHA256
     # Build merkle tree with Rxs
     for rx in prescriptions:
-        mt.add_leaf(rx.signature)
+        mt.add_leaf(rx.rxid)
     mt.make_tree();
     # Just to check
     print mt.get_leaf_count();
@@ -90,13 +90,13 @@ def is_rx_in_block(target_rx, block):
     n = 0
     for index, hash in enumerate(rx_hashes):
         mtn.add_leaf(hash)
-        if target_rx.signature == hash:
+        if target_rx.rxid == hash:
             n = index
     # Make the tree and get the proof
     mtn.make_tree()
     proof = mtn.get_proof(n)
     print proof
-    return mtn.validate_proof(proof, target_rx.signature, block.merkleroot)
+    return mtn.validate_proof(proof, target_rx.rxid, block.merkleroot)
 
 
 def get_qr_code(data, file_path="/tmp/qrcode.jpg"):

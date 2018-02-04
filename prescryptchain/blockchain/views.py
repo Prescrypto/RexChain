@@ -30,7 +30,7 @@ class AddPrescriptionView(View):
             rx = form.save(commit = False)
             rx.save()
             hash_object = hashlib.sha256(str(rx.timestamp))
-            rx.signature = hash_object.hexdigest()
+            rx.rxid = hash_object.hexdigest()
             rx.save()
 
         return redirect('/')
