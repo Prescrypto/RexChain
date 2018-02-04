@@ -159,7 +159,7 @@ class PrescriptionManager(models.Manager):
         print data
         print data.get("signature")
 
-        rx.signature = data.get("signature")
+        rx.signature = "fake"
 
 
         # Save previous hash

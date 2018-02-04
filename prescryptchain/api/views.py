@@ -54,6 +54,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'signature',
             'previous_hash',
             'raw_size',
+            'rxid',
         )
         read_only_fields = ('id', 'signature','previous_hash',)
 
