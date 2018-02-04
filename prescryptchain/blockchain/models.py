@@ -87,8 +87,8 @@ class Block(models.Model):
             prescriptions = Prescription.objects.all().order_by('-id')[:BLOCK_SIZE]
             self.data["hashes"] = []
             for rx in prescriptions:
-                sum_hashes += rx.signature
-                self.data["hashes"].append(rx.signature)
+                sum_hashes += rx.rxid
+                self.data["hashes"].append(rx.rxid)
 
             merkleroot = get_merkle_root(prescriptions)
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
@@ -150,12 +150,18 @@ class PrescriptionManager(models.Manager):
 
         rx.timestamp = data["timestamp"]
         rx.create_raw_msg()
-        rx.sign()
+        
+
+        rx.hash()
+        # Save signature
+        # Should verify stuff here
+        rx.signature = data.get("signature")
+
         # Save previous hash
         if self.last() is None:
             rx.previous_hash = "0"
         else:
-            rx.previous_hash = self.last().signature
+            rx.previous_hash = self.last().rxid
 
         rx.save()
 
@@ -192,14 +198,15 @@ class Prescription(models.Model):
     bought = models.BooleanField(default=False)
     # Main
     signature = models.CharField(max_length=255, blank=True, default="")
+    rxid = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, default="")
 
     objects = PrescriptionManager()
 
-    # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
-    def sign(self):
+    # Hashes msg_html with utf-8 encoding, saves this in and hash in signature
+    def hash(self):
         hash_object = hashlib.sha256(self.raw_msg)
-        self.signature = hash_object.hexdigest()
+        self.rxid = hash_object.hexdigest()
 
     @cached_property
     def get_data_base64(self):
@@ -244,7 +251,7 @@ class Prescription(models.Model):
         # get the size of the raw rx
         size = (
             len(self.raw_msg) + len(self.diagnosis) +
-            len(self.location) + len(self.signature) +
+            len(self.location) + len(self.rxid) +
             len(self.medic_name) + len(self.medic_cedula) +
             len(self.medic_hospital) + len(self.patient_name) +
             len(self.patient_age) + len(str(self.get_formatted_date()))
@@ -261,7 +268,7 @@ class Prescription(models.Model):
 
 
     def __str__(self):
-        return self.signature
+        return self.rxid
 
 
 class MedicationManager(models.Manager):
