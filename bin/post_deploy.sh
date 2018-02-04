@@ -10,3 +10,5 @@ if [ $AUTO_MIGRATE == True ]; then
 else
   echo "=> Not apply automatically Migrations!"
 fi
+
+echo "=> Start Genesis script..."
