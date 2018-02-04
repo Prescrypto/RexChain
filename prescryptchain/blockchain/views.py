@@ -44,7 +44,7 @@ def rx_detail(request, hash_rx=False):
     if hash_rx:
         context = {}
         try:
-            rx = Prescription.objects.get(signature=hash_rx)
+            rx = Prescription.objects.get(rxid=hash_rx)
             medications = get_simplified_medication_json(rx.medications.all())
             context["rx"] = rx
             context["medications"] = medications
@@ -60,7 +60,7 @@ def rx_detail(request, hash_rx=False):
 def rx_priv_key(request, hash_rx=False):
     # Temporary way to show key just for test, remove later
     try:
-        rx = Prescription.objects.get(signature=hash_rx)
+        rx = Prescription.objects.get(rxid=hash_rx)
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
     except Exception as e:
         return HttpResponse("Not Found", content_type="text/plain")
@@ -69,7 +69,7 @@ def rx_priv_key(request, hash_rx=False):
 def qr_code(request, hash_rx=False):
     # Temporary way to show qrcode just for test, remove later
     try:
-        rx = Prescription.objects.get(signature=hash_rx)
+        rx = Prescription.objects.get(rxid=hash_rx)
         img = get_qr_code(rx.get_priv_key)
         return HttpResponse(img, content_type="image/jpeg"
 )
