@@ -81,7 +81,7 @@ def verify_signature(message, signature, PublicKey):
         return rsa.verify(message, signature, PublicKey)
     except Exception as e:
         print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
-        raise False
+        return False
 
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
