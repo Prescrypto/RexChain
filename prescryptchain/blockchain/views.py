@@ -63,7 +63,7 @@ class ValidateRxView(View):
                     # Not found
                     pass
             except Exception as e:
-                pass
+                return redirect("/")
             return render(request, template, context)
         # Should add a message
         return redirect("/")
