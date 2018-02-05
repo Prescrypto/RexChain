@@ -121,7 +121,7 @@ class PoE(object):
     ''' Object tools for encrypt and decrypt info '''
     def journal(self, merkle_root):
         try:
-            data = embed_data(to_embed=merkle_root, api_key=BLOCKCYPHER_API_TOKEN, coin_symbol=CHAIN)
+            data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
             return data 
         except Exception as e:
             print("Error :%s, type(%s)" % (e, type(e)))
