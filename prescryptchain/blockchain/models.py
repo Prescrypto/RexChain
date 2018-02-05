@@ -34,6 +34,7 @@ BLOCK_SIZE = settings.BLOCK_SIZE
 
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
+
     def create_block(self):
         # Do initial block or create next block
         last_block = Block.objects.last()
@@ -137,18 +138,10 @@ class PrescriptionManager(models.Manager):
         raw_pub_key = data.get("public_key")
         pub_key = un_savify_key(raw_pub_key) # Make it usable
 
-        # Sort and extract signature
+        # Extract signature
         _signature = data.pop("signature", None)
 
-        print("[API Create Raw Rx INFO ] Data: {}".format(sorted(data)))
-
-        if _signature is None:
-            raise FailedVerifiedSignature
-
-        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
-            print("[SUCCESS verify signature]")
-        else:
-            raise FailedVerifiedSignature
+        # print("[API Create Raw Rx INFO ] Data: {}".format(sorted(data)))
 
         rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
         rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
@@ -166,11 +159,14 @@ class PrescriptionManager(models.Manager):
         rx.timestamp = data["timestamp"]
         rx.create_raw_msg()
 
-
         rx.hash()
         # Save signature
         rx.signature = _signature
 
+        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+            rx.is_valid = True
+        else:
+            rx.is_valid = False
 
         # Save previous hash
         if self.last() is None:
