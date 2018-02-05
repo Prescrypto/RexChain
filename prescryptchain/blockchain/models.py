@@ -6,6 +6,7 @@ import base64
 import merkletools
 # Date
 from datetime import timedelta, datetime
+from operator import itemgetter
 # Unicode shite
 import unicodedata
 # Django Libs
@@ -23,7 +24,7 @@ from .utils import (
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
 )
 from .helpers import genesis_hash_generator
-from api.exceptions import EmptyMedication
+from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 # Setting block size
 BLOCK_SIZE = settings.BLOCK_SIZE
@@ -132,9 +133,21 @@ class PrescriptionManager(models.Manager):
         rx = Prescription()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        print("[API Create Raw Rx INFO ]Data: {}".format(sorted(data)))
-        # Make it usable
-        pub_key = un_savify_key(raw_pub_key)
+        pub_key = un_savify_key(raw_pub_key) # Make it usable
+
+        # Sort and extract signature
+        data.medications.sort(key=itemgetter('number'))
+        _signature = data.pop("signature", None)
+
+        print("[API Create Raw Rx INFO ] Data: {}".format(sorted(data)))
+
+        if _signature is None:
+            raise FailedVerifiedSignature
+
+        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+            print("[SUCCESS verify signature]")
+        else:
+            raise FailedVerifiedSignature
 
         rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
         rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
@@ -155,10 +168,7 @@ class PrescriptionManager(models.Manager):
 
         rx.hash()
         # Save signature
-        # Should verify stuff here
-        print data.get("signature")
-
-        rx.signature = data.get("signature")
+        rx.signature = _signature
 
 
         # Save previous hash
@@ -201,13 +211,13 @@ class Prescription(models.Model):
     extras = models.TextField(blank=True, max_length=10000, default="")
     bought = models.BooleanField(default=False)
     # Main
-    signature = models.CharField(max_length=255, null=True, blank=True, default="")
+    _signature = models.CharField(max_length=255, null=True, blank=True, default="")
     rxid = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, default="")
 
     objects = PrescriptionManager()
 
-    # Hashes msg_html with utf-8 encoding, saves this in and hash in signature
+    # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
     def hash(self):
         hash_object = hashlib.sha256(self.raw_msg)
         self.rxid = hash_object.hexdigest()
