@@ -40,10 +40,10 @@ class BlockManager(models.Manager):
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
-            return self.generate_next_block(hash_before=genesis.hash_block)
+            return self.generate_next_block(genesis.hash_block, rx_queryset)
 
         else:
-            return self.generate_next_block(hash_before=last_block.hash_block)
+            return self.generate_next_block(last_block.hash_block, rx_queryset)
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
@@ -137,7 +137,7 @@ class PrescriptionManager(models.Manager):
 
     def handle_creation_block(self):
         ''' Handle if exist enought validated rx to create block after rx creation '''
-        if self.valid_rxs().count() % BLOCK_SIZE:
+        if self.valid_rxs().count() % BLOCK_SIZE == 0:
             Block.objects.create_block(self.valid_rxs())
 
     def create_rx(self, data, **kwargs):
