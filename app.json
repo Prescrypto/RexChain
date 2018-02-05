@@ -35,7 +35,9 @@
     "BLOCKCYPHER_API_TOKEN": {
       "required": true
     },
-
+    "CHAIN": {
+      "required": true
+    },
     "LOAD_FIXTURES": "True"
   },
   "formation": {
