@@ -69,6 +69,19 @@ def hex2bin(hexStr):
     return binascii.unhexlify(hexStr)
 
 
+''' Sign and verify functions '''
+def sign(message, PrivateKey):
+        signature = rsa.sign(message, PrivateKey, 'SHA-1')
+        return base64.b64encode(signature)
+
+def verify_signature(message, signature, PublicKey):
+    signature = base64.b64decode(signature)
+    try:
+        return rsa.verify(message, signature, PublicKey)
+    except Exception as e:
+        self.logger.error("[CryptoTool, verify ERROR ] Signature or message are corrupted")
+        return False
+
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
     # Generate merkle tree
