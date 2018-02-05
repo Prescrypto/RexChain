@@ -24,3 +24,8 @@ django-jet==1.0.6
 #QRCode
 Pillow==4.2.1
 qrcode==5.3
+
+# Proof of Existence (ETH)
+bitcoin==1.1.39
+blockcypher==1.0.73
+python-dateutil==2.2

@@ -18,6 +18,9 @@ from Crypto.PublicKey import RSA
 from Crypto.Util import asn1
 from base64 import b64decode
 import merkletools
+# PoE
+from blockcypher import embed_data
+from django.conf import settings
 
 # Returns a tuple with Private and Public keys
 def get_new_asym_keys():
@@ -127,3 +130,19 @@ def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
     img.save(file_path)
     with open(file_path, "rb") as f:
         return f.read()
+
+class PoE(object):
+    ''' Object tools for encrypt and decrypt info '''
+    def journal(self, merkle_root):
+        try:
+            data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
+            return data["hash"] 
+        except Exception as e:
+            print("Error :%s, type(%s)" % (e, type(e)))
+            raise e
+
+
+
+
+
+
