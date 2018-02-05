@@ -4,6 +4,7 @@
 import hashlib
 import base64
 import merkletools
+import logging
 # Date
 from datetime import timedelta, datetime
 # Unicode shite
@@ -116,6 +117,8 @@ class Block(models.Model):
 
 class PrescriptionManager(models.Manager):
     ''' Manager for prescriptions '''
+    logger = logging.getLogger('django_info')
+
     def create_rx(self, data, **kwargs):
 
         rx = self.create_raw_rx(data)
@@ -128,10 +131,10 @@ class PrescriptionManager(models.Manager):
 
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
-
         rx = Prescription()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
+        self.logger.info("[API Create Raw Rx INFO ]Data: {}".format(sorted(data)))
         # Make it usable
         pub_key = un_savify_key(raw_pub_key)
 
@@ -150,7 +153,7 @@ class PrescriptionManager(models.Manager):
 
         rx.timestamp = data["timestamp"]
         rx.create_raw_msg()
-        
+
 
         rx.hash()
         # Save signature
