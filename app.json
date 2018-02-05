@@ -38,6 +38,9 @@
     "CHAIN": {
       "required": true
     },
+    "BASE_POE_URL": {
+      "required": true
+    },
     "LOAD_FIXTURES": "True"
   },
   "formation": {

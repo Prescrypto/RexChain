@@ -31,6 +31,7 @@ BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 # Proof of existence specific (interface with external ledger)
 BLOCKCYPHER_API_TOKEN = os.environ['BLOCKCYPHER_API_TOKEN']
 CHAIN = os.environ['CHAIN']
+BASE_POE_URL = os.environ['BASE_POE_URL']
 
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
