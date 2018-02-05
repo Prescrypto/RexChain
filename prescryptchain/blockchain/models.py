@@ -4,8 +4,10 @@
 import hashlib
 import base64
 import merkletools
+import json
 # Date
 from datetime import timedelta, datetime
+from operator import itemgetter
 # Unicode shite
 import unicodedata
 # Django Libs
@@ -20,12 +22,11 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
+    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
+    verify_signature, PoE
 )
-from .helpers import genesis_hash_generator
-from blockchain.utils import PoE
-# Exceptions
-from api.exceptions import EmptyMedication
+from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
+from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 # Setting block size
 BLOCK_SIZE = settings.BLOCK_SIZE
@@ -33,29 +34,33 @@ BLOCK_SIZE = settings.BLOCK_SIZE
 
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
-    def create_block(self):
+
+    def create_block(self, rx_queryset):
         # Do initial block or create next block
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
-            return self.generate_next_block(hash_before=genesis.hash_block)
+            return self.generate_next_block(genesis.hash_block, rx_queryset)
 
         else:
-            return self.generate_next_block(hash_before=last_block.hash_block)
+            return self.generate_next_block(last_block.hash_block, rx_queryset)
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
-        genesis_block = Block.objects.create(hash_block=genesis_hash_generator());
+        genesis_block = Block.objects.create(
+            hash_block=genesis_hash_generator(),
+            data=GENESIS_INIT_DATA,
+            merkleroot=get_genesis_merkle_root())
         genesis_block.hash_before = "0"
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, hash_before):
+    def generate_next_block(self, hash_before, rx_queryset):
         # Generete a new block
 
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
-        data_block = new_block.get_block_data()
+        data_block = new_block.get_block_data(rx_queryset)
         new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
@@ -88,18 +93,17 @@ class Block(models.Model):
         size = (len(self.get_before_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
 
-    def get_block_data(self):
+    def get_block_data(self, rx_queryset):
         # Get the sum of hashes of last prescriptions in block size
         sum_hashes = ""
         try:
-            prescriptions = Prescription.objects.all().order_by('-id')[:BLOCK_SIZE]
             self.data["hashes"] = []
-            for rx in prescriptions:
-                sum_hashes += rx.signature
-                self.data["hashes"].append(rx.signature)
-
-            merkleroot = get_merkle_root(prescriptions)
-
+            for rx in rx_queryset:
+                sum_hashes += rx.rxid
+                self.data["hashes"].append(rx.rxid)
+                rx.block = self
+                rx.save()
+            merkleroot = get_merkle_root(rx_queryset)
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
@@ -123,8 +127,27 @@ class Block(models.Model):
         return self.hash_block
 
 
+class PrescriptionQueryset(models.QuerySet):
+    ''' Add custom querysets'''
+
+    def non_validated_rxs(self):
+        return self.filter(is_valid=True).filter(block=None)
+
+
 class PrescriptionManager(models.Manager):
     ''' Manager for prescriptions '''
+
+    def get_queryset(self):
+        return PrescriptionQueryset(self.model, using=self._db)
+
+    def non_validated_rxs(self):
+        return self.get_queryset().non_validated_rxs()
+
+    def create_block_attempt(self):
+        ''' Handle if exist enought validated rx to create block after rx creation '''
+        if self.non_validated_rxs().count() % BLOCK_SIZE == 0:
+            Block.objects.create_block(self.non_validated_rxs())
+
     def create_rx(self, data, **kwargs):
 
         rx = self.create_raw_rx(data)
@@ -137,12 +160,15 @@ class PrescriptionManager(models.Manager):
 
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
-
         rx = Prescription()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        # Make it usable
-        pub_key = un_savify_key(raw_pub_key)
+        pub_key = un_savify_key(raw_pub_key) # Make it usable
+
+        # Extract signature
+        _signature = data.pop("signature", None)
+
+        # print("[API Create Raw Rx INFO ] Data: {}".format(sorted(data)))
 
         rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
         rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
@@ -151,23 +177,33 @@ class PrescriptionManager(models.Manager):
         rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
         rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
 
+        # This is basically the address
+        rx.public_key = raw_pub_key
+
         if "location" in data:
             rx.location = data["location"]
 
         rx.timestamp = data["timestamp"]
         rx.create_raw_msg()
-        rx.sign()
+
+        rx.hash()
+        # Save signature
+        rx.signature = _signature
+
+        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+            rx.is_valid = True
+        else:
+            rx.is_valid = False
+
         # Save previous hash
         if self.last() is None:
             rx.previous_hash = "0"
         else:
-            rx.previous_hash = self.last().signature
+            rx.previous_hash = self.last().rxid
 
         rx.save()
 
-        if rx.id % BLOCK_SIZE == 0:
-            # Here is where create the block
-            Block.objects.create_block()
+        self.create_block_attempt()
 
         return rx
 
@@ -197,15 +233,18 @@ class Prescription(models.Model):
     extras = models.TextField(blank=True, max_length=10000, default="")
     bought = models.BooleanField(default=False)
     # Main
-    signature = models.CharField(max_length=255, blank=True, default="")
+    block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
+    signature = models.CharField(max_length=255, null=True, blank=True, default="")
+    is_valid = models.BooleanField(default=True, blank=True)
+    rxid = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, default="")
 
     objects = PrescriptionManager()
 
-    # Hashes msg_html with utf-8 encoding, saves this in raw_html_msg and hash in signature
-    def sign(self):
+    # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
+    def hash(self):
         hash_object = hashlib.sha256(self.raw_msg)
-        self.signature = hash_object.hexdigest()
+        self.rxid = hash_object.hexdigest()
 
     @cached_property
     def get_data_base64(self):
@@ -250,7 +289,7 @@ class Prescription(models.Model):
         # get the size of the raw rx
         size = (
             len(self.raw_msg) + len(self.diagnosis) +
-            len(self.location) + len(self.signature) +
+            len(self.location) + len(self.rxid) +
             len(self.medic_name) + len(self.medic_cedula) +
             len(self.medic_hospital) + len(self.patient_name) +
             len(self.patient_age) + len(str(self.get_formatted_date()))
@@ -267,7 +306,7 @@ class Prescription(models.Model):
 
 
     def __str__(self):
-        return self.signature
+        return self.rxid
 
 
 class MedicationManager(models.Manager):

@@ -8,6 +8,7 @@ import rsa
 import cPickle
 import binascii
 import qrcode
+import base64
 # Unicode shite
 import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
@@ -72,13 +73,26 @@ def hex2bin(hexStr):
     return binascii.unhexlify(hexStr)
 
 
+''' Sign and verify functions '''
+def sign(message, PrivateKey):
+    signature = rsa.sign(message, PrivateKey, 'SHA-1')
+    return base64.b64encode(signature)
+
+def verify_signature(message, signature, PublicKey):
+    signature = base64.b64decode(signature)
+    try:
+        return rsa.verify(message, signature, PublicKey)
+    except Exception as e:
+        print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
+        return False
+
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
     # Generate merkle tree
     mt = merkletools.MerkleTools() # Default is SHA256
     # Build merkle tree with Rxs
     for rx in prescriptions:
-        mt.add_leaf(rx.signature)
+        mt.add_leaf(rx.rxid)
     mt.make_tree();
     # Just to check
     print mt.get_leaf_count();
@@ -93,13 +107,13 @@ def is_rx_in_block(target_rx, block):
     n = 0
     for index, hash in enumerate(rx_hashes):
         mtn.add_leaf(hash)
-        if target_rx.signature == hash:
+        if target_rx.rxid == hash:
             n = index
     # Make the tree and get the proof
     mtn.make_tree()
     proof = mtn.get_proof(n)
     print proof
-    return mtn.validate_proof(proof, target_rx.signature, block.merkleroot)
+    return mtn.validate_proof(proof, target_rx.rxid, block.merkleroot)
 
 
 def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
