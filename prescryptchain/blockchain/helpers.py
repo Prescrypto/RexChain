@@ -20,7 +20,7 @@ def get_genesis_merkle_root():
 
     for single_hash in GENESIS_INIT_DATA["hashes"]:
         _mt.add_leaf(single_hash)
-    mt.make_tree();
+    _mt.make_tree();
     # get merkle_root and return
-    return mt.get_merkle_root();
+    return _mt.get_merkle_root();
 
