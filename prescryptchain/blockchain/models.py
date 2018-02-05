@@ -23,6 +23,8 @@ from .utils import (
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
 )
 from .helpers import genesis_hash_generator
+from blockchain.utils import PoE
+# Exceptions
 from api.exceptions import EmptyMedication
 
 # Setting block size
@@ -57,6 +59,12 @@ class BlockManager(models.Manager):
         new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
+        # Proof of Existennce layer
+        _poe = PoE() # init
+        txid = _poe.journal(new_block.merkleroot)
+
+        # new_block.txid = txid # When the time comes
+
         new_block.save()
 
         return new_block
@@ -71,6 +79,7 @@ class Block(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     data = JSONField(default={}, blank=True)
     merkleroot = models.CharField(max_length=255, default="")
+    poetxid = models.CharField(max_length=255, default="", blank=True)
 
     objects = BlockManager()
 
@@ -91,6 +100,7 @@ class Block(models.Model):
                 self.data["hashes"].append(rx.signature)
 
             merkleroot = get_merkle_root(prescriptions)
+
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
