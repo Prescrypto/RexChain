@@ -56,7 +56,8 @@ class ValidateRxView(View):
             try:
                 # Find block – This WILL BE UPDATED TO RXID
                 for block in blocks:
-                    target_block = block if is_rx_in_block(rx, block) else False
+                    target_block = block
+                    break if is_rx_in_block(rx, block) else continue
                 if target_block:
                     context["poe"] = _poe.attest(target_block.poetxid)
                 else:
