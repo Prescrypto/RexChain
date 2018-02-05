@@ -39,6 +39,7 @@ class AddPrescriptionView(View):
 
 class ValidateRxView(View):
     template = "blockchain/validate.html"
+
     def get(self, request, *args, **kwargs):
         pass
 
@@ -61,7 +62,8 @@ class ValidateRxView(View):
                 else:
                     # Not found
                     pass
-
+            except Exception as e:
+                pass
             return render(request, template, context)
         # Should add a message
         return redirect("/")
