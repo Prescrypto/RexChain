@@ -54,15 +54,7 @@ class ValidateRxView(View):
             rx = Prescription.objects.get(signature=hash_rx) # This WILL BE UPDATED TO RXID
             _poe = Poe()
             try:
-                # Find block – This WILL BE UPDATED TO RXID
-                for block in blocks:
-                    target_block = block
-                    break if is_rx_in_block(rx, block) else continue
-                if target_block:
-                    context["poe"] = _poe.attest(target_block.poetxid)
-                else:
-                    # Not found
-                    pass
+                context["poe"] = _poe.attest(rx.block.poetxid)
             except Exception as e:
                 return redirect("/")
             return render(request, template, context)
