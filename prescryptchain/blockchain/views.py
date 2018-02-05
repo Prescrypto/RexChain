@@ -37,6 +37,10 @@ class AddPrescriptionView(View):
         return redirect('/')
 
 
+def poe(request):
+    if request.GET:
+        return render(request, "blockchain/poe.html")
+
 def rx_detail(request, hash_rx=False):
     ''' Get a hash and return the rx '''
     if request.GET.get("hash_rx", False):

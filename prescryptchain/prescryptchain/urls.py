@@ -20,7 +20,7 @@ from rest_framework.documentation import include_docs_urls
 from .views import home
 from blockchain.views import (
     AddPrescriptionView, rx_detail, block_detail,
-    rx_priv_key, qr_code
+    rx_priv_key, qr_code, poe
 )
 
 urlpatterns = [
@@ -34,6 +34,8 @@ urlpatterns = [
     url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail"),
     url(r'^block/$', block_detail, name="block_search"),
     url(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
+    # Static content
+    url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
 ]
 
 # Show images stored local in dev
