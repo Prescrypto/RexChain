@@ -60,11 +60,10 @@ class BlockManager(models.Manager):
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
         # Proof of Existennce layer
-        _poe = PoE() # init
+        _poe = PoE() # init proof of existence element
         txid = _poe.journal(new_block.merkleroot)
-
-        # new_block.txid = txid # When the time comes
-
+        new_block.poetxid = txid
+        # Save
         new_block.save()
 
         return new_block

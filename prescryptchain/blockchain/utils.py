@@ -122,7 +122,7 @@ class PoE(object):
     def journal(self, merkle_root):
         try:
             data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
-            return data 
+            return data["hash"] 
         except Exception as e:
             print("Error :%s, type(%s)" % (e, type(e)))
             return e
