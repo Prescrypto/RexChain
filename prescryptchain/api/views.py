@@ -55,8 +55,9 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'previous_hash',
             'raw_size',
             'rxid',
+            'is_valid',
         )
-        read_only_fields = ('id', 'rxid', 'previous_hash',)
+        read_only_fields = ('id', 'rxid', 'previous_hash', 'is_valid')
 
     def create(self, validated_data):
         rx = Prescription.objects.create_rx(data=validated_data)
