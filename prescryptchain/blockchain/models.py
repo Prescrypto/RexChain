@@ -136,7 +136,7 @@ class PrescriptionManager(models.Manager):
         pub_key = un_savify_key(raw_pub_key) # Make it usable
 
         # Sort and extract signature
-        data.medications.sort(key=itemgetter('number'))
+        data["medications"].sort(key=itemgetter('number'))
         _signature = data.pop("signature", None)
 
         print("[API Create Raw Rx INFO ] Data: {}".format(sorted(data)))
