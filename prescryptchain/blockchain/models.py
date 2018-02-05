@@ -35,7 +35,7 @@ BLOCK_SIZE = settings.BLOCK_SIZE
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
 
-    def create_block(self):
+    def create_block(self, rx_queryset):
         # Do initial block or create next block
         last_block = Block.objects.last()
         if last_block is None:
@@ -52,12 +52,12 @@ class BlockManager(models.Manager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, hash_before):
+    def generate_next_block(self, hash_before, rx_queryset):
         # Generete a new block
 
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
-        data_block = new_block.get_block_data()
+        data_block = new_block.get_block_data(rx_queryset)
         new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
@@ -84,17 +84,18 @@ class Block(models.Model):
         size = (len(self.get_before_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
 
-    def get_block_data(self):
+    def get_block_data(self, rx_queryset):
         # Get the sum of hashes of last prescriptions in block size
         sum_hashes = ""
         try:
-            prescriptions = Prescription.objects.all().order_by('-id')[:BLOCK_SIZE]
             self.data["hashes"] = []
-            for rx in prescriptions:
+            for rx in rx_queryset:
                 sum_hashes += rx.rxid
                 self.data["hashes"].append(rx.rxid)
+                rx.block = self
+                rx.save()
 
-            merkleroot = get_merkle_root(prescriptions)
+            merkleroot = get_merkle_root(rx_queryset)
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
@@ -118,8 +119,26 @@ class Block(models.Model):
         return self.hash_block
 
 
+class PrescriptionQueryset(models.QuerySet):
+    ''' Add custom querysets'''
+
+    def valid_rxs(self):
+        return self.filter(is_valid=True).filter(block=None)
+
+
 class PrescriptionManager(models.Manager):
     ''' Manager for prescriptions '''
+
+    def get_queryset(self):
+        return PrescriptionQueryset(self.model, using=self._db)
+
+    def valid_rxs(self):
+        return self.get_queryset().valid_rxs()
+
+    def handle_creation_block(self):
+        ''' Handle if exist enought validated rx to create block after rx creation '''
+        if self.valid_rxs().count() % BLOCK_SIZE:
+            Block.objects.create_block(self.valid_rxs())
 
     def create_rx(self, data, **kwargs):
 
@@ -176,9 +195,7 @@ class PrescriptionManager(models.Manager):
 
         rx.save()
 
-        if rx.id % BLOCK_SIZE == 0:
-            # Here is where create the block
-            Block.objects.create_block()
+        self.handle_creation_block()
 
         return rx
 
