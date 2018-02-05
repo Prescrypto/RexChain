@@ -211,7 +211,7 @@ class Prescription(models.Model):
     extras = models.TextField(blank=True, max_length=10000, default="")
     bought = models.BooleanField(default=False)
     # Main
-    _signature = models.CharField(max_length=255, null=True, blank=True, default="")
+    signature = models.CharField(max_length=255, null=True, blank=True, default="")
     rxid = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, default="")
 
