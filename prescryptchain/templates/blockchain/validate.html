@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+  Validate Rx
+{% endblock title %}
+{% block subtitle %}
+  <h2>Validación de Receta contra notario blockchain</h2>
+{% endblock subtitle %}
+{% block content %}
+  {# RX Detail #}
+  <section class="container-fluid bg-midnight">
+    <div class="row padding-2em">
+      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <div class="row">
+          <article class="col-xs-12 col-lg-6">
+            {# Rx info #}
+            <table id="crypto-table" class="table table-striped">
+              <tr>
+                <td colspan="2"><strong>Evidencia:</strong></td>
+                {{ poe }}
+              <!-- </tr>
+                <tr>
+                  <td>Tamaño:</td>
+                  <td>{{ rx.raw_size }} bytes</td>
+                </tr>
+                <tr>
+                  <td>Timestamp:</td>
+                  <td>{{ rx.timestamp }}</td>
+                </tr>
+                <tr>
+                  <td>Medic Name:</td>
+                  <td id="medic_name">{{ rx.get_data_base64.medic_name }}</td>
+                </tr>
+                <tr>
+                  <td>Medic Cedula:</td>
+                  <td id="medic_cedula">{{ rx.get_data_base64.medic_cedula }}</td>
+                </tr>
+                <tr>
+                  <td>Medic Hospital:</td>
+                  <td id="medic_hospital">{{ rx.get_data_base64.medic_hospital }}</td>
+                </tr>
+                <tr>
+                  <td>Patient Name:</td>
+                  <td id="patient_name">{{ rx.get_data_base64.patient_name }}</td>
+                </tr>
+                <tr>
+                  <td>Patient Age:</td>
+                  <td id="patient_age">{{ rx.get_data_base64.patient_age }}</td>
+                </tr>
+                <tr>
+                  <td>Diagnostico:</td>
+                  <td id="diagnosis">{{ rx.get_data_base64.diagnosis}}</td>
+                </tr> -->
+              </table>
+          </article>
+        </div>
+    </div>
+  </section>
+  </section>
+{% endblock content %}
+
+{% block jsblock %}
+
+{% endblock jsblock %}

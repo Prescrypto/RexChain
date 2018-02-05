@@ -11,8 +11,9 @@ from django.views.generic import View, CreateView, ListView
 from django.conf import settings
 from .forms import NewPrescriptionForm
 from .models import Prescription, Block
-from .utils import get_qr_code
-
+from .utils import get_qr_code, is_rx_in_block
+# Blockcypher
+from blockchain.utils import PoE
 
 
 class AddPrescriptionView(View):
@@ -22,7 +23,7 @@ class AddPrescriptionView(View):
     def get(self, request, *args, **kwargs):
         template = 'blockchain/new_rx.html'
         form = NewPrescriptionForm
-        return render(request, template ,{"form": form,})
+        return render(request, template, {"form": form,})
 
     def post(self, request, *args, **kwargs):
         template = 'blockchain/new_rx.html'
@@ -36,6 +37,34 @@ class AddPrescriptionView(View):
 
         return redirect('/')
 
+class ValidateRxView(View):
+    template = "blockchain/validate.html"
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        hash_rx = request.GET.get("hash_rx")
+        # Temporary solution
+        blocks = Block.objects.all()
+
+        if hash_rx:
+            # init
+            context = {}
+            rx = Prescription.objects.get(signature=hash_rx) # This WILL BE UPDATED TO RXID
+            _poe = Poe()
+            try:
+                # Find block – This WILL BE UPDATED TO RXID
+                for block in blocks:
+                    target_block = block if is_rx_in_block(rx, block) else False
+                if target_block:
+                    context["poe"] = _poe.attest(target_block.poetxid)
+                else:
+                    # Not found
+                    pass
+
+            return render(request, template, context)
+        # Should add a message
+        return redirect("/")
 
 def poe(request):
     ''' Proof of existence explanation '''
