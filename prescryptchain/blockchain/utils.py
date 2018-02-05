@@ -8,6 +8,7 @@ import rsa
 import cPickle
 import binascii
 import qrcode
+import base64
 # Unicode shite
 import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
