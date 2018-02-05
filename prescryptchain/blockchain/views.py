@@ -91,7 +91,7 @@ def block_detail(request, block_hash=False):
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
             # Create URL
-            context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/"+block.poetxid+"/"
+            context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+block.poetxid+"/"
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:
