@@ -21,7 +21,8 @@ from django.utils.dateformat import DateFormat
 from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root
+    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
+    verify_signature
 )
 from .helpers import genesis_hash_generator
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
