@@ -58,7 +58,7 @@ class ValidateRxView(View):
             except Exception as e:
                 return redirect("/")
             return render(request, template, context)
-        # Should add a message
+        # Should add a message from messages framework
         return redirect("/")
 
 def poe(request):
