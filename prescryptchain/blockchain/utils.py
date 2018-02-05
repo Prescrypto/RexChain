@@ -125,7 +125,7 @@ class PoE(object):
             return data["hash"] 
         except Exception as e:
             print("Error :%s, type(%s)" % (e, type(e)))
-            return e
+            raise e
 
 
 
