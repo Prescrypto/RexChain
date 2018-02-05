@@ -1,0 +1,10 @@
+# !/usr/bin/env bash
+# This migrates automatically after each build to Heroku
+
+echo "=> Begin post compile script..."
+# First, apply migrations to the schema
+if [ $AUTO_MIGRATE == True ]; then
+  python ./prescryptchain/manage.py migrate
+else
+  echo "=> Do not automatically migrate!"
+fi
