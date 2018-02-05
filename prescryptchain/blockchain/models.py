@@ -212,7 +212,9 @@ class Prescription(models.Model):
     extras = models.TextField(blank=True, max_length=10000, default="")
     bought = models.BooleanField(default=False)
     # Main
+    block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
     signature = models.CharField(max_length=255, null=True, blank=True, default="")
+    is_valid = models.BooleanField(default=True, blank=True)
     rxid = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, default="")
 
