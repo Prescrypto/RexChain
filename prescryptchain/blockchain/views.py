@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView
 # Our Models
+from django.conf import settings
 from .forms import NewPrescriptionForm
 from .models import Prescription, Block
 from .utils import get_qr_code
@@ -89,6 +90,8 @@ def block_detail(request, block_hash=False):
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
+            # Create URL
+            context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/"+block.poetxid+"/"
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:

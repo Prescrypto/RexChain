@@ -28,9 +28,15 @@
           <td><a href="/block/{{ block_object.get_before_hash }}">{{ block_object.get_before_hash }}</a></td>
         </tr>
         <tr>
-          <td>Timestam:</td>
+          <td>Notarized Timestamp:</td>
           <td>{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
         </tr>
+        {% if block_object.poetxid %}
+          <tr>
+            <td>Proof of Existence: <a href="/proof-of-existence/">(What is this?)</a></td>
+            <td><td><a href="{{ poe_url }}">{{ block_object.poetxid }}</a></td></td>
+          </tr>
+        {% endif %}
       </table>
     </article>
     <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
