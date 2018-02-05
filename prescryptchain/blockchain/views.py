@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import hashlib
 # Django packages
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import View, CreateView, ListView
 # Our Models
 from django.conf import settings
@@ -38,8 +38,8 @@ class AddPrescriptionView(View):
 
 
 def poe(request):
-    if request.GET:
-        return render(request, "blockchain/poe.html", context)
+    ''' Proof of existence explanation '''
+    return render(request, "blockchain/poe.html")
 
 def rx_detail(request, hash_rx=False):
     ''' Get a hash and return the rx '''
@@ -111,3 +111,4 @@ def get_simplified_medication_json(medications):
         json['presentation'] = medication.presentation
         medication_json.append(json)
     return medication_json[::-1] # This 'pythonesque' code reverts order of lists
+
