@@ -25,7 +25,7 @@ from .utils import (
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
     verify_signature
 )
-from .helpers import genesis_hash_generator
+from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 # Setting block size
@@ -47,7 +47,10 @@ class BlockManager(models.Manager):
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
-        genesis_block = Block.objects.create(hash_block=genesis_hash_generator());
+        genesis_block = Block.objects.create(
+            hash_block=genesis_hash_generator(),
+            data=GENESIS_INIT_DATA,
+            merkleroot=get_genesis_merkle_root())
         genesis_block.hash_before = "0"
         genesis_block.save()
         return genesis_block
