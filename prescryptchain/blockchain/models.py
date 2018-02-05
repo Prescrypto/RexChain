@@ -125,7 +125,7 @@ class Block(models.Model):
 class PrescriptionQueryset(models.QuerySet):
     ''' Add custom querysets'''
 
-    def valid_rxs(self):
+    def non_validated_rxs(self):
         return self.filter(is_valid=True).filter(block=None)
 
 
@@ -135,13 +135,13 @@ class PrescriptionManager(models.Manager):
     def get_queryset(self):
         return PrescriptionQueryset(self.model, using=self._db)
 
-    def valid_rxs(self):
-        return self.get_queryset().valid_rxs()
+    def non_validated_rxs(self):
+        return self.get_queryset().non_validated_rxs()
 
     def create_block_attempt(self):
         ''' Handle if exist enought validated rx to create block after rx creation '''
-        if self.valid_rxs().count() % BLOCK_SIZE == 0:
-            Block.objects.create_block(self.valid_rxs())
+        if self.non_validated_rxs().count() % BLOCK_SIZE == 0:
+            Block.objects.create_block(self.non_validated_rxs())
 
     def create_rx(self, data, **kwargs):
 
