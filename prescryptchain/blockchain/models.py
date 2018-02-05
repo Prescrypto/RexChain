@@ -138,7 +138,7 @@ class PrescriptionManager(models.Manager):
     def valid_rxs(self):
         return self.get_queryset().valid_rxs()
 
-    def handle_creation_block(self):
+    def create_block_attempt(self):
         ''' Handle if exist enought validated rx to create block after rx creation '''
         if self.valid_rxs().count() % BLOCK_SIZE == 0:
             Block.objects.create_block(self.valid_rxs())
@@ -198,7 +198,7 @@ class PrescriptionManager(models.Manager):
 
         rx.save()
 
-        self.handle_creation_block()
+        self.create_block_attempt()
 
         return rx
 
