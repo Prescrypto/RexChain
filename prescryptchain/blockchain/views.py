@@ -51,7 +51,7 @@ class ValidateRxView(View):
         if hash_rx:
             # init
             context = {}
-            rx = Prescription.objects.get(signature=hash_rx) # This WILL BE UPDATED TO RXID
+            rx = Prescription.objects.get(rxid=hash_rx) # This WILL BE UPDATED TO RXID
             _poe = Poe()
             try:
                 context["poe"] = _poe.attest(rx.block.poetxid)
