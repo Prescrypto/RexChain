@@ -49,7 +49,7 @@ class ValidateRxView(View):
             # init
             context = {}
             
-            _poe = Poe()
+            _poe = PoE()
             try:
                 context["poe"] = _poe.attest(rx.block.poetxid)
             except Exception as e:
