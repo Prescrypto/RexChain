@@ -50,10 +50,11 @@ class ValidateRxView(View):
             context = {}
             _poe = PoE()
             try:
-                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+block.poetxid+"/"
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+rx.block.poetxid+"/"
                 context["poe"] = _poe.attest(rx.block.poetxid)
                 context["merkle_root"] = rx.block.merkle_root
             except Exception as e:
+                print("Error :%s, type(%s)" % (e, type(e)))
                 return redirect("/")
             return render(request, self.template, context)
         # Should add a message
@@ -78,7 +79,7 @@ def rx_detail(request, hash_rx=False):
             return render(request, "blockchain/rx_detail.html", context)
 
         except Exception as e:
-            # Add logger here
+            print("Error :%s, type(%s)" % (e, type(e)))
             return redirect("/block/?block_hash=%s" % hash_rx)
 
     return redirect("/")
