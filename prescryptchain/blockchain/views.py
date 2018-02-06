@@ -41,10 +41,9 @@ class ValidateRxView(View):
     template = "blockchain/validate.html"
 
     def get(self, request, *args, **kwargs):
-        hash_rx = request.GET.get("hash_rx")
+        hash_rx = kwargs.get("hash_rx")
         # Temporary solution
-        blocks = Block.objects.all()
-        rx = Prescription.objects.get(rxid=hash_rx) # This WILL BE UPDATED TO RXID
+        rx = Prescription.objects.get(rxid=hash_rx)
 
         if hash_rx:
             # init
