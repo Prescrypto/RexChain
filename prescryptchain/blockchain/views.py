@@ -48,32 +48,14 @@ class ValidateRxView(View):
         if hash_rx:
             # init
             context = {}
-            
             _poe = PoE()
             try:
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+block.poetxid+"/"
                 context["poe"] = _poe.attest(rx.block.poetxid)
+                context["merkle_root"] = rx.block.merkle_root
             except Exception as e:
                 return redirect("/")
             return render(request, self.template, context)
-        # Should add a message
-        return redirect("/")
-
-    def post(self, request, *args, **kwargs):
-        hash_rx = request.GET.get("hash_rx")
-        # Temporary solution
-        blocks = Block.objects.all()
-
-        if hash_rx:
-            # init
-            context = {}
-            rx = Prescription.objects.get(rxid=hash_rx) # This WILL BE UPDATED TO RXID
-            _poe = Poe()
-            try:
-                context["poe"] = _poe.attest(rx.block.poetxid)
-            except Exception as e:
-                print("Error :%s, type(%s)" % (e, type(e)))
-                return redirect("/")
-            return render(request, template, context)
         # Should add a message
         return redirect("/")
 
