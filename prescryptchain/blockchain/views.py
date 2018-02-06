@@ -5,13 +5,15 @@ from __future__ import unicode_literals
 import hashlib
 # Django packages
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import View, CreateView, ListView
 # Our Models
+from django.conf import settings
 from .forms import NewPrescriptionForm
 from .models import Prescription, Block
-from .utils import get_qr_code
-
+from .utils import get_qr_code, is_rx_in_block
+# Blockcypher
+from blockchain.utils import PoE
 
 
 class AddPrescriptionView(View):
@@ -21,7 +23,7 @@ class AddPrescriptionView(View):
     def get(self, request, *args, **kwargs):
         template = 'blockchain/new_rx.html'
         form = NewPrescriptionForm
-        return render(request, template ,{"form": form,})
+        return render(request, template, {"form": form,})
 
     def post(self, request, *args, **kwargs):
         template = 'blockchain/new_rx.html'
@@ -35,6 +37,32 @@ class AddPrescriptionView(View):
 
         return redirect('/')
 
+class ValidateRxView(View):
+    template = "blockchain/validate.html"
+
+    def get(self, request, *args, **kwargs):
+        hash_rx = kwargs.get("hash_rx")
+        # Temporary solution
+        rx = Prescription.objects.get(rxid=hash_rx)
+
+        if hash_rx:
+            # init
+            context = {}
+            _poe = PoE()
+            try:
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+rx.block.poetxid+"/"
+                context["poe"] = _poe.attest(rx.block.poetxid)
+                context["merkle_root"] = rx.block.merkleroot
+            except Exception as e:
+                print("Error :%s, type(%s)" % (e, type(e)))
+                return redirect("/")
+            return render(request, self.template, context)
+        # Should add a message
+        return redirect("/")
+
+def poe(request):
+    ''' Proof of existence explanation '''
+    return render(request, "blockchain/poe.html")
 
 def rx_detail(request, hash_rx=False):
     ''' Get a hash and return the rx '''
@@ -51,7 +79,7 @@ def rx_detail(request, hash_rx=False):
             return render(request, "blockchain/rx_detail.html", context)
 
         except Exception as e:
-            # Add logger here
+            print("Error :%s, type(%s)" % (e, type(e)))
             return redirect("/block/?block_hash=%s" % hash_rx)
 
     return redirect("/")
@@ -89,6 +117,8 @@ def block_detail(request, block_hash=False):
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
+            # Create URL
+            context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+block.poetxid+"/"
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:
@@ -104,3 +134,4 @@ def get_simplified_medication_json(medications):
         json['presentation'] = medication.presentation
         medication_json.append(json)
     return medication_json[::-1] # This 'pythonesque' code reverts order of lists
+
