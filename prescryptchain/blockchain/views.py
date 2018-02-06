@@ -52,7 +52,7 @@ class ValidateRxView(View):
             try:
                 context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+rx.block.poetxid+"/"
                 context["poe"] = _poe.attest(rx.block.poetxid)
-                context["merkle_root"] = rx.block.merkle_root
+                context["merkle_root"] = rx.block.merkleroot
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
                 return redirect("/")
