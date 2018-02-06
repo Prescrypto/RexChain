@@ -19,7 +19,7 @@ from Crypto.Util import asn1
 from base64 import b64decode
 import merkletools
 # PoE
-from blockcypher import embed_data
+from blockcypher import embed_data, get_transaction_details
 from django.conf import settings
 
 # Returns a tuple with Private and Public keys
@@ -137,6 +137,13 @@ class PoE(object):
         try:
             data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
             return data["hash"] 
+        except Exception as e:
+            print("Error :%s, type(%s)" % (e, type(e)))
+            raise e
+    
+    def attest(self, txid):
+        try:
+            return get_transaction_details(txid, coin_symbol=settings.CHAIN)
         except Exception as e:
             print("Error :%s, type(%s)" % (e, type(e)))
             raise e
