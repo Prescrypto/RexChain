@@ -34,14 +34,4 @@ class Migration(migrations.Migration):
             name='timestamp',
             field=models.DateTimeField(db_index=True, default=datetime.datetime(2018, 2, 5, 4, 17, 48, 920753, tzinfo=utc)),
         ),
-        migrations.AddField(
-            model_name='prescription',
-            name='block',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='block', to='blockchain.Block'),
-        ),
-        migrations.AddField(
-            model_name='prescription',
-            name='is_valid',
-            field=models.BooleanField(default=True),
-        ),
     ]
