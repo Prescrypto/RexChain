@@ -54,7 +54,7 @@ class ValidateRxView(View):
                 context["poe"] = _poe.attest(rx.block.poetxid)
             except Exception as e:
                 return redirect("/")
-            return render(request, template, context)
+            return render(request, self.template, context)
         # Should add a message
         return redirect("/")
 
