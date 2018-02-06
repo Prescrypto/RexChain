@@ -17,44 +17,28 @@
             <table id="crypto-table" class="table table-striped">
               <tr>
                 <td colspan="2"><strong>Evidencia:</strong></td>
-                {{ poe }}
               </tr>
                 <tr>
                   <td>Timestamp Notarizada:</td>
-                  <td>{{ poe.received }} bytes</td>
-                </tr>
-                <!-- <tr>
-                  <td>Timestamp:</td>
-                  <td>{{ rx.timestamp }}</td>
+                  <td>{{ poe.received }}</td>
                 </tr>
                 <tr>
-                  <td>Medic Name:</td>
-                  <td id="medic_name">{{ rx.get_data_base64.medic_name }}</td>
+                  <td>TxId en la Blockchain:</td>
+                  <td>{{ poe.hash }}</td>
                 </tr>
                 <tr>
-                  <td>Medic Cedula:</td>
-                  <td id="medic_cedula">{{ rx.get_data_base64.medic_cedula }}</td>
+                  <td>Raíz de Merkle Blockchainizada</td>
+                  <td>{{ poe.outputs[0].data_hex }}</td>
                 </tr>
                 <tr>
-                  <td>Medic Hospital:</td>
-                  <td id="medic_hospital">{{ rx.get_data_base64.medic_hospital }}</td>
+                  <td>Raíz de Merkle de Prescrypto</td>
+                  <td>GERT IT</td>
                 </tr>
-                <tr>
-                  <td>Patient Name:</td>
-                  <td id="patient_name">{{ rx.get_data_base64.patient_name }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Age:</td>
-                  <td id="patient_age">{{ rx.get_data_base64.patient_age }}</td>
-                </tr>
-                <tr>
-                  <td>Diagnostico:</td>
-                  <td id="diagnosis">{{ rx.get_data_base64.diagnosis}}</td>
-                </tr> -->
               </table>
           </article>
         </div>
     </div>
+    {{ poe }}
   </section>
   </section>
 {% endblock content %}
