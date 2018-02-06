@@ -143,7 +143,7 @@ class PoE(object):
     
     def attest(self, txid):
         try:
-            return get_transaction_details(txid, coin_symbol=CHAIN)
+            return get_transaction_details(txid, coin_symbol=settings.CHAIN)
         except Exception as e:
             print("Error :%s, type(%s)" % (e, type(e)))
             raise e
