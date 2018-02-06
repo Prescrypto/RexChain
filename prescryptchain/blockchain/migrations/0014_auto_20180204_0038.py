@@ -19,6 +19,11 @@ class Migration(migrations.Migration):
             name='rxid',
             field=models.CharField(blank=True, default=b'', max_length=255),
         ),
+        migrations.AddField(
+            model_name='block',
+            name='poetxid',
+            field=models.CharField(blank=True, default=b'', max_length=255),
+        ),
         migrations.AlterField(
             model_name='prescription',
             name='private_key',
