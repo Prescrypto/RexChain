@@ -292,6 +292,11 @@ class Prescription(models.Model):
         return DateFormat(localised_date).format(format_time)
 
     @cached_property
+    def get_delta_datetime(self):
+        ''' Fix 6 hours timedelta on rx '''
+        return self.timestamp - timedelta(hours=6)
+
+    @cached_property
     def raw_size(self):
         # get the size of the raw rx
         size = (
