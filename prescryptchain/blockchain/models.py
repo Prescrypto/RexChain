@@ -119,11 +119,6 @@ class Block(models.Model):
         return DateFormat(localised_date).format(format_time)
 
     @cached_property
-    def get_delta_datetime(self):
-        ''' Fix 6 hours timedelta on rx '''
-        return self.timestamp - timedelta(hours=6)
-
-    @cached_property
     def get_before_hash(self):
         ''' Get before hash block '''
         return self.previous_hash
@@ -295,6 +290,11 @@ class Prescription(models.Model):
             localised_date = localised_date - timedelta(hours=6)
 
         return DateFormat(localised_date).format(format_time)
+
+    @cached_property
+    def get_delta_datetime(self):
+        ''' Fix 6 hours timedelta on rx '''
+        return self.timestamp - timedelta(hours=6)
 
     @cached_property
     def raw_size(self):
