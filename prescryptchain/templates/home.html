@@ -53,7 +53,7 @@
                     <td><a class="a_white" href="/hash/{{ rx.rxid }}/"> {{ rx.raw_size }} bytes</a></td>
                     <td class="text-center hidden-xs"><a class="a_white" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
                     <td class="text-center visible-xs-block signature-mobile"><a class="a_white" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
-                    <td class="text-center"><a href="/hash/{{rx.signature}}/"><span class="blue-font">{{ rx.timestamp|timezone:"America/Mexico_City"|timesince }}</span></a></td>
+                    <td class="text-center"><a href="/hash/{{ rx.rxid }}/"><span class="blue-font">{{ rx.get_delta_datetime|timezone:"America/Mexico_City"|timesince }}</span></a></td>
                   </tr>
                 {% endfor %}
 

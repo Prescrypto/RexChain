@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load tz %}
 {% block title %}
   Rx Detail
 {% endblock title %}
@@ -25,7 +26,7 @@
                 </tr>
                 <tr>
                   <td>Timestamp:</td>
-                  <td>{{ rx.timestamp }}</td>
+                  <td>{{ rx.get_delta_datetime|timezone:"America/Mexico_City" }}</td>
                 </tr>
                 <tr>
                   <td>Medic Name:</td>
