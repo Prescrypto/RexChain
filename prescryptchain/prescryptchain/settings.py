@@ -16,15 +16,25 @@ import dj_database_url
 DATABASE_URL = os.environ['DATABASE_URL']
 DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 
+# Check if we are in production
+PRODUCTION = ast.literal_eval(os.environ['PRODUCTION'])
+# Change allowed hosts accordingly
+if PRODUCTION:
+    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+else:
+    ALLOWED_HOSTS = [os.environ['HEROKU_APP_NAME']+".herokuapp.com", "127.0.0.1"]
+
+# SSL
+SESSION_COOKIE_SECURE = ast.literal_eval(os.environ['SECURE_SSL_REDIRECT'])
+CSRF_COOKIE_SECURE = ast.literal_eval(os.environ['SECURE_SSL_REDIRECT'])
+SECURE_SSL_REDIRECT = ast.literal_eval(os.environ['SECURE_SSL_REDIRECT'])
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ast.literal_eval(os.environ['DEBUG_STATE'])
-PRODUCTION = ast.literal_eval(os.environ['PRODUCTION'])
-
-ALLOWED_HOSTS = ['*'] # temporary
 
 BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 
@@ -127,10 +137,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-# Secure Django Settings
-SECURE_SSL_REDIRECT = ast.literal_eval(os.environ['SECURE_SSL_REDIRECT'])
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
