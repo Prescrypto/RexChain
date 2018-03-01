@@ -41,6 +41,9 @@
     "BASE_POE_URL": {
       "required": true
     },
+    "ALLOWED_HOSTS": {
+      "required": true
+    },
     "LOAD_FIXTURES": "True"
   },
   "formation": {
