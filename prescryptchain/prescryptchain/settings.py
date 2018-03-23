@@ -177,3 +177,35 @@ LOGGING = {
         }
     },
 }
+
+
+#Redis Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv('REDIS_URL', 'redis://localhost:6379/0'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                    # config for pool connections
+                    "max_connections": 10
+            }
+        }
+    }
+}
+# Redis Config
+RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
+    },
+    'high': {
+        'USE_REDIS_CACHE': 'default',
+    },
+    'low': {
+        'USE_REDIS_CACHE': 'default',
+    }
+}
+# extra config args for RQ
+RQ = {
+    #RQ_EXCEPTION_HANDLERS = ['']
+}

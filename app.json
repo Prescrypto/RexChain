@@ -54,6 +54,7 @@
   "addons": [
     "papertrail",
     "heroku-postgresql",
+    "heroku-redis"
     {
       "plan": "deployhooks:http",
       "options": {
