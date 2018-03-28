@@ -49,18 +49,16 @@
   "formation": {
     "web": {
       "quantity": 1
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
     }
   },
   "addons": [
     "papertrail",
     "heroku-postgresql",
     "heroku-redis"
-    {
-      "plan": "deployhooks:http",
-      "options": {
-        "url": "https://hooks.zapier.com/hooks/catch/583174/t6paiu/"
-      }
-    }
   ],
   "buildpacks": [
     {
