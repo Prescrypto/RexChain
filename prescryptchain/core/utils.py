@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ''' Utils tools for rxchain '''
-
+import logging
 from hashlib import sha256
 from string import ascii_letters
 from math import ceil, floor
@@ -13,6 +13,7 @@ class Hashcash(object):
 
     def __init__(self, debug=False, expiration_time="01:00:00", *args, **kwargs):
         """ Initialize hashcash object """
+        self.logger = logging.getLogger('django_info')
         self.tries = [0]
         self.date_format = "%m/%d/%Y %H:%M:%S"
         self.now = datetime.now
@@ -57,6 +58,8 @@ class Hashcash(object):
         valid_sha = False
         sha = sha256(challenge + hex(counter)[2:]).hexdigest()
         if sha[:amount_zeros] == zeros:
+            if self.debug:
+                self.logger.info("[SUCCESS] SHA FOUND IT : {}".format(sha))
             valid_sha = True
         hashcash = "{}{}".format(challenge, hex(counter)[2:])
         #return a list with True or False type and string type
@@ -78,7 +81,7 @@ class Hashcash(object):
         hashcash_list = hashcash.split('*')
         #this block verifies if hashcash is correctly made
         if len(hashcash_list) != 6:
-            print('Hashcash malformed')
+            self.logger.error('Hashcash malformed')
             return False
         #Verifies that word_initial matches
         if word_initial is not None and word_initial != self._get_hashcash_word_initial(hashcash):
@@ -97,10 +100,10 @@ class Hashcash(object):
             date = self._format_date(self._get_hashcash_date(hashcash))
             date_expiration = self._add_date(date, self.expiration_time)
             verify = self._compare_dates(today_clear, date_expiration)
-            #print(verify)
-            #print(today)
+
             if verify == today:
                 return False
+
         bits = int(self._get_hashcash_bits(hashcash))
         amount_zeros = int(ceil(bits/4.))
         # Return True or False: True==00134324525 or False==09321456799
