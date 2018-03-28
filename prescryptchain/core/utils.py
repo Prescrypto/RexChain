@@ -45,7 +45,7 @@ class Hashcash(object):
         #return a string type
         return challenge
 
-    def check_sha(self, challenge, counter):
+    def calculate_sha(self, challenge, counter):
         """Calculates Sha256 a challenge
         Parameters:
             challenge: It is a type string, create for function create_challenge.

@@ -10,8 +10,7 @@ def safe_set_cache(key, value):
     try:
         cache.set(key, value)
         cache.persist(key)
-        logger.info('[SUCCESS]Saving redis key:{}, value:{}'.format(key, value))
+        logger.info('[SUCCESS] Saving in redis key:{}, value:{}'.format(key, value))
     except Exception as e:
         logger.error('[ERROR SET variables on Redis]: {}, type:{}'.format(e, type(e)))
         raise e
-
