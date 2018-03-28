@@ -24,6 +24,7 @@ from blockchain.views import (
 )
 
 urlpatterns = [
+    url(r'^django-rq/', include('django_rq.urls')),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', admin.site.urls),
