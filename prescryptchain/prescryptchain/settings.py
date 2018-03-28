@@ -156,31 +156,6 @@ STATICFILES_DIRS = (
 )
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-# Console logging for DEBUG=False - Probably should disable if DEBUG = True
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    "formatters": {
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'loggers': {
-        'django_info': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        }
-    },
-}
-
-
 #Redis Cache
 CACHES = {
     "default": {
