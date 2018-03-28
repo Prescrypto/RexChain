@@ -211,3 +211,41 @@ RQ_QUEUES = {
 RQ = {
     #RQ_EXCEPTION_HANDLERS = ['']
 }
+
+# Console logging for DEBUG=False - Probably should disable if DEBUG = True
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    "formatters": { # add rq_console format
+        "rq_console": {
+            "format": "%(asctime)s %(message)s",
+            "datefmt": "%H:%M:%S",
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        "rq_console": {  # add rq_console hadler
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            "class": "rq.utils.ColorizingStreamHandler",
+            "formatter": "rq_console",
+            "exclude": ["%(asctime)s"],
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'loggers': {
+        'django_info': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        "rq.worker": { # add rq logger
+            "handlers": ["console"],
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
+    },
+}
