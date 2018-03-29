@@ -163,7 +163,7 @@ class PrescriptionManager(models.Manager):
         if is_valid_hashcash:
             block = Block.objects.create_block(self.non_validated_rxs()) # TODO add hashcash to block meta data
             block.hashcash = hashcash_string
-            block.nonce = cache.get(counter)
+            block.nonce = cache.get('counter')
             block.save()
             safe_set_cache('challenge', None)
             safe_set_cache('counter', None)
