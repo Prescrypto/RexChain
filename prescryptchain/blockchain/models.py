@@ -89,6 +89,8 @@ class Block(models.Model):
     data = JSONField(default={}, blank=True)
     merkleroot = models.CharField(max_length=255, default="")
     poetxid = models.CharField(max_length=255, default="", blank=True)
+    nonce = models.CharField(max_length=50, default="", blank=True)
+    hashcash = models.CharField(max_length=255, default="", blank=True)
 
     objects = BlockManager()
 
@@ -156,10 +158,13 @@ class PrescriptionManager(models.Manager):
             safe_set_cache('challenge', challenge)
             safe_set_cache('counter', 0)
 
-        is_valid_hashcash, hashcash = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
+        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
 
         if is_valid_hashcash:
-            Block.objects.create_block(self.non_validated_rxs()) # TODO add hashcash to block meta data
+            block = Block.objects.create_block(self.non_validated_rxs()) # TODO add hashcash to block meta data
+            block.hashcash = hashcash_string
+            block.nonce = cache.get(counter)
+            block.save()
             safe_set_cache('challenge', None)
             safe_set_cache('counter', None)
 
@@ -243,7 +248,7 @@ class Prescription(models.Model):
     diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
-    timestamp = models.DateTimeField(default=timezone.now(), db_index=True)
+    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
