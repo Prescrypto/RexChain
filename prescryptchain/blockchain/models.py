@@ -69,7 +69,7 @@ class BlockManager(models.Manager):
             _poe = PoE() # init proof of existence element
             txid = _poe.journal(new_block.merkleroot)
             new_block.poetxid = txid
-        except Exception as :
+        except Exception as e:
             pass
         # Save
         new_block.save()
