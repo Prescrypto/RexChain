@@ -206,7 +206,7 @@ class PrescriptionManager(models.Manager):
         # Temporary fix overflow problems
         # TODO fix problem with rsa encrypts with too long characters
         if len(data['diagnosis']) > 52:
-            data['diagnosis'] = data['diagnosis'][0:52]
+            data['diagnosis'] = data['diagnosis'][0:50]
         rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
 
         # This is basically the address

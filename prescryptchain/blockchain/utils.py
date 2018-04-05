@@ -79,8 +79,9 @@ def sign(message, PrivateKey):
     return base64.b64encode(signature)
 
 def verify_signature(message, signature, PublicKey):
-    signature = base64.b64decode(signature)
+    ''' Convert signature and check message with it '''
     try:
+        signature = base64.b64decode(signature)
         return rsa.verify(message, signature, PublicKey)
     except Exception as e:
         print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
