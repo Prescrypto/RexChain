@@ -65,9 +65,12 @@ class BlockManager(models.Manager):
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
         # Proof of Existennce layer
-        _poe = PoE() # init proof of existence element
-        txid = _poe.journal(new_block.merkleroot)
-        new_block.poetxid = txid
+        try:
+            _poe = PoE() # init proof of existence element
+            txid = _poe.journal(new_block.merkleroot)
+            new_block.poetxid = txid
+        except Exception as e:
+            pass
         # Save
         new_block.save()
 
@@ -175,6 +178,10 @@ class PrescriptionManager(models.Manager):
         rx.medic_hospital = bin2hex(encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
         rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
         rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
+        # Temporary fix overflow problems
+        # TODO fix problem with rsa encrypts with too long characters
+        if len(data['diagnosis']) > 52:
+            data['diagnosis'] = data['diagnosis'][0:52]
         rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
 
         # This is basically the address
