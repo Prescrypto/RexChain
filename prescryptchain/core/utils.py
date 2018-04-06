@@ -13,7 +13,7 @@ from django.conf import settings
 class Hashcash(object):
     """ Main hashcash object """
 
-    def __init__(self, debug=settings.DEBUG_STATE, expiration_time="01:00:00", *args, **kwargs):
+    def __init__(self, debug=settings.DEBUG, expiration_time="01:00:00", *args, **kwargs):
         """ Initialize hashcash object """
         self.logger = logging.getLogger('django_info')
         self.tries = [0]
