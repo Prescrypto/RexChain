@@ -7,21 +7,23 @@ from math import ceil, floor
 from random import choice
 from datetime import datetime, timedelta
 
+from django.utils import timezone
+from django.conf import settings
 
 class Hashcash(object):
     """ Main hashcash object """
 
-    def __init__(self, debug=False, expiration_time="01:00:00", *args, **kwargs):
+    def __init__(self, debug=settings.DEBUG_STATE, expiration_time="01:00:00", *args, **kwargs):
         """ Initialize hashcash object """
         self.logger = logging.getLogger('django_info')
         self.tries = [0]
         self.date_format = "%m/%d/%Y %H:%M:%S"
-        self.now = datetime.now
+        self.now = timezone.now
         self.debug = debug
         self.expiration_time = expiration_time
 
     def create_challenge(
-        self, word_initial, bits=20, long_from_chain=8):
+        self, word_initial, bits=int(settings.HC_BITS_DIFFICULTY), long_from_chain=int(settings.HC_RANDOM_STRING_SIZE)):
         """Create a challenge wiht three parameters.
         Parameters:
             word_initial: It is a type string value, with which it

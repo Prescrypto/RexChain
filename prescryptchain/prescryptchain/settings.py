@@ -43,6 +43,11 @@ BLOCKCYPHER_API_TOKEN = os.environ['BLOCKCYPHER_API_TOKEN']
 CHAIN = os.environ['CHAIN']
 BASE_POE_URL = os.environ['BASE_POE_URL']
 
+#Hashcash settings
+HC_BITS_DIFFICULTY = os.environ["HC_BITS_DIFFICULTY"]
+HC_RANDOM_STRING_SIZE = os.environ["HC_RANDOM_STRING_SIZE"]
+HC_WORD_INITIAL = os.environ['HC_WORD_INITIAL']
+
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
 

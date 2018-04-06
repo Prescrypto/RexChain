@@ -157,7 +157,7 @@ class PrescriptionManager(models.Manager):
         ''' Use PoW hashcash algoritm to attempt to create a block '''
         _hashcash_tools = Hashcash(debug=True)
         if not cache.get('challenge') and not cache.get('counter') == 0:
-            challenge = _hashcash_tools.create_challenge(word_initial="Test", bits=4, long_from_chain=4)
+            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
             safe_set_cache('challenge', challenge)
             safe_set_cache('counter', 0)
 
