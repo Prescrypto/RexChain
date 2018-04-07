@@ -230,7 +230,7 @@ class Prescription(models.Model):
     diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
-    timestamp = models.DateTimeField(default=timezone.now(), db_index=True)
+    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
