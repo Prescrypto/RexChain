@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 from django.shortcuts import render
 from blockchain.models import Prescription, Block
 
 
 def home(request):
+    ''' Home view'''
+    logger = logging.getLogger('django_info')
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
     rxs = Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH]
     blocks = Block.objects.all().order_by('-id')[:LIMIT_BLOCK]
+    logger.info('Total Blocks: {}'.format(blocks.count()))
     return render(request, "home.html", {"prescriptions" : rxs, "rx_blocks": blocks })
 
 
