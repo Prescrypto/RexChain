@@ -1,11 +1,11 @@
 # django
-Django==1.11.3
+Django==1.11.11
 
 # Heroku
 gunicorn==19.7.1
-dj-database-url==0.4.2
-whitenoise==3.3.0
-psycopg2==2.7.1
+dj-database-url==0.5.0
+whitenoise==3.3.1
+psycopg2==2.7.4
 
 # DRF
 django-filter==1.1.0
@@ -19,7 +19,7 @@ merkletools==1.0.2
 pysha3==1.0b1
 
 # Others
-django-jet==1.0.6
+django-jet==1.0.7
 
 #QRCode
 Pillow==4.2.1
