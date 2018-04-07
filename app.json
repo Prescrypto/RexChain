@@ -26,9 +26,6 @@
     "BLOCK_SIZE": {
       "required": true
     },
-    "DISABLE_COLLECTSTATIC": {
-      "required": true
-    },
     "SECURE_SSL_REDIRECT": {
       "required": true
     },
