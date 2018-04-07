@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 from django.shortcuts import render
+
 from blockchain.models import Prescription, Block
 
 
@@ -22,3 +23,10 @@ def block_detail(request, block_hash):
 
 def rx_detail(request, rx_hash):
     return render(request, "blockchain/rx_detail.html", {})
+
+def humanstxt(request):
+    ''' Show humans txt file '''
+    response = render(request, 'humans.txt', {})
+    response['Content-Type'] = "text/plain"
+    return response
+
