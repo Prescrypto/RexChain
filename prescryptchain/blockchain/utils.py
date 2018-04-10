@@ -3,6 +3,7 @@
 # from core.utils import AESCipher
 ## Hash lib
 import hashlib
+import logging
 from datetime import timedelta, datetime
 import rsa
 import cPickle
@@ -90,19 +91,21 @@ def verify_signature(message, signature, PublicKey):
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
     # Generate merkle tree
+    logger = logging.getLogger('django_info')
     mt = merkletools.MerkleTools() # Default is SHA256
     # Build merkle tree with Rxs
     for rx in prescriptions:
         mt.add_leaf(rx.rxid)
     mt.make_tree();
     # Just to check
-    print mt.get_leaf_count();
+    logger.error("Leaf Count: {}".format(mt.get_leaf_count()))
     # get merkle_root and return
     return mt.get_merkle_root();
 
 #  Proves a hash is in merkle root of block merkle tree
 def is_rx_in_block(target_rx, block):
     #  We need to create a new tree and follow the path to get this proof
+    logger = logging.getLogger('django_info')
     mtn = merkletools.MerkleTools()
     rx_hashes = block.data["hashes"]
     n = 0
@@ -113,7 +116,7 @@ def is_rx_in_block(target_rx, block):
     # Make the tree and get the proof
     mtn.make_tree()
     proof = mtn.get_proof(n)
-    print proof
+    logger.error("Proof: {}".format(proof))
     return mtn.validate_proof(proof, target_rx.rxid, block.merkleroot)
 
 
