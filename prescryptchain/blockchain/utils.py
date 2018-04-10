@@ -156,9 +156,3 @@ class PoE(object):
         except Exception as e:
             print("[PoE ERROR] Error returning transantion details :%s, type(%s)" % (e, type(e)))
             raise e
-
-
-
-
-
-
