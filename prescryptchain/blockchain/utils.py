@@ -137,13 +137,18 @@ def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
 
 class PoE(object):
     ''' Object tools for encrypt and decrypt info '''
+    logger = logging.getLogger('django_info')
+
     def journal(self, merkle_root):
         try:
             data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
-            return data["hash"]
+            if isinstance(data, dict):
+                self.logger.info('[PoE data]:{}'.format(data))
+                return data.get("hash", "")
+            else:
+                return None
         except Exception as e:
-            print("[PoE ERROR] Error returning hash from embed data :%s, type(%s)" % (e, type(e)))
-            raise e
+            self.logger.error("[PoE ERROR] Error returning hash from embed data:{}, Error :{}, type({})".format(e, type(e)))
 
     def attest(self, txid):
         try:
