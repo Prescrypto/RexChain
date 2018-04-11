@@ -25,7 +25,7 @@ vagrant up
 get server running and start creating stuff
 vagrant ssh
 
-$ cd /vagrant/prescryptochain
+$ cd /vagrant/cryptovault
 $ python manage.py migrate
 $ python manage.py loaddata ./fixtures/initial_data.json
 $ python manage.py runserver [::]:8000
