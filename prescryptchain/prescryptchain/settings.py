@@ -16,6 +16,9 @@ import dj_database_url
 DATABASE_URL = os.environ['DATABASE_URL']
 DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = ast.literal_eval(os.environ['DEBUG_STATE'])
+
 # Check if we are in production
 PRODUCTION = ast.literal_eval(os.environ['PRODUCTION'])
 # Change allowed hosts accordingly
@@ -33,9 +36,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ast.literal_eval(os.environ['DEBUG_STATE'])
-
 BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 
 # Proof of existence specific (interface with external ledger)
@@ -51,8 +51,9 @@ HC_WORD_INITIAL = os.environ['HC_WORD_INITIAL']
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
 
-# Application definition
+APPEND_SLASH=True
 
+# Application definition
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',
@@ -72,6 +73,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -159,7 +161,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #Redis Cache
 CACHES = {

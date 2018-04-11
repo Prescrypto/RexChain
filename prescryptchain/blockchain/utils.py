@@ -3,6 +3,7 @@
 # from core.utils import AESCipher
 ## Hash lib
 import hashlib
+import logging
 from datetime import timedelta, datetime
 import rsa
 import cPickle
@@ -90,19 +91,21 @@ def verify_signature(message, signature, PublicKey):
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
     # Generate merkle tree
+    logger = logging.getLogger('django_info')
     mt = merkletools.MerkleTools() # Default is SHA256
     # Build merkle tree with Rxs
     for rx in prescriptions:
         mt.add_leaf(rx.rxid)
     mt.make_tree();
     # Just to check
-    print mt.get_leaf_count();
+    logger.error("Leaf Count: {}".format(mt.get_leaf_count()))
     # get merkle_root and return
     return mt.get_merkle_root();
 
 #  Proves a hash is in merkle root of block merkle tree
 def is_rx_in_block(target_rx, block):
     #  We need to create a new tree and follow the path to get this proof
+    logger = logging.getLogger('django_info')
     mtn = merkletools.MerkleTools()
     rx_hashes = block.data["hashes"]
     n = 0
@@ -113,7 +116,7 @@ def is_rx_in_block(target_rx, block):
     # Make the tree and get the proof
     mtn.make_tree()
     proof = mtn.get_proof(n)
-    print proof
+    logger.error("Proof: {}".format(proof))
     return mtn.validate_proof(proof, target_rx.rxid, block.merkleroot)
 
 
@@ -134,13 +137,19 @@ def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
 
 class PoE(object):
     ''' Object tools for encrypt and decrypt info '''
+    logger = logging.getLogger('django_info')
+
     def journal(self, merkle_root):
         try:
             data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
-            return data["hash"]
+            if isinstance(data, dict):
+                self.logger.info('[PoE data]:{}'.format(data))
+                return data.get("hash", "")
+            else:
+                self.logger.error("Type of data:".format(type(data)))
+                return None
         except Exception as e:
-            print("[PoE ERROR] Error returning hash from embed data :%s, type(%s)" % (e, type(e)))
-            raise e
+            self.logger.error("[PoE ERROR] Error returning hash from embed data, Error :{}, type({})".format(e, type(e)))
 
     def attest(self, txid):
         try:
@@ -148,9 +157,3 @@ class PoE(object):
         except Exception as e:
             print("[PoE ERROR] Error returning transantion details :%s, type(%s)" % (e, type(e)))
             raise e
-
-
-
-
-
-

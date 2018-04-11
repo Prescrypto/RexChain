@@ -2,7 +2,7 @@
   "name": "Prescrypt Chain",
   "description": "Made Cryptography to Mexican Health Environ",
   "scripts": {
-    "postdeploy": "bin/review_app_init"
+    "postdeploy": "bin/post_compile"
   },
   "env": {
     "HEROKU_APP_NAME": {
@@ -24,9 +24,6 @@
       "required": true
     },
     "BLOCK_SIZE": {
-      "required": true
-    },
-    "DISABLE_COLLECTSTATIC": {
       "required": true
     },
     "SECURE_SSL_REDIRECT": {

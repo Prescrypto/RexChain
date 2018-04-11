@@ -5,6 +5,7 @@ import hashlib
 import base64
 import merkletools
 import json
+import logging
 # Date
 from datetime import timedelta, datetime
 from operator import itemgetter
@@ -35,6 +36,7 @@ from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 # Setting block size
 BLOCK_SIZE = settings.BLOCK_SIZE
+logger = logging.getLogger('django_info')
 
 
 class BlockManager(models.Manager):
@@ -75,7 +77,8 @@ class BlockManager(models.Manager):
             txid = _poe.journal(new_block.merkleroot)
             new_block.poetxid = txid
         except Exception as e:
-            pass
+            logger.error("[PoE generate Block Error]: {}, type:{}".format(e, type(e)))
+
         # Save
         new_block.save()
 
@@ -117,7 +120,7 @@ class Block(models.Model):
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
-            print("Error was found: %s" % e)
+            logger.error("[BLOCK ERROR] get block data error : %s" % e)
             return ""
 
 
@@ -195,8 +198,6 @@ class PrescriptionManager(models.Manager):
 
         # Extract signature
         _signature = data.pop("signature", None)
-
-        # print("[API Create Raw Rx INFO ] Data: {}".format(sorted(data)))
 
         rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
         rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
