@@ -72,7 +72,8 @@ class BlockManager(models.Manager):
             txid = _poe.journal(new_block.merkleroot)
             new_block.poetxid = txid
         except Exception as e:
-            pass
+            logger.error("[PoE generate Block Error]: {}, type".format(e, type(e)))
+
         # Save
         new_block.save()
 
