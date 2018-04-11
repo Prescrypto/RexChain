@@ -149,7 +149,7 @@ class PoE(object):
                 self.logger.error("Type of data:".format(type(data)))
                 return None
         except Exception as e:
-            self.logger.error("[PoE ERROR] Error returning hash from embed data:{}, Error :{}, type({})".format(e, type(e)))
+            self.logger.error("[PoE ERROR] Error returning hash from embed data, Error :{}, type({})".format(e, type(e)))
 
     def attest(self, txid):
         try:
