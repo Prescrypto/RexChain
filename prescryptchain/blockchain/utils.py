@@ -141,12 +141,7 @@ class PoE(object):
 
     def journal(self, merkle_root):
         try:
-            # Temporary fix for size on embed data
-            EMBED_DATA_LIMIT = 30
-            if len(merkle_root) > EMBED_DATA_LIMIT:
-                merkle_root = merkle_root[:EMBED_DATA_LIMIT]
-
-            data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN, data_is_hex=False)
+            data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
             if isinstance(data, dict):
                 self.logger.info('[PoE data]:{}'.format(data))
                 return data.get("hash", "")
