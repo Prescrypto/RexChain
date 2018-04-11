@@ -142,7 +142,7 @@ class PoE(object):
     def journal(self, merkle_root):
         try:
             # Temporary fix for size on embed data
-            EMBED_DATA_LIMIT = 35
+            EMBED_DATA_LIMIT = 30
             if len(merkle_root) > EMBED_DATA_LIMIT:
                 merkle_root = merkle_root[:EMBED_DATA_LIMIT]
 
