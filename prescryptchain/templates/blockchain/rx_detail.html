@@ -5,7 +5,7 @@
   Rx Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2>Detalle de la receta</h2>
+  <h2>Detail of the transaction</h2>
 {% endblock subtitle %}
 {% block content %}
   {# RX Detail #}
@@ -21,7 +21,7 @@
               </tr>
               {# for field in prescription #}
                 <tr>
-                  <td>Tamaño:</td>
+                  <td>Size:</td>
                   <td>{{ rx.raw_size }} bytes</td>
                 </tr>
                 <tr>
@@ -78,7 +78,7 @@
                   <td><a href="/hash/{{rx.rxid}}">{{ rx.rxid }}</a></td>
               </tr>
               <tr>
-                  <td>Hash Anterior:</td>
+                  <td>Previous Hash:</td>
                   <td><a href="/hash/{{ rx.get_before_hash }}">{{ rx.get_before_hash }}</a></td>
               </tr>
 
@@ -88,7 +88,7 @@
             <p>Public Key: <pre>{{ rx.public_key }}</pre></p>
           </article>
           <article class="col-xs-12 col-lg-6">
-            <p class="text-center"><a href="/validate/{{rx.rxid}}/" class="btn btn-primary btn-lg" style="padding: .5em 4em; font-size:2em;">¡Validar!</a></p>
+            <p class="text-center"><a href="/validate/{{rx.rxid}}/" class="btn btn-primary btn-lg" style="padding: .5em 4em; font-size:2em;">Validate!</a></p>
           </article>
 
         </div>
@@ -97,15 +97,15 @@
   <section class="container-fluid padding-2em bg-midnight">
     <div class="row padding-2em">
       <article class="col-xs-12 col-lg-8 col-lg-offset-2">
-        ¿Tienes la clave privada para esta receta? Puedes visualizarla de manera segura aquí
-        <button id="visualize-button" class="btn btn-primary btn-lg" type="button">Visualizar!</button>
+        Do you have the private key for thistransaction? You can view it safely here.
+        <button id="visualize-button" class="btn btn-primary btn-lg" type="button">Visualize!</button>
         <div id="encrypt-box" class="padding-2em">
           <div class="form-group">
-            <textarea id="priv_key_id"rows="4" class="form-control" name="private-key-chain" placeholder="Pega tu clave privada aquí"></textarea>
-            <button id="decrypt-button" class="btn btn-primary btn-lg" type="submit">Desencriptar!</button>
+            <textarea id="priv_key_id"rows="4" class="form-control" name="private-key-chain" placeholder="Paste your private key here"></textarea>
+            <button id="decrypt-button" class="btn btn-primary btn-lg" type="submit">Decrypt!</button>
             <p id="message"></p>
             <div id="qr-box" class="hidden">
-              <p>Posiciona tu código QR aquí y dale clic en desencyptar</p>
+              <p>Position your QR code here and click on decrypt</p>
               <div id="reader" style="width:100%;height:370px"></div>
             </div>
           </div>
@@ -126,7 +126,7 @@
     $('#reader').html5_qrcode(function(data){
         // do something when code is read
         console.log(data);
-        $('#messages').html("QR encontrado!");
+        $('#messages').html("QR found!");
         $('#priv_key_id').val(data);
         $('#reader').html5_qrcode_stop();
         $("#qr-box").toggleClass("hidden");
