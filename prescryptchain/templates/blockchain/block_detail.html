@@ -13,10 +13,10 @@
     <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
       <table id="crypto-table" class="table table-striped">
         <tr>
-          <td colspan="2"><strong>Detalles</strong></td>
+          <td colspan="2"><strong>Details</strong></td>
         </tr>
         <tr>
-          <td>Tamaño:</td>
+          <td>Size:</td>
           <td>{{ block_object.raw_size }} bytes</td>
         </tr>
         <tr>
@@ -24,7 +24,7 @@
           <td>{{ block_object.hash_block }}</td>
         </tr>
         <tr>
-          <td>Hash anterior:</td>
+          <td>Previous Hash:</td>
           <td><a href="/block/{{ block_object.get_before_hash }}">{{ block_object.get_before_hash }}</a></td>
         </tr>
         <tr>
@@ -37,7 +37,7 @@
         </tr>
         {% if block_object.poetxid %}
           <tr>
-            <td>Prueba de Existencia: <a href="/proof-of-existence/">(¿Qué es esto?)</a></td>
+            <td>Proof of Existence: <a href="/proof-of-existence/">(What is this?)</a></td>
             <td><a href="{{ poe_url }}" target="_blank">{{ block_object.poetxid }}</a></td>
           </tr>
         {% endif %}
@@ -46,7 +46,7 @@
     <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
       <table id="crypto-table" class="table table-striped">
         <tr>
-          <td colspan="2"><strong>Recetas en el bloque</strong></td>
+          <td colspan="2"><strong>Transaction in the Block</strong></td>
         </tr>
         {% for hash in  block_object.data.hashes %}
         <tr>
