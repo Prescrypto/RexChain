@@ -5,10 +5,10 @@
   Rx Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2>Detail of the transaction</h2>
+  <h2>Details of the transaction</h2>
 {% endblock subtitle %}
 {% block content %}
-  {# RX Detail #}
+  {# TX Detail #}
   <section class="container-fluid bg-midnight">
     <div class="row padding-2em">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
@@ -17,7 +17,7 @@
             {# Rx info #}
             <table id="crypto-table" class="table table-striped">
               <tr>
-                <td colspan="2"><strong>Detalles</strong></td>
+                <td colspan="2"><strong>Details</strong></td>
               </tr>
               {# for field in prescription #}
                 <tr>
@@ -75,11 +75,11 @@
               </tr>
               <tr>
                   <td>Hash:</td>
-                  <td><a href="/hash/{{rx.rxid}}">{{ rx.rxid }}</a></td>
+                  <td><a class="a_white" href="/hash/{{rx.rxid}}">{{ rx.rxid }}</a></td>
               </tr>
               <tr>
                   <td>Previous Hash:</td>
-                  <td><a href="/hash/{{ rx.get_before_hash }}">{{ rx.get_before_hash }}</a></td>
+                  <td><a class="a_white" href="/hash/{{ rx.get_before_hash }}">{{ rx.get_before_hash }}</a></td>
               </tr>
 
             </table>
