@@ -21,7 +21,7 @@
                     <td><a class="a_white" href="/block/{{ rx_block.hash_block }}/"> {{ rx_block.raw_size }} bytes</a></td>
                     <td class="text-center hidden-xs"><a class="a_white" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
                     <td class="text-center visible-xs-block hash_block-mobile"><a class="a_white" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-                    <td class="text-center"><a href="/block/{{ rx_block.hash_block }}/"><span class="blue-font">{{ rx_block.timestamp|timezone:"America/Mexico_City"|timesince }}</span></a></td>
+                    <td class="text-center"><a href="/block/{{ rx_block.hash_block }}/"><span class="blue-font">{{ rx_block.timestamp|timezone:"UTC"|timesince }}</span></a></td>
                   </tr>
                 {% endfor %}
 
@@ -53,7 +53,7 @@
                     <td><a class="a_white" href="/hash/{{ rx.rxid }}/"> {{ rx.raw_size }} bytes</a></td>
                     <td class="text-center hidden-xs"><a class="a_white" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
                     <td class="text-center visible-xs-block signature-mobile"><a class="a_white" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
-                    <td class="text-center"><a href="/hash/{{ rx.rxid }}/"><span class="blue-font">{{ rx.get_delta_datetime|timezone:"America/Mexico_City"|timesince }}</span></a></td>
+                    <td class="text-center"><a href="/hash/{{ rx.rxid }}/"><span class="blue-font">{{ rx.get_delta_datetime|timezone:"UTC"|timesince }}</span></a></td>
                   </tr>
                 {% endfor %}
 
