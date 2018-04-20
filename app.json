@@ -41,22 +41,30 @@
     "ALLOWED_HOSTS": {
       "required": true
     },
-    "LOAD_FIXTURES": "True"
+    "LOAD_FIXTURES": "True",
+    "HC_BITS_DIFFICULTY": {
+      "required": true
+    },
+    "HC_RANDOM_STRING_SIZE": {
+      "required": true
+    },
+    "HC_WORD_INITIAL": {
+      "required": true
+    },
   },
   "formation": {
     "web": {
       "quantity": 1
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
     }
   },
   "addons": [
     "papertrail",
     "heroku-postgresql",
-    {
-      "plan": "deployhooks:http",
-      "options": {
-        "url": "https://hooks.zapier.com/hooks/catch/583174/t6paiu/"
-      }
-    }
+    "heroku-redis"
   ],
   "buildpacks": [
     {

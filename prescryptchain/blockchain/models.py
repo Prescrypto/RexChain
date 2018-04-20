@@ -19,7 +19,11 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
+from django.core.cache import cache
+
 # Our methods
+from core.helpers import safe_set_cache
+from core.utils import Hashcash
 from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
@@ -28,6 +32,7 @@ from .utils import (
 )
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
+
 
 # Setting block size
 BLOCK_SIZE = settings.BLOCK_SIZE
@@ -90,6 +95,8 @@ class Block(models.Model):
     data = JSONField(default={}, blank=True)
     merkleroot = models.CharField(max_length=255, default="")
     poetxid = models.CharField(max_length=255, default="", blank=True)
+    nonce = models.CharField(max_length=50, default="", blank=True)
+    hashcash = models.CharField(max_length=255, default="", blank=True)
 
     objects = BlockManager()
 
@@ -150,9 +157,27 @@ class PrescriptionManager(models.Manager):
         return self.get_queryset().non_validated_rxs()
 
     def create_block_attempt(self):
-        ''' Handle if exist enought validated rx to create block after rx creation '''
-        if self.non_validated_rxs().count() % BLOCK_SIZE == 0:
-            Block.objects.create_block(self.non_validated_rxs())
+        ''' Use PoW hashcash algoritm to attempt to create a block '''
+        _hashcash_tools = Hashcash(debug=True)
+        if not cache.get('challenge') and not cache.get('counter') == 0:
+            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
+            safe_set_cache('challenge', challenge)
+            safe_set_cache('counter', 0)
+
+        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
+
+        if is_valid_hashcash:
+            block = Block.objects.create_block(self.non_validated_rxs()) # TODO add on creation hash and merkle
+            block.hashcash = hashcash_string
+            block.nonce = cache.get('counter')
+            block.save()
+            safe_set_cache('challenge', None)
+            safe_set_cache('counter', None)
+
+        else:
+            counter = cache.get('counter') + 1
+            safe_set_cache('counter', counter)
+
 
     def create_rx(self, data, **kwargs):
 

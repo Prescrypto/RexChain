@@ -43,6 +43,11 @@ BLOCKCYPHER_API_TOKEN = os.environ['BLOCKCYPHER_API_TOKEN']
 CHAIN = os.environ['CHAIN']
 BASE_POE_URL = os.environ['BASE_POE_URL']
 
+#Hashcash settings
+HC_BITS_DIFFICULTY = os.environ["HC_BITS_DIFFICULTY"]
+HC_RANDOM_STRING_SIZE = os.environ["HC_RANDOM_STRING_SIZE"]
+HC_WORD_INITIAL = os.environ['HC_WORD_INITIAL']
+
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
 
@@ -60,8 +65,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_rq',
     'api',
     'blockchain',
+    'core',
+
 ]
 
 MIDDLEWARE = [
@@ -156,16 +164,57 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+#Redis Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv('REDIS_URL', 'redis://localhost:6379/0'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                    # config for pool connections
+                    "max_connections": 10
+            }
+        }
+    }
+}
+# Redis Config
+RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
+    },
+    'high': {
+        'USE_REDIS_CACHE': 'default',
+    },
+    'low': {
+        'USE_REDIS_CACHE': 'default',
+    }
+}
+# extra config args for RQ
+RQ = {
+    #RQ_EXCEPTION_HANDLERS = ['']
+}
+
 # Console logging for DEBUG=False - Probably should disable if DEBUG = True
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    "formatters": {
+    "formatters": { # add rq_console format
+        "rq_console": {
+            "format": "%(asctime)s %(message)s",
+            "datefmt": "%H:%M:%S",
+        },
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-        }
+        },
+        "rq_console": {  # add rq_console hadler
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            "class": "rq.utils.ColorizingStreamHandler",
+            "formatter": "rq_console",
+            "exclude": ["%(asctime)s"],
+        },
     },
     'filters': {
         'require_debug_true': {
@@ -176,6 +225,10 @@ LOGGING = {
         'django_info': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        }
+        },
+        "rq.worker": { # add rq logger
+            "handlers": ["console"],
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
     },
 }
