@@ -34,6 +34,7 @@ $ python manage.py rqworker high default low
 
 
 ### HTTP API
+
 ##### Get blockchain
 ```
 curl http://localhost:8080/api/v1/block
