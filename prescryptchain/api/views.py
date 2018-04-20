@@ -92,8 +92,10 @@ class BlockSerializer(serializers.ModelSerializer):
             'data',
             'timestamp',
             'merkleroot',
+            'hashcash',
+            'nonce',
         )
-        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', 'merkleroot',)
+        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', 'merkleroot','hashcash','nonce',)
 
 
 class BlockViewSet(viewsets.ModelViewSet):
