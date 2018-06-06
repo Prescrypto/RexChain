@@ -50,7 +50,7 @@
     },
     "HC_WORD_INITIAL": {
       "required": true
-    },
+    }
   },
   "formation": {
     "web": {
