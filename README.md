@@ -29,6 +29,8 @@ $ cd /vagrant/cryptovault
 $ python manage.py migrate
 $ python manage.py loaddata ./fixtures/initial_data.json
 $ python manage.py runserver [::]:8000
+
+# Run this in another console
 $ python manage.py rqworker high default low
 ```
 
