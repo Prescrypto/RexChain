@@ -197,12 +197,13 @@ class PrescriptionManager(models.Manager):
 
 
         pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
+        hex_raw_pub_key = savify_key(pub_key)
 
         # Extract signature
         _signature = data.pop("signature", None)
 
         # This is basically the address
-        rx.public_key = raw_pub_key
+        rx.public_key = hex_raw_pub_key
 
         if "data" in data:
             rx.data = data["data"]
@@ -265,6 +266,8 @@ class Prescription(models.Model):
     is_valid = models.BooleanField(default=True, blank=True)
     rxid = models.TextField(blank=True, default="")
     previous_hash = models.TextField(blank=True, default="")
+
+    data = JSONField(default={}, blank=True)
 
     objects = PrescriptionManager()
 
