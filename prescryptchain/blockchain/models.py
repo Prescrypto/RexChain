@@ -212,9 +212,7 @@ class PrescriptionManager(models.Manager):
             rx.location = data["location"]
 
         rx.timestamp = data["timestamp"]
-        rx.create_raw_msg()
 
-        rx.hash()
         # Save signature
         rx.signature = _signature
 
@@ -228,6 +226,9 @@ class PrescriptionManager(models.Manager):
             rx.previous_hash = "0"
         else:
             rx.previous_hash = self.last().rxid
+
+        rx.create_raw_msg()
+        rx.hash()
 
         rx.save()
 
@@ -303,12 +304,10 @@ class Prescription(models.Model):
     def create_raw_msg(self):
         # Create raw html and encode
         msg = (
-            self.medic_name +
-            self.medic_cedula +
-            self.medic_hospital +
-            self.patient_name +
-            self.patient_age +
-            self.diagnosis
+            json.dumps(self.data) +
+            timezone.now().isoformat() +
+            self.previous_hash
+
         )
         self.raw_msg = msg.encode('utf-8')
 
