@@ -21,6 +21,7 @@
               </tr>
               {# for field in prescription #}
               <tr><td colspan="2"><strong>Genomic Country Data:</strong></td></tr>
+              <section class="countries">
               {% for country in rx.data %}
                 <tr>
                   <td>Country Name {{ forloop.counter }}:</td>
@@ -31,6 +32,7 @@
                   <td id="instrucciones">{{ country.percentage }}</td>
                 </tr>
               {% endfor %}
+              </section>
               </table>
           </article>
 
