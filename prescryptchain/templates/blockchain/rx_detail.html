@@ -20,48 +20,15 @@
                 <td colspan="2"><strong>Details</strong></td>
               </tr>
               {# for field in prescription #}
+              <tr><td colspan="2"><strong>Genomic Country Data:</strong></td></tr>
+              {% for country in rx.data %}
                 <tr>
-                  <td>Size:</td>
-                  <td>{{ rx.raw_size }} bytes</td>
+                  <td>Country Name {{ forloop.counter }}:</td>
+                  <td id="medication">{{ country.country_name }}</td>
                 </tr>
                 <tr>
-                  <td>Timestamp:</td>
-                  <td>{{ rx.get_delta_datetime|timezone:"UTC" }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Name:</td>
-                  <td id="medic_name">{{ rx.get_data_base64.medic_name }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Cedula:</td>
-                  <td id="medic_cedula">{{ rx.get_data_base64.medic_cedula }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Hospital:</td>
-                  <td id="medic_hospital">{{ rx.get_data_base64.medic_hospital }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Name:</td>
-                  <td id="patient_name">{{ rx.get_data_base64.patient_name }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Age:</td>
-                  <td id="patient_age">{{ rx.get_data_base64.patient_age }}</td>
-                </tr>
-                <tr>
-                  <td>Diagnostico:</td>
-                  <td id="diagnosis">{{ rx.get_data_base64.diagnosis}}</td>
-                </tr>
-              {# endfor #}
-                <tr><td colspan="2"><strong>Medicamentos:</strong></td></tr>
-              {% for med in medications %}
-                <tr>
-                  <td>Medicamento {{ forloop.counter }}:</td>
-                  <td id="medication">{{ med.presentation }}</td>
-                </tr>
-                <tr>
-                  <td>Instrucciones {{ forloop.counter }}:</td>
-                  <td id="instrucciones">{{ med.instructions }}</td>
+                  <td>Percentage {{ forloop.counter }}:</td>
+                  <td id="instrucciones">{{ country.percentage }}</td>
                 </tr>
               {% endfor %}
               </table>
@@ -122,7 +89,6 @@
   <script>
 
     $("#qr-box").toggleClass("hidden");
-
     $('#reader').html5_qrcode(function(data){
         // do something when code is read
         console.log(data);
