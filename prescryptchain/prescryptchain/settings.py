@@ -51,6 +51,9 @@ HC_WORD_INITIAL = os.environ['HC_WORD_INITIAL']
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
 
+# WALLET URL
+WALLET_URL = os.environ["WALLET_URL"]
+
 APPEND_SLASH=True
 
 # Application definition
@@ -97,6 +100,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'prescryptchain.processors.add_wallet_url',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
