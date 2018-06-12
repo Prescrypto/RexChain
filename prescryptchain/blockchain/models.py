@@ -28,7 +28,7 @@ from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
-    verify_signature, PoE
+    verify_signature, PoE, pubkey_string_to_rsa
 )
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
@@ -194,24 +194,18 @@ class PrescriptionManager(models.Manager):
         rx = Prescription()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        pub_key = un_savify_key(raw_pub_key) # Make it usable
+
+
+        pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
 
         # Extract signature
         _signature = data.pop("signature", None)
 
-        rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
-        rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
-        rx.medic_hospital = bin2hex(encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
-        rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
-        rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
-        # Temporary fix overflow problems
-        # TODO fix problem with rsa encrypts with too long characters
-        if len(data['diagnosis']) > 52:
-            data['diagnosis'] = data['diagnosis'][0:50]
-        rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
-
         # This is basically the address
         rx.public_key = raw_pub_key
+
+        if "data" in data:
+            rx.data = data["data"]
 
         if "location" in data:
             rx.location = data["location"]
