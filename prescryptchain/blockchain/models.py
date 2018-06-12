@@ -307,7 +307,6 @@ class Prescription(models.Model):
             json.dumps(self.data) +
             timezone.now().isoformat() +
             self.previous_hash
-
         )
         self.raw_msg = msg.encode('utf-8')
 
