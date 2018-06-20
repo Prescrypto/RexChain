@@ -28,7 +28,7 @@ from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
-    verify_signature, PoE, pubkey_string_to_rsa
+    verify_signature, PoE, pubkey_string_to_rsa, pubkey_base64_to_rsa
 )
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
@@ -195,8 +195,12 @@ class PrescriptionManager(models.Manager):
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
 
+        try:
+            pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
+        except Exception as e:
+            # Attempt to create public key with base64
+            pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
-        pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
         hex_raw_pub_key = savify_key(pub_key)
 
         # Extract signature
