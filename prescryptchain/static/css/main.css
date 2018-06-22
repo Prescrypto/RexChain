@@ -135,6 +135,32 @@ ul.nav.navbar-nav.navbar-right{
   color:#4AD991;
   font-size: 20px;
 }
+.shadowbl{
+  color: #4D4F5C;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 7px;
+  padding:20px;
+}
+.shadowbl_blue{
+  color: #fff;
+  background-color: #3B86FF;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 7px;
+  padding: 20px;
+}
+#search-block{
+  color:#fff;
+  background-color: #4E4E4E;
+  border-radius: 0;
+}
+input.form-control{
+  border-radius: 0;
+  width:200px!important;
+}
+.navbar-form{
+  padding-left:0!important;
+}
 /* Ribbon with alpha stuff */
 .ribbon {
   background-color: #000000;
@@ -168,3 +194,18 @@ ul.nav.navbar-nav.navbar-right{
   text-shadow: 0 0 5px #444;
 }
 /* /Ribbon */
+
+@media (max-width: 700px) {
+  .whiteblock{
+    width:100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  div#infosearch{
+    width:100%!important;
+  }
+  #graphica{
+    width:100%!important;
+  }
+}
