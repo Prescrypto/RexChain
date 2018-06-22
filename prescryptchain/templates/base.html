@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}">
       <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
       <link rel="stylesheet" href="{% static "css/animate.css" %}">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
       {% block cssblock %}
       {% endblock cssblock %}
@@ -55,10 +56,37 @@
     {# Footer Section #}
     <footer class="container-fluid">
       <div class="row padding-2em">
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
+        <div class="col-md-2">
+          <p style="font-size: 15px;"><strong>SequentiaNavigator</strong></p>
+        </div>
+        <div class="col-md-4">
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="footeranch"><a href="{{WALLET_URL}}">Go to Wallet</a></li>
+                <li class="footeranch"><a href="">Tutorial</a></li>
+                <li class="footeranch"><a href="">FAQ</a></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="footeranch"><a href="">Our Company</a></li>
+                <li class="footeranch"><a href="">Support</a></li>
+                <li class="footeranch"><a href="">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <p><strong>Title</strong></p>
+          <p><small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum cupiditate non porro ex ducimus minus laborum, nesciunt omnis, pariatur ea atque, autem fugiat accusantium voluptatum quibusdam magnam provident recusandae odio?</small></p>
+        </div>
+        <div class="col-md-2">
+          <div class="social">
+            <i class="fab fa-facebook-square"></i>
+            <i class="fab fa-facebook-square"></i>
+          </div>
+        </div>
       </div>
     </footer>
 

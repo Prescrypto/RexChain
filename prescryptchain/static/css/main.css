@@ -1,17 +1,30 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900');
 body{
     color: #F0F0F7;
-    font-family: "Source Sans";
+    font-family: "Source Sans Pro";
 }
 p, a{
-    font-family: "Source Sans";
+    font-family: "Source Sans Pro";
+    text-align: justify;
 }
 .bg-blank{
     background: #fff;
 }
-footer{
+
+footer.container-fluid{
   background-color: #4E4E4E;
   color: #fff;
+  padding: 20px 120px 20px 120px;
+  font-family: "Source Sans Pro";
+  font-weight: 400;
+}
+.footeranch{
+  padding-bottom: 15px;
+}
+
+.social{
+  padding-top: 90px;
+  text-align: right;
 }
 .bg-portrait{
     background: ##F0F0F7;
