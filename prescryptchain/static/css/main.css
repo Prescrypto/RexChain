@@ -11,6 +11,11 @@ p, a{
 .bg-blank{
     background: #fff;
 }
+h3{
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+}
 
 footer.container-fluid{
   background-color: #4E4E4E;
@@ -122,6 +127,15 @@ ul.nav.navbar-nav.navbar-right{
   width:30%;
   margin:7px;
 }
+.mainblock{
+  color: #4D4F5C;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 20px;
+  width:1020px;
+  margin-top: 14px;
+  margin-bottom: 20px;
+}
 
 #hashrate{
   color:#FF6565;
@@ -134,6 +148,9 @@ ul.nav.navbar-nav.navbar-right{
 #marketcap{
   color:#4AD991;
   font-size: 20px;
+}
+.centeredrow{
+  margin-left:50px;
 }
 .shadowbl{
   color: #4D4F5C;
@@ -198,14 +215,18 @@ input.form-control{
 @media (max-width: 700px) {
   .whiteblock{
     width:100%;
+    margin:auto;
   }
 }
 
 @media (max-width: 1200px) {
   div#infosearch{
     width:100%!important;
+    margin:auto;
   }
   #graphica{
     width:100%!important;
+    height:100%!important;
+    margin:auto;
   }
 }
