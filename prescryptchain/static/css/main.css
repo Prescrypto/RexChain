@@ -2,6 +2,7 @@
 body{
     color: #F0F0F7;
     font-family: "Source Sans Pro";
+    background-color: #F0F0F7;
 }
 p, a{
     font-family: "Source Sans Pro";
@@ -29,11 +30,7 @@ footer.container-fluid{
 .bg-portrait{
     background: ##F0F0F7;
 }
-.bg-midnight{
-    background: #6400ff;
-    background: -webkit-linear-gradient(to right, #232526, #6400ff);
-    background: linear-gradient(to right, #232526, #6400ff);
-}
+
 .bg-grey{
     background: #F0F0F7;
 
@@ -86,7 +83,7 @@ ul.nav.navbar-nav.navbar-right{
     padding-bottom: 2em;
 }
 .crypto-table{
-    color: #fff;
+    color: #626262;
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {
@@ -117,7 +114,27 @@ ul.nav.navbar-nav.navbar-right{
     color:#3e3e3e;
 
 }
+.whiteblock{
+  color: #4D4F5C;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 20px;
+  width:30%;
+  margin:7px;
+}
 
+#hashrate{
+  color:#FF6565;
+  font-size: 20px;
+}
+#transperday{
+  color:#A3A0FB;
+  font-size: 20px;
+}
+#marketcap{
+  color:#4AD991;
+  font-size: 20px;
+}
 /* Ribbon with alpha stuff */
 .ribbon {
   background-color: #000000;
