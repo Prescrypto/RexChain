@@ -121,68 +121,6 @@
     </div>
   </div>
 </section>
-
-  <!-- {# last 5 blocks #}
-  <section class="container-fluid">
-    <div class="row padding-2em">
-      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
-        <section class="row">
-          <article class="col-xs-12 col-lg-3"><h3>RECENT BLOCKS</h3> </article>
-          <article class="col-xs-12 col-lg-1"></article>
-            <article class="col-xs-12 col-lg-8">
-              <table id="crypto-table" class="table table-striped">
-                <tr>
-                  <td>Size</td>
-                  <td>Hash</td>
-                  <td class="text-center">When</td>
-                </tr>
-                {% for rx_block in rx_blocks %}
-                  <tr>
-                    <td><a class="a_white" href="/block/{{ rx_block.hash_block }}/"> {{ rx_block.raw_size }} bytes</a></td>
-                    <td class="text-center hidden-xs"><a class="a_white" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-                    <td class="text-center visible-xs-block hash_block-mobile"><a class="a_white" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-                    <td class="text-center"><a class="a_white" href="/block/{{ rx_block.hash_block }}/"><span class="blue-font">{{ rx_block.timestamp|timezone:"UTC"|timesince }}</span></a></td>
-                  </tr>
-                {% endfor %}
-
-              </table>
-            </article>
-          <div class="col-xs-12">
-            <hr />
-          </div>
-        </section>
-      </div>
-    </div>
-  </section> -->
-  <!-- {# last 5 rx #}
-  <section class="container-fluid bg-midnight">
-    <div class="row padding-2em">
-      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
-        <section class="row">
-          <article class="col-xs-12 col-lg-3"><h3>RECENT TXS</h3> </article>
-          <article class="col-xs-12 col-lg-1"></article>
-            <article class="col-xs-12 col-lg-8">
-              <table id="crypto-table" class="table table-striped">
-                <tr>
-                  <td>Size</td>
-                  <td>Hash</td>
-                  <td class="text-center">When</td>
-                </tr>
-                {% for rx in prescriptions %}
-                  <tr>
-                    <td><a class="a_white" href="/hash/{{ rx.rxid }}/"> {{ rx.raw_size }} bytes</a></td>
-                    <td class="text-center hidden-xs"><a class="a_white" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
-                    <td class="text-center visible-xs-block signature-mobile"><a class="a_white" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
-                    <td class="text-center"><a class="a_white" href="/hash/{{ rx.rxid }}/"><span class="blue-font">{{ rx.get_delta_datetime|timezone:"UTC"|timesince }}</span></a></td>
-                  </tr>
-                {% endfor %}
-
-              </table>
-            </article>
-        </section>
-      </div>
-    </div>
-  </section> -->
 {% endblock content %}
 
 {% block jsblock %}
