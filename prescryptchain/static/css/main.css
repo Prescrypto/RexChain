@@ -43,7 +43,7 @@ footer.container-fluid{
 .teko{
 	font-family: "Source Sans";
 	letter-spacing: 1.5px;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 700;
   color: white;
 }
@@ -55,6 +55,7 @@ a.teko:hover{
   font-family: Source Sans;
   font-weight: 700;
   font-size: 40px;
+  margin-left:75px;
 }
 .genobank{
 	color: #ffffff
@@ -64,6 +65,8 @@ a.teko:hover{
 }
 .navbar{
     margin-bottom: 10px;
+    width:70%;
+    margin:auto;
 }
 header.container-fluid.bg-blank{
   background-color: #000;
