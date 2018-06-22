@@ -20,7 +20,7 @@ h3{
 footer.container-fluid{
   background-color: #4E4E4E;
   color: #fff;
-  padding: 20px 120px 20px 120px;
+  padding: 20px 120px 5px 120px;
   font-family: "Source Sans Pro";
   font-weight: 400;
 }
@@ -52,7 +52,7 @@ a.teko:hover{
 }
 .main-title{
   color:#000;
-  font-family: Source Sans;
+  font-family: "Source Sans Pro";
   font-weight: 700;
   font-size: 40px;
   margin-left:75px;
@@ -92,10 +92,13 @@ ul.nav.navbar-nav.navbar-right{
 }
 .crypto-table{
     color: #626262;
+    background-color: #FAFAFA;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #000105;
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
     padding: 1em 1.5em;
 }
 .table > tbody > tr > td{
@@ -105,14 +108,14 @@ ul.nav.navbar-nav.navbar-right{
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.a_white{
-    color: #fff;
+.a_purple{
+  color:#A3A0FB;
 }
-.a_white:hover{
-    color: #4384c3;
+.a_grey{
+  color:#626262;
 }
-.font-blue{
-    color: #337ab7;
+.a_green{
+  color:#4AD991;
 }
 .powered{
     color:#ffd800;
