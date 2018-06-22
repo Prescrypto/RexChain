@@ -1,56 +1,67 @@
-@import url('https://fonts.googleapis.com/css?family=Teko');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900');
 body{
-    color: #fff;
-    font-family: "Open Sans";
+    color: #F0F0F7;
+    font-family: "Source Sans";
 }
 p, a{
-    font-family: "Open Sans";
+    font-family: "Source Sans";
 }
 .bg-blank{
     background: #fff;
 }
+footer{
+  background-color: #4E4E4E;
+  color: #fff;
+}
 .bg-portrait{
-    background: #757F9A;
-    background: -webkit-linear-gradient(to right, #D7DDE8, #757F9A);
-    background: linear-gradient(to right, #D7DDE8, #757F9A);
+    background: ##F0F0F7;
 }
 .bg-midnight{
     background: #6400ff;
     background: -webkit-linear-gradient(to right, #232526, #6400ff);
     background: linear-gradient(to right, #232526, #6400ff);
 }
-.bg-blue-sky{
-    background: #6400ff;
-    background: -webkit-linear-gradient(to right, #232526, #6400ff);
-    background: linear-gradient(to right, #232526, #6400ff);
+.bg-grey{
+    background: #F0F0F7;
 
 }
 .teko{
-	font-family: "Teko";
+	font-family: "Source Sans";
 	letter-spacing: 1.5px;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+a.teko:hover{
+  text-decoration: none;
+}
+.main-title{
+  color:#000;
+  font-family: Source Sans;
+  font-weight: 700;
+  font-size: 40px;
 }
 .genobank{
 	color: #ffffff
 }
-.title-font{
-    font-family: "Teko";
-    font-size: 2.2em;
-    font-weight: 700;
-    text-decoration: none;
-}
 .title-font a{
-	color: rgb(98, 57, 189)!important;
-}
-.title-font a:hover{
-    text-decoration: none;
+	color: white!important;
 }
 .navbar{
     margin-bottom: 10px;
 }
+header.container-fluid.bg-blank{
+  background-color: #000;
+}
 .navbar-default {
-    background-color: #fff;
-    border-color: #fff;
+    background-color: #000;
+    border : 0;
+}
+a{
+  color : #fff !important;
+}
+ul.nav.navbar-nav.navbar-right{
+  padding-top: 10px;
 }
 .hero{
     padding-top: 1em;
