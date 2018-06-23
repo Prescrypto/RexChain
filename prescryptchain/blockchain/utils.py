@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # AESCipher
 # from core.utils import AESCipher
+import binascii
 ## Hash lib
 import hashlib
 import logging
@@ -84,9 +85,13 @@ def verify_signature(message, signature, PublicKey):
     try:
         signature = base64.b64decode(signature)
         return rsa.verify(message, signature, PublicKey)
-    except Exception as e:
-        print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
-        return False
+    except:
+        try:
+            signature = base64.b64decode(binascii.unhexlify(signature))
+            return rsa.verify(message, signature, PublicKey)
+        except Exception as e:
+            print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
+            return False
 
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
