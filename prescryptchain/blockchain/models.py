@@ -223,7 +223,7 @@ class PrescriptionManager(models.Manager):
         # Save signature
         rx.signature = _signature
 
-        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+        if verify_signature(json.dumps(data), _signature, pub_key):
             rx.is_valid = True
         else:
             rx.is_valid = False
