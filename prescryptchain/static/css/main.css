@@ -75,9 +75,6 @@ header.container-fluid.bg-blank{
     background-color: #000;
     border : 0;
 }
-a{
-  color : #fff !important;
-}
 ul.nav.navbar-nav.navbar-right{
   padding-top: 10px;
 }
@@ -109,13 +106,16 @@ ul.nav.navbar-nav.navbar-right{
     text-overflow: ellipsis;
 }
 .a_purple{
-  color:#A3A0FB;
+  color:#A3A0FB!important;
 }
 .a_grey{
-  color:#626262;
+  color:#626262!important;
 }
 .a_green{
-  color:#4AD991;
+  color:#4AD991!important;
+}
+a{
+  color : #fff !important;
 }
 .powered{
     color:#ffd800;
