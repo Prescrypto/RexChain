@@ -25,7 +25,7 @@ vagrant up
 get server running and start creating stuff
 vagrant ssh
 
-$ cd /vagrant/cryptovault
+$ cd /vagrant/prescryptchain
 $ python manage.py migrate
 $ python manage.py loaddata ./fixtures/initial_data.json
 $ python manage.py runserver [::]:8000
@@ -39,5 +39,5 @@ $ python manage.py rqworker high default low
 
 ##### Get blockchain
 ```
-curl http://localhost:8080/api/v1/block
+curl http://127.0.0.1:8000/api/v1/block
 ```
