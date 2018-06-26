@@ -4,7 +4,7 @@
   Validate Rx
 {% endblock title %}
 {% block subtitle %}
-  <h2>Validation of transaction against notary blockchain</h2>
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validation of transaction against notary blockchain</h2>
 {% endblock subtitle %}
 {% block content %}
   {# TX Detail #}
@@ -14,7 +14,7 @@
         <div class="row">
           <article class="col-xs-12 col-lg-6">
             {# Rx info #}
-            <table id="crypto-table" class="table table-striped">
+            <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
               <tr>
                 <td colspan="2"><strong>Evidence:</strong></td>
               </tr>
@@ -23,8 +23,8 @@
                   <td>{{ poe.received }}</td>
                 </tr>
                 <tr>
-                  <td>Tx Id in the Blockchain:<a href="/proof-of-existence/">(¿What is that?)</a></td>
-                  <td><a href="{{ poe_url }}">{{ poe.hash }}</a></td>
+                  <td>Tx Id in the Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿What is that?)</a></td>
+                  <td><a class="a_grey" href="{{ poe_url }}">{{ poe.hash }}</a></td>
                 </tr>
                 <tr>
                   <td>Root of Merkle Blockchainizada</td>
