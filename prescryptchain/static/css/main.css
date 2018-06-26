@@ -1,22 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900');
 body{
-    color: #F0F0F7;
-    font-family: "Source Sans Pro";
-    background-color: #F0F0F7;
+  color: #F0F0F7;
+  font-family: "Source Sans Pro";
+  background-color: #F0F0F7;
 }
 p, a{
-    font-family: "Source Sans Pro";
-    text-align: justify;
+  font-family: "Source Sans Pro";
+  text-align: justify;
 }
 .bg-blank{
-    background: #fff;
+  background: #fff;
 }
 h3{
   color: #000;
   font-size: 20px;
   font-weight: 700;
 }
-
 footer.container-fluid{
   background-color: #4E4E4E;
   color: #fff;
@@ -27,7 +26,6 @@ footer.container-fluid{
 .footeranch{
   padding-bottom: 15px;
 }
-
 .social{
   padding-top: 90px;
   text-align: right;
@@ -35,10 +33,8 @@ footer.container-fluid{
 .bg-portrait{
     background: ##F0F0F7;
 }
-
 .bg-grey{
     background: #F0F0F7;
-
 }
 .teko{
 	font-family: "Source Sans";
@@ -64,46 +60,45 @@ a.teko:hover{
 	color: white!important;
 }
 .navbar{
-    margin-bottom: 10px;
-    width:70%;
-    margin:auto;
+  margin-bottom: 10px;
+  width:70%;
+  margin:auto;
 }
 header.container-fluid.bg-blank{
   background-color: #000;
 }
 .navbar-default {
-    background-color: #000;
-    border : 0;
+  background-color: #000;
+  border : 0;
 }
 ul.nav.navbar-nav.navbar-right{
   padding-top: 10px;
 }
 .hero{
-    padding-top: 1em;
-    padding-bottom: 1em;
-    font-size: 3em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  font-size: 3em;
 }
 .padding-2em{
-    padding-top: 2em;
-    padding-bottom: 2em;
+  padding-top: 2em;
+  padding-bottom: 2em;
 }
 .crypto-table{
-    color: #626262;
-    background-color: #FAFAFA;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
+  color: #626262;
+  background-color: #FAFAFA;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
 }
-
 .table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #fff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
-    padding: 1em 1.5em;
+  background-color: #fff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
+  padding: 1em 1.5em;
 }
 .table > tbody > tr > td{
-    border-top: 0px;
-    padding: 1em 1.5em;
-    max-width:200px; /* Customise it accordingly */
-    overflow: hidden;
-    text-overflow: ellipsis;
+  border-top: 0px;
+  padding: 1em 1.5em;
+  max-width:200px; /* Customise it accordingly */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .a_purple{
   color:#A3A0FB!important;
@@ -117,13 +112,17 @@ ul.nav.navbar-nav.navbar-right{
 a{
   color : #fff !important;
 }
-.powered{
-    color:#ffd800;
-
+a.greybutton, #visualize-button, #decrypt-button{
+  background-color:#626262;
+  color:#fff;
+  font-weight:700;
+  border:0px;
 }
-.powered:hover{
-    color:#3e3e3e;
-
+a.greybutton:hover{
+  background-color:#626262;
+  color:#fff;
+  font-weight:700;
+  border:0px;
 }
 .whiteblock{
   color: #4D4F5C;
@@ -142,7 +141,6 @@ a{
   margin-top: 14px;
   margin-bottom: 20px;
 }
-
 #hashrate{
   color:#FF6565;
   font-size: 20px;
@@ -177,6 +175,11 @@ a{
   background-color: #4E4E4E;
   border-radius: 0;
 }
+.shadowed_details{
+  background-color:#fff;
+  padding:0px!important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 input.form-control{
   border-radius: 0;
   width:200px!important;
@@ -184,39 +187,6 @@ input.form-control{
 .navbar-form{
   padding-left:0!important;
 }
-/* Ribbon with alpha stuff */
-.ribbon {
-  background-color: #000000;
-  overflow: hidden;
-  white-space: nowrap;
-  /* top right corner */
-  position: absolute;
-  right: -70px;
-  top: 35px;
-  /* 45 deg ccw rotation */
-  -webkit-transform: rotate(+45deg);
-     -moz-transform: rotate(+45deg);
-      -ms-transform: rotate(+45deg);
-       -o-transform: rotate(+45deg);
-          transform: rotate(+45deg);
-  /* shadow */
-  -webkit-box-shadow: 0 0 10px #888;
-     -moz-box-shadow: 0 0 10px #888;
-          box-shadow: 0 0 10px #888;
-}
-.ribbon a {
-  border: 1px solid #faa;
-  color: #fff;
-  display: block;
-  font: bold 81.25% 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  margin: 1px 0;
-  padding: 10px 80px;
-  text-align: center;
-  text-decoration: none;
-  /* shadow */
-  text-shadow: 0 0 5px #444;
-}
-/* /Ribbon */
 
 @media (max-width: 700px) {
   .whiteblock{
