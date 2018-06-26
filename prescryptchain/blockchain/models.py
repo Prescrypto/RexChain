@@ -147,7 +147,14 @@ class PrescriptionQueryset(models.QuerySet):
     ''' Add custom querysets'''
 
     def non_validated_rxs(self):
+        return self.filter(is_valid=False).filter(block=None)
+
+    def validated_rxs(self):
         return self.filter(is_valid=True).filter(block=None)
+
+    def has_not_block(self):
+        return self.filter(block=None)
+
 
 
 class PrescriptionManager(models.Manager):
@@ -158,6 +165,12 @@ class PrescriptionManager(models.Manager):
 
     def non_validated_rxs(self):
         return self.get_queryset().non_validated_rxs()
+
+    def validated_rxs(self):
+        return self.get_queryset().validated_rxs()
+
+    def has_not_block(self):
+        return self.get_queryset().has_not_block()
 
     def create_block_attempt(self):
         ''' Use PoW hashcash algoritm to attempt to create a block '''
@@ -170,7 +183,7 @@ class PrescriptionManager(models.Manager):
         is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
 
         if is_valid_hashcash:
-            block = Block.objects.create_block(self.non_validated_rxs()) # TODO add on creation hash and merkle
+            block = Block.objects.create_block(self.has_not_block())
             block.hashcash = hashcash_string
             block.nonce = cache.get('counter')
             block.save()
@@ -238,7 +251,8 @@ class PrescriptionManager(models.Manager):
         rx.hash()
 
         rx.save()
-
+        # SUCCESS creation of TX
+        # Attempt creation of block
         self.create_block_attempt()
 
         return rx
