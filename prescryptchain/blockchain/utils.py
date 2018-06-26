@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # AESCipher
 # from core.utils import AESCipher
+import binascii
 ## Hash lib
 import hashlib
 import logging
@@ -84,9 +85,13 @@ def verify_signature(message, signature, PublicKey):
     try:
         signature = base64.b64decode(signature)
         return rsa.verify(message, signature, PublicKey)
-    except Exception as e:
-        print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
-        return False
+    except:
+        try:
+            signature = base64.b64decode(binascii.unhexlify(signature))
+            return rsa.verify(message, signature, PublicKey)
+        except Exception as e:
+            print("[CryptoTool, verify ERROR ] Signature or message are corrupted")
+            return False
 
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(prescriptions):
@@ -184,3 +189,25 @@ def pubkey_string_to_rsa(string_key):
     pubkey = rsa.PublicKey.load_pkcs1_openssl_pem(pub_key)
     #data is rsa type
     return pubkey
+
+
+def pubkey_base64_to_rsa(base64_key):
+    ''' Convert base64 pub key to pem file and then pub key rsa object '''
+
+    LINE_SIZE = 64
+    BEGIN_LINE = "-----BEGIN PUBLIC KEY-----"
+    END_LINE = "-----END PUBLIC KEY-----"
+
+    # Replace spaces with plus string, who is remove it when django gets from uri param
+    base64_key.replace(" ", "+")
+
+    lines = [base64_key[i:i+LINE_SIZE] for i in range(0, len(base64_key), LINE_SIZE)]
+
+    raw_key = "{}\n".format(BEGIN_LINE)
+    for line in lines:
+        # iter lines and create s unique string with \n
+        raw_key += "{}\n".format(line)
+
+    raw_key += "{}".format(END_LINE)
+
+    return pubkey_string_to_rsa(raw_key), raw_key
