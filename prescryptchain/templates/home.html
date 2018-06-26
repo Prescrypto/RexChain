@@ -50,7 +50,26 @@
       <div class="col-md-4" id="infosearch" style="width:30%; margin-right:14px;">
         <div class="row">
           <div class="shadowbl_blue col-md-12" style="height:148px">
-            <h2 style="color:#fff"><strong>Some Info here!</strong></h2>
+            <h2 style="color:#fff"><strong>
+              <SCRIPT LANGUAGE="Javascript">
+                <!--
+                // Array of day names
+                var dayNames = new Array("Sunday","Monday","Tuesday","Wednesday",
+                        "Thursday","Friday","Saturday");
+
+                // Array of month Names
+                var monthNames = new Array(
+                "January","February","March","April","May","June","July",
+                "August","September","October","November","December");
+
+                var now = new Date();
+                document.write(dayNames[now.getDay()] + ", " +
+                monthNames[now.getMonth()] + " " +
+                now.getDate() + ", " + now.getFullYear());
+
+                // -->
+              </SCRIPT></strong>
+            </h2>
           </div>
         </div>
         <div class="row">
