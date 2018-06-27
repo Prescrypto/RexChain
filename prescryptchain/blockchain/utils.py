@@ -157,30 +157,3 @@ class PoE(object):
         except Exception as e:
             print("[PoE ERROR] Error returning transantion details :%s, type(%s)" % (e, type(e)))
             raise e
-
-
-def privkey_string_to_rsa(string_key):
-    '''Take a private key created with jsencrypt and convert it into
-    a rsa data of python'''
-    with open('privkey.pem','wb') as file:
-        file.write(string_key)
-
-    with open('privkey.pem','rb') as file:
-        priv_key = file.read()
-
-    privkey = rsa.PrivateKey.load_pkcs1(priv_key)
-    #data is rsa type
-    return privkey
-
-def pubkey_string_to_rsa(string_key):
-    '''Take a public key created with jsencrypt and convert it into
-    a rsa data of python'''
-    with open('pubkey.pem','wb') as file:
-        file.write(string_key)
-
-    with open('pubkey.pem','rb') as file:
-        pub_key = file.read()
-
-    pubkey = rsa.PublicKey.load_pkcs1_openssl_pem(pub_key)
-    #data is rsa type
-    return pubkey
