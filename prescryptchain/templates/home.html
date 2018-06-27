@@ -23,7 +23,7 @@
           <div class="col-md-3"><img src="{% static 'media/icon-block2.png' %}" alt=""></div>
           <div class="col-md-9">
             <p id="transperday">270 790</p>
-            <p>Transaction per day</p>
+            <p>Transacciones al día</p>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
           <div class="col-md-3"><img src="{% static 'media/icon-block3.png' %}" alt=""></div>
           <div class="col-md-9">
             <p id="marketcap">$115,226,784,775.00</p>
-            <p>Market Cap</p>
+            <p>Capital del Mercado</p>
           </div>
         </div>
       </div>
@@ -54,13 +54,13 @@
               <SCRIPT LANGUAGE="Javascript">
                 <!--
                 // Array of day names
-                var dayNames = new Array("Sunday","Monday","Tuesday","Wednesday",
-                        "Thursday","Friday","Saturday");
+                var dayNames = new Array("Domingo","Lunes","Martes","Miercoles",
+                        "Jueves","Viernes","Sábado");
 
                 // Array of month Names
                 var monthNames = new Array(
-                "January","February","March","April","May","June","July",
-                "August","September","October","November","December");
+                "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
+                "Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
                 var now = new Date();
                 document.write(dayNames[now.getDay()] + ", " +
@@ -74,12 +74,12 @@
         </div>
         <div class="row">
           <div class="shadowbl col-md-12" style="height:150px">
-            <h2>Search</h2>
+            <h2>Busqueda</h2>
             <form method="GET" action="/hash" class="navbar-form navbar-left" role="search">
               <div class="form-group">
                 <input type="text" class="form-control" name="hash_rx" placeholder="Tx Hash" required>
               </div>
-              <button type="submit" id="search-block" class="btn btn-default">Search</button>
+              <button type="submit" id="search-block" class="btn btn-default">Buscar</button>
             </form>
           </div>
         </div>
@@ -97,13 +97,13 @@
   <div class="container mainblock">
     <div class="row">
       <div class="col-xs-12">
-        <h3>RECENT BLOCKS</h3>
+        <h3>BLOCKS RECIENTES</h3>
         {# last 5 blocks #}
         <table id="crypto-table" class="table table-striped">
           <tr>
-            <td>Size</td>
+            <td>Tamaño</td>
             <td>Hash</td>
-            <td class="text-center">When</td>
+            <td class="text-center">Cuándo</td>
           </tr>
           {% for rx_block in rx_blocks %}
             <tr>
@@ -119,13 +119,13 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <h3>RECENT TXS</h3>
+        <h3>PRESCRIPCIONES RECIENTES</h3>
         {# last 5 rx #}
         <table id="crypto-table" class="table table-striped">
           <tr>
-            <td>Size</td>
+            <td>Tamaño</td>
             <td>Hash</td>
-            <td class="text-center">When</td>
+            <td class="text-center">Cuándo</td>
             </tr>
           {% for rx in prescriptions %}
           <tr>
