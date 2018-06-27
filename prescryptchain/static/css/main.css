@@ -192,6 +192,9 @@ input.form-control{
   form.navbar-form.navbar-right{
     display: none!important;
   }
+  .main-title{
+    font-size:30px;
+  }
 }
 @media (max-width: 700px) {
   .whiteblock{
