@@ -199,13 +199,16 @@ input.form-control{
     font-size:30px;
   }
   .mainblock{
-    width: 400px;
+    width: 400px!important;
   }
 }
 @media (max-width: 700px) {
   .whiteblock{
     width:100%;
     margin:auto;
+  }
+  .mainblock{
+    width: 600px;
   }
 }
 
