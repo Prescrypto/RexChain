@@ -198,6 +198,9 @@ input.form-control{
   .main-title{
     font-size:30px;
   }
+  .mainblock{
+    width: 400px;
+  }
 }
 @media (max-width: 700px) {
   .whiteblock{
