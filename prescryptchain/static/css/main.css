@@ -201,6 +201,19 @@ input.form-control{
   .mainblock{
     width: 400px!important;
   }
+  footer{
+    padding:40px!important;
+  }
+  .footer_txt, .footer_title{
+    display: none;
+  }
+  .footer_menu{
+    width:150px;
+  }
+  .social{
+  padding-top: 5px;
+  text-align: left;
+  }
 }
 @media (max-width: 700px) {
   .whiteblock{
