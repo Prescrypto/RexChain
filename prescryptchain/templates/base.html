@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}">
       <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
       <link rel="stylesheet" href="{% static "css/animate.css" %}">
-
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
       {% block cssblock %}
       {% endblock cssblock %}
@@ -18,55 +18,71 @@
   <body class="bg-portrait">
     <header class="container-fluid bg-blank">
       <article class="row">
-        <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <div class="col-xs-12 col-lg-12">
           <nav id="nav-main" class="navbar navbar-default">
             <div class="container-fluid">
               <div class="navbar-header">
-                  <h1 class="title-font animated fadeInRight"><a href="/" title="Lightweight centralized public blockchain to prescriptions">RxChain</a></h1>
+                  <h1 style="margin-top: 10px;"><a class="teko" href="/" title="Lightweight centralized public blockchain to prescriptions">RxChain</a></h1>
               </div>
               <ul class="nav navbar-nav navbar-right">
-                <li><a title="Contacto hola@prescrypto.com" href="mailto:hola@prescrypto.com?Subject=Prescrypt-chain-contact">Contacto</a></li>
-                <li><a title="Nuestro blog de noticias" href="http://blog.prescrypto.com" target="_blank">Blog</a></li>
                 <li>
                   <form method="GET" action="/hash" class="navbar-form navbar-left" role="search">
                     <div class="form-group">
-                      <input type="text" class="form-control" name="hash_rx" placeholder="Rx Hash" required>
+                      <input type="text" class="form-control" name="hash_rx" placeholder="Tx Hash" required>
                     </div>
-                    <button type="submit" class="btn btn-default">Buscar</button>
+                    <button type="submit" class="btn btn-default" style="border-radius:0;">Buscar</button>
                   </form>
                 </li>
+                <li><a title="Contacto hola@prescrypto.com" href="mailto:hola@prescrypto.com?Subject=Prescrypt-chain-contact">Contacto</a></li>
               </ul>
             </div>
           </nav>
         </div>
       </article>
-      <div class="ribbon">
-        <a href="#">Versión Alpha</a>
-      </div>
     </header>
     <section class="container-fluid">
-      <div class="row hero bg-blue-sky">
-        <div class="col-xs-12 col-lg-8 col-lg-offset-2">
-          {% block subtitle %}<h2>Bienvenido al navegador de <strong>rxchain</strong></h2>{% endblock subtitle %}
+      <div class="row hero bg-grey">
+        <div class="col-xs-12 col-lg-8 col-lg-offset-1">
+          {% block subtitle %}<h2 class="main-title"> Bienvenido al<br>navegador de RxChain</h2>{% endblock subtitle %}
         </div>
       </div>
     </section>
     {% block content %}
     {% endblock content %}
     {# Footer Section #}
-    <footer class="container-fluid bg-midnight">
+    <footer class="container-fluid">
       <div class="row padding-2em">
-
-        <article class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <div class="col-md-2">
+          <p style="font-size: 15px;"><strong>RxChain</strong></p>
+        </div>
+        <div class="col-md-4">
           <div class="row">
-            <article class="col-xs-12">
-              <hr />
-            </article>
-            <article class="col-xs-12">
-              <p class="pull-right">We're <span title="Powered" class="glyphicon glyphicon-flash animated powered"></span> by <a href="https://www.prescrypto.com/?from=prescript-chain">Prescrypto</a></p>
-            </article>
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="footeranch"><a href="http://blog.prescrypto.com">Blog</a></li>
+                <li class="footeranch"><a href="">Tutorial</a></li>
+                <li class="footeranch"><a href="">FAQ</a></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="footeranch"><a href="">Nosotros</a></li>
+                <li class="footeranch"><a href="">Soporte</a></li>
+                <li class="footeranch"><a href="">Contacto</a></li>
+              </ul>
+            </div>
           </div>
-        </article>
+        </div>
+        <div class="col-md-4">
+          <p><strong>¿Qué es Blockchain?</strong></p>
+          <p><small>es una estructura de datos en la que la información contenida se agrupa en conjuntos (bloques) a los que se les añade metainformaciones relativas a otro bloque de la cadena anterior en una línea temporal.</small></p>
+        </div>
+        <div class="col-md-2">
+          <div class="social">
+            <i class="fab fa-facebook-square"></i>
+            <i class="fab fa-twitter-square"></i>
+          </div>
+        </div>
       </div>
     </footer>
 
