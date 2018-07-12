@@ -4,7 +4,7 @@
 {# Block HOME #}
 {% block content %}
 <!-- STATISTICS SECTION-->
-<section>
+<section id="stat_section">
   <div class="container">
     <div class="row centeredrow">
       <!-- First block-->
@@ -43,7 +43,7 @@
 <!-- Closing Statistic Section-->
 
 <!-- Graphics section-->
-<section>
+<section id="stat_section">
   <div class="container">
     <div class="row centeredrow">
       <!-- First block-->
@@ -85,8 +85,8 @@
         </div>
       </div>
       <!-- Second Block-->
-      <div id="graphica" class="shadowbl col-md-8" style="width:61%; height:310px; margin-right:0!important;">
-        <img src="{% static 'media/graph.png' %}" class="img-responsive" alt="">
+      <div class="shadowbl col-md-8" style="width:61%; height:310px; margin-right:0!important;">
+        <div id="chartdiv" style="width: 95%; height: 280px; background-color: #FFFFFF;" ></div>
       </div>
     </div> <!--Closing main row-->
   </div> <!-- Closing container-->
@@ -143,4 +143,116 @@
 {% endblock content %}
 
 {% block jsblock %}
+    <!-- amCharts javascript sources -->
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+
+    <!-- amCharts javascript code -->
+    <script type="text/javascript">
+      AmCharts.makeChart("chartdiv",
+        {
+          "type": "serial",
+          "categoryField": "category",
+          "plotAreaBorderColor": "#626262",
+          "startDuration": 1,
+          "startEffect": "easeOutSine",
+          "color": "#626262",
+          "theme": "light",
+          "categoryAxis": {
+            "gridPosition": "start",
+            "axisColor": "#626262",
+            "gridColor": "#626262"
+          },
+          "chartCursor": {
+            "enabled": true,
+            "cursorColor": "#626262"
+          },
+          "chartScrollbar": {
+            "enabled": true,
+            "backgroundColor": "#626262"
+          },
+          "trendLines": [],
+          "graphs": [
+            {
+              "balloonText": "[[title]] of [[category]]:[[value]]",
+              "bullet": "round",
+              "id": "AmGraph-1",
+              "title": "Rate",
+              "valueField": "column-1"
+            }
+          ],
+          "guides": [],
+          "valueAxes": [
+            {
+              "id": "ValueAxis-1",
+              "axisColor": "#626262",
+              "title": "Hash/s"
+            }
+          ],
+          "allLabels": [],
+          "balloon": {
+            "color": "#626262"
+          },
+          "titles": [
+            {
+              "id": "Title-1",
+              "size": 15,
+              "text": "Hash Rate"
+            }
+          ],
+          "dataProvider": [
+            {
+              "category": "Ago '17",
+              "column-1": "6.3"
+            },
+            {
+              "category": "Sep '17",
+              "column-1": "6.1"
+            },
+            {
+              "category": "Oct '17",
+              "column-1": "8.1"
+            },
+            {
+              "category": "Nov '17",
+              "column-1": "9.9"
+            },
+            {
+              "category": "Dic '17",
+              "column-1": "11"
+            },
+            {
+              "category": "Jan '18",
+              "column-1": "14"
+            },
+            {
+              "category": "Feb '18",
+              "column-1": "20"
+            },
+            {
+              "category": "Mar '18",
+              "column-1": "23"
+            },
+            {
+              "category": "Abr '18",
+              "column-1": "25"
+            },
+            {
+              "category": "May '18",
+              "column-1": "28"
+            },
+            {
+              "category": "Jun '18",
+              "column-1": "35"
+            },
+            {
+              "category": "Jul '18",
+              "column-1": "38"
+            }
+          ]
+        }
+      );
+    </script>
 {% endblock jsblock %}

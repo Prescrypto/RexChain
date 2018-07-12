@@ -28,7 +28,8 @@ from .utils import (
     un_savify_key, savify_key,
     encrypt_with_public_key, decrypt_with_private_key,
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
-    verify_signature, PoE
+    verify_signature, PoE, pubkey_string_to_rsa, pubkey_base64_to_rsa
+
 )
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
@@ -75,7 +76,10 @@ class BlockManager(models.Manager):
         try:
             _poe = PoE() # init proof of existence element
             txid = _poe.journal(new_block.merkleroot)
-            new_block.poetxid = txid
+            if txid is not None:
+                new_block.poetxid = txid
+            else:
+                new_block.poetxid = ""
         except Exception as e:
             logger.error("[PoE generate Block Error]: {}, type:{}".format(e, type(e)))
 
@@ -144,7 +148,14 @@ class PrescriptionQueryset(models.QuerySet):
     ''' Add custom querysets'''
 
     def non_validated_rxs(self):
+        return self.filter(is_valid=False).filter(block=None)
+
+    def validated_rxs(self):
         return self.filter(is_valid=True).filter(block=None)
+
+    def has_not_block(self):
+        return self.filter(block=None)
+
 
 
 class PrescriptionManager(models.Manager):
@@ -155,6 +166,12 @@ class PrescriptionManager(models.Manager):
 
     def non_validated_rxs(self):
         return self.get_queryset().non_validated_rxs()
+
+    def validated_rxs(self):
+        return self.get_queryset().validated_rxs()
+
+    def has_not_block(self):
+        return self.get_queryset().has_not_block()
 
     def create_block_attempt(self):
         ''' Use PoW hashcash algoritm to attempt to create a block '''
@@ -167,7 +184,7 @@ class PrescriptionManager(models.Manager):
         is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
 
         if is_valid_hashcash:
-            block = Block.objects.create_block(self.non_validated_rxs()) # TODO add on creation hash and merkle
+            block = Block.objects.create_block(self.has_not_block())
             block.hashcash = hashcash_string
             block.nonce = cache.get('counter')
             block.save()
@@ -194,7 +211,14 @@ class PrescriptionManager(models.Manager):
         rx = Prescription()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        pub_key = un_savify_key(raw_pub_key) # Make it usable
+
+        try:
+            pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
+        except Exception as e:
+            # Attempt to create public key with base64
+            pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
+
+        hex_raw_pub_key = savify_key(pub_key)
 
         # Extract signature
         _signature = data.pop("signature", None)
@@ -235,7 +259,8 @@ class PrescriptionManager(models.Manager):
             rx.previous_hash = self.last().rxid
 
         rx.save()
-
+        # SUCCESS creation of TX
+        # Attempt creation of block
         self.create_block_attempt()
 
         return rx
