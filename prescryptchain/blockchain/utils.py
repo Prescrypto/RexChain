@@ -164,6 +164,7 @@ class PoE(object):
             raise e
 
 
+
 def privkey_string_to_rsa(string_key):
     '''Take a private key created with jsencrypt and convert it into
     a rsa data of python'''
@@ -211,3 +212,4 @@ def pubkey_base64_to_rsa(base64_key):
     raw_key += "{}".format(END_LINE)
 
     return pubkey_string_to_rsa(raw_key), raw_key
+

@@ -29,6 +29,7 @@ from .utils import (
     encrypt_with_public_key, decrypt_with_private_key,
     calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
     verify_signature, PoE, pubkey_string_to_rsa, pubkey_base64_to_rsa
+
 )
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
@@ -222,17 +223,27 @@ class PrescriptionManager(models.Manager):
         # Extract signature
         _signature = data.pop("signature", None)
 
-        # This is basically the address
-        rx.public_key = hex_raw_pub_key
+        rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
+        rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
+        rx.medic_hospital = bin2hex(encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
+        rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
+        rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
+        # Temporary fix overflow problems
+        # TODO fix problem with rsa encrypts with too long characters
+        if len(data['diagnosis']) > 52:
+            data['diagnosis'] = data['diagnosis'][0:50]
+        rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
 
-        if "data" in data:
-            rx.data = data["data"]
+        # This is basically the address
+        rx.public_key = raw_pub_key
 
         if "location" in data:
             rx.location = data["location"]
 
         rx.timestamp = data["timestamp"]
+        rx.create_raw_msg()
 
+        rx.hash()
         # Save signature
         rx.signature = _signature
 
@@ -247,9 +258,6 @@ class PrescriptionManager(models.Manager):
         else:
             rx.previous_hash = self.last().rxid
 
-        rx.create_raw_msg()
-        rx.hash()
-
         rx.save()
         # SUCCESS creation of TX
         # Attempt creation of block
@@ -262,34 +270,32 @@ class PrescriptionManager(models.Manager):
 @python_2_unicode_compatible
 class Prescription(models.Model):
     # Cryptographically enabled fields
-    public_key = models.TextField(blank=True, default="")
-    private_key = models.TextField(blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
+    public_key = models.CharField(max_length=3000, blank=True, default="")
+    private_key = models.CharField(max_length=3000, blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
-    medic_name = models.TextField(blank=True, default="")
-    medic_cedula = models.TextField(blank=True, default="")
-    medic_hospital = models.TextField(blank=True, default="")
-    patient_name = models.TextField(blank=True, default="")
-    patient_age = models.TextField(blank=True, default="")
+    medic_name = models.CharField(blank=True, max_length=255, default="")
+    medic_cedula = models.CharField(blank=True, max_length=255, default="")
+    medic_hospital = models.CharField(blank=True, max_length=255, default="")
+    patient_name = models.CharField(blank=True, max_length=255, default="")
+    patient_age = models.CharField(blank=True, max_length=255, default="")
     diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
-    location = models.TextField(blank=True, default="")
+    location = models.CharField(blank=True, max_length=255, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
     location_lon = models.FloatField(null=True, blank=True, default=0)
     # Rx Specific
-    details = models.TextField(blank=True, default="")
-    extras = models.TextField(blank=True, default="")
+    details = models.TextField(blank=True, max_length=10000, default="")
+    extras = models.TextField(blank=True, max_length=10000, default="")
     bought = models.BooleanField(default=False)
     # Main
     block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
-    signature = models.TextField(null=True, blank=True, default="")
+    signature = models.CharField(max_length=255, null=True, blank=True, default="")
     is_valid = models.BooleanField(default=True, blank=True)
-    rxid = models.TextField(blank=True, default="")
-    previous_hash = models.TextField(blank=True, default="")
-
-    data = JSONField(default={}, blank=True)
+    rxid = models.CharField(max_length=255, blank=True, default="")
+    previous_hash = models.CharField(max_length=255, default="")
 
     objects = PrescriptionManager()
 
@@ -325,9 +331,12 @@ class Prescription(models.Model):
     def create_raw_msg(self):
         # Create raw html and encode
         msg = (
-            json.dumps(self.data) +
-            timezone.now().isoformat() +
-            self.previous_hash
+            self.medic_name +
+            self.medic_cedula +
+            self.medic_hospital +
+            self.patient_name +
+            self.patient_age +
+            self.diagnosis
         )
         self.raw_msg = msg.encode('utf-8')
 
@@ -384,8 +393,8 @@ class Medication(models.Model):
         related_name='medications'
         )
     active = models.CharField(blank=True, max_length=255, default="")
-    presentation = models.TextField(
-        blank=True
+    presentation = models.CharField(
+        blank=True, max_length=255,
     )
     instructions = models.TextField(blank=True, default="")
     frequency = models.CharField(blank=True, max_length=255, default="")
