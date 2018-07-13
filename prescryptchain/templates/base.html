@@ -19,23 +19,32 @@
     <header class="container-fluid bg-blank">
       <article class="row">
         <div class="col-xs-12 col-lg-12">
-          <nav id="nav-main" class="navbar navbar-default">
+          <nav class="navbar navbar-default">
             <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
               <div class="navbar-header">
-                  <h1 style="margin-top: 10px;"><a class="teko" href="/" title="Lightweight centralized public blockchain to prescriptions">RxChain</a></h1>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a style="padding-top:20px;" class="teko navbar-brand" href="/" title="Lightweight centralized public blockchain to prescriptions"><img src="{% static 'media/RxChain_Logo.png' %}" alt=""></a>
               </div>
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                  <form method="GET" action="/hash" class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="hash_rx" placeholder="Tx Hash" required>
-                    </div>
-                    <button type="submit" class="btn btn-default" style="border-radius:0;">Buscar</button>
-                  </form>
-                </li>
-                <li><a title="Contacto hola@prescrypto.com" href="mailto:hola@prescrypto.com?Subject=Prescrypt-chain-contact">Contacto</a></li>
-              </ul>
-            </div>
+
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <form method="GET" action="/hash" style="padding-top:10px;" class="navbar-form navbar-right" role="search">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="hash_rx" placeholder="Tx Hash" required>
+                  </div>
+                  <button type="submit" class="btn btn-default" style="border-radius:0;">Search</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a title="Contact hola@prescryto.com" href="mailto:hola@prescrypto.com?Subject=Prescrypt-chain-contact">Contact</a></li>
+                </ul>
+              </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
           </nav>
         </div>
       </article>
@@ -52,19 +61,20 @@
     {# Footer Section #}
     <footer class="container-fluid">
       <div class="row padding-2em">
-        <div class="col-md-2">
-          <p style="font-size: 15px;"><strong>RxChain</strong></p>
+
+        <div class="footer_title col-md-2">
+          <img src="{% static 'media/RxChain_Logo.png' %}" alt="">
         </div>
-        <div class="col-md-4">
+        <div  class="col-md-4 col-xs-12">
           <div class="row">
-            <div class="col-md-6">
+            <div id="menu1" class="footer_menu col-xs-6">
               <ul class="list-unstyled">
                 <li class="footeranch"><a href="http://blog.prescrypto.com">Blog</a></li>
                 <li class="footeranch"><a href="">Tutorial</a></li>
                 <li class="footeranch"><a href="">FAQ</a></li>
               </ul>
             </div>
-            <div class="col-md-6">
+            <div class="footer_menu col-xs-6">
               <ul class="list-unstyled">
                 <li class="footeranch"><a href="">Nosotros</a></li>
                 <li class="footeranch"><a href="">Soporte</a></li>
@@ -73,9 +83,9 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="footer_txt col-md-4">
           <p><strong>¿Qué es Blockchain?</strong></p>
-          <p><small>es una estructura de datos en la que la información contenida se agrupa en conjuntos (bloques) a los que se les añade metainformaciones relativas a otro bloque de la cadena anterior en una línea temporal.</small></p>
+          <p><small>Es una estructura de datos en la que la información contenida se agrupa en conjuntos (bloques) a los que se les añade metainformaciones relativas a otro bloque de la cadena anterior en una línea temporal.</small></p>
         </div>
         <div class="col-md-2">
           <div class="social">

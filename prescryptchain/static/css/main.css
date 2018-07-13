@@ -39,7 +39,7 @@ footer.container-fluid{
 .teko{
 	font-family: "Source Sans";
 	letter-spacing: 1.5px;
-  font-size: 20px;
+  font-size: 15px!important;
   font-weight: 700;
   color: white;
 }
@@ -51,7 +51,7 @@ a.teko:hover{
   font-family: "Source Sans Pro";
   font-weight: 700;
   font-size: 40px;
-  margin-left:75px;
+  margin-left:4em;
 }
 .genobank{
 	color: #ffffff
@@ -188,10 +188,40 @@ input.form-control{
   padding-left:0!important;
 }
 
+@media (max-width: 400px) {
+  form.navbar-form.navbar-right{
+    display: none!important;
+  }
+  #stat_section{
+    display: none!important;
+  }
+  .main-title{
+    font-size:30px;
+  }
+  .mainblock{
+    width: 400px!important;
+  }
+  footer{
+    padding:40px!important;
+  }
+  .footer_txt, .footer_title{
+    display: none;
+  }
+  .footer_menu{
+    width:150px;
+  }
+  .social{
+  padding-top: 5px;
+  text-align: left;
+  }
+}
 @media (max-width: 700px) {
   .whiteblock{
     width:100%;
     margin:auto;
+  }
+  .mainblock{
+    width: 600px;
   }
 }
 
