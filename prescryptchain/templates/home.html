@@ -116,28 +116,35 @@
 
   <!--Real time charts Javascript Code-->
   <script>
-    Highcharts.setOptions({
-    global: {
-      useUTC: false
-    }
-  });
+    var chart; // global
 
+    function requestData() {
+    $.ajax({
+        url: 'https://www.highcharts.com/studies/live-server-data.php',
+        success: function(point) {
+            var series = chart.series[0],
+                shift = series.data.length > 20; // shift if the series is
+                                                 // longer than 20
+
+            // add the point
+            chart.series[0].addPoint(point, true, shift);
+
+            // call it again after one second
+            setTimeout(requestData, 1000);
+        },
+        cache: false
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
   Highcharts.chart('container', {
     chart: {
       type: 'spline',
       animation: Highcharts.svg, // don't animate in old IE
       marginRight: 10,
       events: {
-        load: function () {
-
-          // set up the updating of the chart each second
-          var series = this.series[0];
-          setInterval(function () {
-            var x = (new Date()).getTime(), // current time
-              y = Math.random();
-            series.addPoint([x, y], true, true);
-          }, 1000);
-        }
+        load: requestData
       }
     },
     title: {
@@ -171,22 +178,10 @@
     },
     series: [{
       name: 'Prescripciones/s',
-      data: (function () {
-        // generate an array of random data
-        var data = [],
-          time = (new Date()).getTime(),
-          i;
-
-        for (i = -19; i <= 0; i += 1) {
-          data.push({
-            x: time + i * 1000,
-            y: Math.random()
-          });
-        }
-        return data;
-      }())
+      data: []
     }]
   });
+});
   </script>
 
 {% endblock jsblock %}
