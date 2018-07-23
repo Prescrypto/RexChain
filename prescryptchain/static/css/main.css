@@ -202,7 +202,7 @@ input.form-control{
 .receta_count{
   padding-left:80px;
 }
-.num_receta{
+#num_receta{
   font-size:3em;
   font-weight:600;
   color:#535353;
