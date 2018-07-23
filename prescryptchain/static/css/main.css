@@ -61,6 +61,7 @@ a.teko:hover{
 }
 .navbar{
   margin-bottom: 10px;
+  padding-bottom: 10px;
   width:70%;
   margin:auto;
 }
@@ -190,9 +191,10 @@ input.form-control{
 /* RT Chart CSS */
 .highcharts-title{
   font-family: "Source Sans Pro"!important;
+  text-transform: none!important;
 }
 .graph_section{
-  width:670px;
+  width:670px!important;
   height:310px;
   margin : 7px 0px 0px 0px;
   padding:0;
@@ -216,7 +218,7 @@ input.form-control{
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   form.navbar-form.navbar-right{
     display: none!important;
   }
@@ -262,5 +264,8 @@ input.form-control{
     width:100%!important;
     height:100%!important;
     margin:auto;
+  }
+  .graph_section{
+  width:900px!important;
   }
 }
