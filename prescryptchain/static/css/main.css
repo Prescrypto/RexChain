@@ -216,7 +216,7 @@ input.form-control{
 }
 
 /* Responsive */
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   form.navbar-form.navbar-right{
     display: none!important;
   }
@@ -227,7 +227,7 @@ input.form-control{
     font-size:30px;
   }
   .mainblock{
-    width: 400px!important;
+    width: 100%!important;
   }
   footer{
     padding:40px!important;
