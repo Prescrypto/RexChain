@@ -120,8 +120,9 @@
 
     function requestData() {
     $.ajax({
-        url: 'https://www.highcharts.com/studies/live-server-data.php',
+        url: 'http://127.0.0.1:8000/tx-statistics/',
         success: function(point) {
+            console.log(point);
             var series = chart.series[0],
                 shift = series.data.length > 20; // shift if the series is
                                                  // longer than 20
