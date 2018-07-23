@@ -188,6 +188,9 @@ input.form-control{
   padding-left:0!important;
 }
 /* RT Chart CSS */
+.highcharts-title{
+  font-family: "Source Sans Pro"!important;
+}
 .graph_section{
   width:670px;
   height:310px;
