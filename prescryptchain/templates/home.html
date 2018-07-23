@@ -139,8 +139,9 @@
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  Highcharts.chart('container', {
+  window.chart = new Highcharts.Chart({
     chart: {
+      renderTo: 'container',
       type: 'spline',
       animation: Highcharts.svg, // don't animate in old IE
       marginRight: 10,
