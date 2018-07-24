@@ -115,8 +115,8 @@
   <!--Real time charts Javascript Code-->
   <script>
     var chart; // global
-    var YOUR_HOSTNAME = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
-    var TX_STATISTICS_ENDPOINT = YOUR_HOSTNAME + "/tx-statistics/";
+    var HOSTNAME = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
+    var TX_STATISTICS_ENDPOINT = HOSTNAME + "/tx-statistics/";
     function requestData() {
     $.ajax({
         url: TX_STATISTICS_ENDPOINT,
