@@ -117,10 +117,11 @@
   <!--Real time charts Javascript Code-->
   <script>
     var chart; // global
-
+    var hostname = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
+    var myUrl = hostname + "/tx-statistics/";
     function requestData() {
     $.ajax({
-        url: 'http://127.0.0.1:8000/tx-statistics/',
+        url: myUrl,
         success: function(point) {
             var series = chart.series[0],
                 shift = series.data.length > 20; // shift if the series is
