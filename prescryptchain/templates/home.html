@@ -3,6 +3,44 @@
 {% load staticfiles %}
 {# Block HOME #}
 {% block content %}
+<!-- STATISTICS SECTION-->
+<section id="stat_section">
+  <div class="container">
+    <div class="row centeredrow">
+      <!-- First block-->
+      <div class="whiteblock col-xs-12 col-sm-4">
+        <div class="row">
+          <div class="col-md-3"><img src="{% static 'media/icon_medic.svg' %}" alt=""></div>
+          <div class="col-md-9">
+            <p id="total_medic">39</p>
+            <p>Total de médicos</p>
+          </div>
+        </div>
+      </div>
+      <!-- Second Block-->
+      <div class="whiteblock col-xs-12 col-sm-4">
+        <div class="row">
+          <div class="col-md-3"><img src="{% static 'media/icon_day.svg' %}" alt=""></div>
+          <div class="col-md-9">
+            <p id="prescriptday">270</p>
+            <p>Prescripciones / día</p>
+          </div>
+        </div>
+      </div>
+      <!-- Third Block-->
+      <div class="whiteblock col-xs-12 col-sm-4">
+        <div class="row">
+          <div class="col-md-3"><img src="{% static 'media/icon_month.svg' %}" alt=""></div>
+          <div class="col-md-9">
+            <p id="prescriptmonth">8123</p>
+            <p>Prescripciones / mes</p>
+          </div>
+        </div>
+      </div>
+    </div> <!--Closing main row-->
+  </div> <!-- Closing container-->
+</section>
+<!-- Closing Statistic Section-->
 
 <!-- Graphics section-->
 <section id="stat_section">

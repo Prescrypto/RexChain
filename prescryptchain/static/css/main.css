@@ -141,15 +141,15 @@ a.greybutton:hover{
   margin-top: 14px;
   margin-bottom: 20px;
 }
-#hashrate{
+#total_medic{
   color:#FF6565;
   font-size: 20px;
 }
-#transperday{
+#prescriptday{
   color:#A3A0FB;
   font-size: 20px;
 }
-#marketcap{
+#prescriptmonth{
   color:#4AD991;
   font-size: 20px;
 }
@@ -188,7 +188,7 @@ input.form-control{
   padding-left:0!important;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 900px) {
   form.navbar-form.navbar-right{
     display: none!important;
   }
