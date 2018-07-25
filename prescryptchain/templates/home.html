@@ -143,6 +143,15 @@
 {% endblock content %}
 
 {% block jsblock %}
+<script>
+  var MEDICOS = "39";
+  var PRESDAY = "270";
+  var PRESMONTH = "8123";
+
+  document.getElementById("#total_medic").innerHTML = MEDICOS;
+  document.getElementById("#prescriptday").innerHTML = PRESDAY;
+  document.getElementById("#prescriptmonth").innerHTML = PRESMONTH;
+</script>
     <!-- amCharts javascript sources -->
     <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
     <script type="text/javascript" src="https://www.amcharts.com/lib/3/serial.js"></script>
