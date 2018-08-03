@@ -146,6 +146,15 @@ class PrescriptionQueryset(models.QuerySet):
     def non_validated_rxs(self):
         return self.filter(is_valid=True).filter(block=None)
 
+    def total_medics(self):
+        return self.distinct("public_key")
+
+    def rx_by_today(self):
+        return self.filter(timestamp__date=timezone.now().date())
+
+    def rx_by_month(self):
+        return self.filter(timestamp__month=timezone.now().date().month)
+
 
 class PrescriptionManager(models.Manager):
     ''' Manager for prescriptions '''
@@ -155,6 +164,15 @@ class PrescriptionManager(models.Manager):
 
     def non_validated_rxs(self):
         return self.get_queryset().non_validated_rxs()
+
+    def total_medics(self):
+        return self.get_queryset().total_medics()
+
+    def rx_by_today(self):
+        return self.get_queryset().rx_by_today()
+
+    def rx_by_month(self):
+        return self.get_queryset().rx_by_month()
 
     def create_block_attempt(self):
         ''' Use PoW hashcash algoritm to attempt to create a block '''
@@ -256,6 +274,7 @@ class Prescription(models.Model):
     diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
+    # TODO ADD created_at time of server!
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     location = models.CharField(blank=True, max_length=255, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here

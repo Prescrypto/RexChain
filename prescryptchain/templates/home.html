@@ -147,9 +147,10 @@
 
 {% block jsblock %}
 <script>
-  var MEDICOS = "39";
-  var PRESDAY = "270";
-  var PRESMONTH = "8123";
+  // TODO Ilham !! Change name to the following variables
+  var MEDICOS = "{{ total_medics }}";
+  var PRESDAY = "{{ rx_by_today }}";
+  var PRESMONTH = "{{ rx_by_month }}";
 
   document.getElementById("total_medic").innerHTML = MEDICOS;
   document.getElementById("prescriptday").innerHTML = PRESDAY;
