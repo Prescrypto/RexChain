@@ -148,13 +148,13 @@
 {% block jsblock %}
 <script>
   // TODO Ilham !! Change name to the following variables
-  var MEDICOS = "{{ total_medics }}";
-  var PRESDAY = "{{ rx_by_today }}";
-  var PRESMONTH = "{{ rx_by_month }}";
+  var totalMedic = "{{ total_medics }}";
+  var rxByDay = "{{ rx_by_today }}";
+  var rxByMonth = "{{ rx_by_month }}";
 
-  document.getElementById("total_medic").innerHTML = MEDICOS;
-  document.getElementById("prescriptday").innerHTML = PRESDAY;
-  document.getElementById("prescriptmonth").innerHTML = PRESMONTH;
+  document.getElementById("total_medic").innerHTML = totalMedic;
+  document.getElementById("prescriptday").innerHTML = rxByDay;
+  document.getElementById("prescriptmonth").innerHTML = rxByMonth;
 </script>
 
   <!-- Highcharts source files-->
