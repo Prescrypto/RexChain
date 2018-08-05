@@ -12,11 +12,16 @@ def home(request):
     logger = logging.getLogger('django_info')
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
-    rxs = Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH]
-    blocks = Block.objects.all().order_by('-id')[:LIMIT_BLOCK]
-    logger.info('Total Blocks: {}'.format(blocks.count()))
-    return render(request, "home.html", {"prescriptions" : rxs, "rx_blocks": blocks })
+    # Creating context for home view!
+    context = {
+        "prescriptions" : Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH],
+        "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
+        "total_medics": Prescription.objects.total_medics().count(),
+        "rx_by_today": Prescription.objects.rx_by_today().count(),
+        "rx_by_month": Prescription.objects.rx_by_month().count(),
 
+    }
+    return render(request, "home.html", context)
 
 def block_detail(request, block_hash):
     return render(request, "blockchain/block_detail.html", {})
