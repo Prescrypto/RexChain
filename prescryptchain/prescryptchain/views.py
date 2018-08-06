@@ -13,7 +13,6 @@ def home(request):
     logger = logging.getLogger('django_info')
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
-    logger.info("Everythong oK")
     try:
         # Creating context for home view!
         context = {
@@ -23,10 +22,9 @@ def home(request):
             "rx_by_today": Prescription.objects.rx_by_today().count(),
             "rx_by_month": Prescription.objects.rx_by_month().count(),
         }
-        logger.info(context)
         return render(request, "home.html", context)
     except Exception as e:
-        logger.error("[home ERROR]: {} Type: {}".format(e, type(e)))
+        logger.error("[View home ERROR]: {} Type: {}".format(e, type(e)))
         return HttpResponse(status=500)
 
 def block_detail(request, block_hash):
