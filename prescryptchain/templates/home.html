@@ -159,7 +159,6 @@
 
   <!-- Highcharts source files-->
   <script src="https://code.highcharts.com/highcharts.js"></script>
-  <script src="https://code.highcharts.com/js/themes/dark-unica.js"></script>
 
   <!--Real time charts Javascript Code-->
   <script>
@@ -178,7 +177,7 @@
             chart.series[0].addPoint(point, true, shift);
 
             // call it again after one second
-            setTimeout(requestData, 1000);
+            setTimeout(requestData, 60000);
 
             // Add to counter
             document.getElementById("num_receta").innerHTML=point[1];
@@ -199,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     },
     title: {
-      text: 'Prescripciones / s'
+      text: 'Historial de las prescripciones'
     },
     xAxis: {
       type: 'datetime',
