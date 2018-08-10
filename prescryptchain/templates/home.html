@@ -172,7 +172,7 @@
             var series = chart.series[0],
                 shift = series.data.length > 20; // shift if the series is
                                                  // longer than 20
-
+            
             // add the point
             chart.series[0].addPoint(point, true, shift);
 
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     },
     tooltip: {
       formatter: function () {
-        return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+        return Highcharts.dateFormat('%H:%M', this.x) + '<br/>' +
           Highcharts.numberFormat(this.y, 2);
       }
     },
