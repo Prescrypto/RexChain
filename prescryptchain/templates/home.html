@@ -177,7 +177,7 @@
             chart.series[0].addPoint(point, true, shift);
 
             // call it again after one second
-            setTimeout(requestData, 60000);
+            setTimeout(requestData, 60000*60);
 
             // Add to counter
             document.getElementById("num_receta").innerHTML=point[1];
