@@ -22,7 +22,7 @@ from django.utils.dateformat import DateFormat
 from django.core.cache import cache
 
 # Our methods
-from core.helpers import safe_set_cache
+from core.helpers import safe_set_cache, get_timestamp
 from core.utils import Hashcash
 from .utils import (
     un_savify_key, savify_key,
@@ -152,8 +152,15 @@ class PrescriptionQueryset(models.QuerySet):
     def rx_by_today(self):
         return self.filter(timestamp__date=timezone.now().date())
 
-    def rx_by_month(self):
-        return self.filter(timestamp__month=timezone.now().date().month)
+    def rx_by_month(self, date_filter):
+        _date = date_filter.date()
+        return self.filter(timestamp__year=_date.year).filter(timestamp__month=_date.month)
+
+    def range_by_hour(self, date_filter):
+        _date = date_filter.date()
+        _time = date_filter.time()
+        return self.filter(timestamp__year=_date.year).filter(timestamp__month=_date.month).filter(timestamp__day=_date.day).filter(timestamp__hour=_time.hour)
+
 
 
 class PrescriptionManager(models.Manager):
@@ -161,6 +168,9 @@ class PrescriptionManager(models.Manager):
 
     def get_queryset(self):
         return PrescriptionQueryset(self.model, using=self._db)
+
+    def range_by_hour(self, date_filter):
+        return self.get_queryset().range_by_hour(date_filter)
 
     def non_validated_rxs(self):
         return self.get_queryset().non_validated_rxs()
@@ -171,8 +181,20 @@ class PrescriptionManager(models.Manager):
     def rx_by_today(self):
         return self.get_queryset().rx_by_today()
 
-    def rx_by_month(self):
-        return self.get_queryset().rx_by_month()
+    def rx_by_month(self, date_filter):
+        return self.get_queryset().rx_by_month(date_filter)
+
+    def get_stats_last_hours(self, hours=10):
+        ''' Return a list of  last rx created by given last hours '''
+        RANGE_HOUR = 1
+        _list = []
+        _new_time = _time = timezone.now()
+        _list.append([get_timestamp(_time), self.range_by_hour(_time).count()])
+        for i in range(0, hours):
+            _time = _time - timedelta(hours=RANGE_HOUR)
+            _list.append([get_timestamp(_time), self.range_by_hour(_time).count()])
+
+        return _list
 
     def create_block_attempt(self):
         ''' Use PoW hashcash algoritm to attempt to create a block '''

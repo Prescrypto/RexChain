@@ -13,9 +13,11 @@ def home(request):
     logger = logging.getLogger('django_info')
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
+    LAST_HOURS = 10
     try:
         # Creating context for home view!
         context = {
+            "stats": Prescription.objects.get_stats_last_hours(hours=LAST_HOURS),
             "prescriptions" : Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
             "total_medics": Prescription.objects.total_medics().count(),
