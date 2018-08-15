@@ -151,6 +151,7 @@
   var totalMedic = "{{ total_medics }}";
   var rxByDay = "{{ rx_by_today }}";
   var rxByMonth = "{{ rx_by_month }}";
+  var stats = {{ stats|safe }};
 
   document.getElementById("total_medic").innerHTML = totalMedic;
   document.getElementById("prescriptday").innerHTML = rxByDay;
@@ -172,7 +173,7 @@
             var series = chart.series[0],
                 shift = series.data.length > 20; // shift if the series is
                                                  // longer than 20
-            
+
             // add the point
             chart.series[0].addPoint(point, true, shift);
 

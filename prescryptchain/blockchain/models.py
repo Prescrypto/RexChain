@@ -149,8 +149,8 @@ class PrescriptionQueryset(models.QuerySet):
     def total_medics(self):
         return self.distinct("public_key")
 
-    def rx_by_today(self):
-        return self.filter(timestamp__date=timezone.now().date())
+    def rx_by_today(self, date_filter):
+        return self.filter(timestamp__date=date_filter.date())
 
     def rx_by_month(self, date_filter):
         _date = date_filter.date()
@@ -178,8 +178,8 @@ class PrescriptionManager(models.Manager):
     def total_medics(self):
         return self.get_queryset().total_medics()
 
-    def rx_by_today(self):
-        return self.get_queryset().rx_by_today()
+    def rx_by_today(self, date_filter):
+        return self.get_queryset().rx_by_today(date_filter)
 
     def rx_by_month(self, date_filter):
         return self.get_queryset().rx_by_month(date_filter)

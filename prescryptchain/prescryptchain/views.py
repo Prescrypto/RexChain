@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 import logging
+import json
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.utils import timezone
 
 from blockchain.models import Prescription, Block
 
@@ -14,15 +16,16 @@ def home(request):
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
     LAST_HOURS = 10
+    _now = timezone.now()
     try:
         # Creating context for home view!
         context = {
-            "stats": Prescription.objects.get_stats_last_hours(hours=LAST_HOURS),
+            "stats": json.dumps(Prescription.objects.get_stats_last_hours(hours=LAST_HOURS)),
             "prescriptions" : Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
             "total_medics": Prescription.objects.total_medics().count(),
-            "rx_by_today": Prescription.objects.rx_by_today().count(),
-            "rx_by_month": Prescription.objects.rx_by_month().count(),
+            "rx_by_today": Prescription.objects.rx_by_today(_now).count(),
+            "rx_by_month": Prescription.objects.rx_by_month(_now).count(),
         }
         return render(request, "home.html", context)
     except Exception as e:
