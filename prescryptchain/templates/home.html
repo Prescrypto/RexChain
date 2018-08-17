@@ -178,31 +178,14 @@
 
             // add the point
             chart.series[0].setData({{ stats|safe }});
-            requestData();
+
+             // Add to counter
+             document.getElementById("num_receta").innerHTML=total_rx;
         },
         cache: false
     });
 }
 
-    function requestData() {
-    $.ajax({
-        url: TX_STATISTICS_ENDPOINT,
-        success: function(point) {
-              var series = chart.series[0],
-                  shift = series.data.length > 9; // shift if the series is
-                                                 // longer than 9
-            // add the point
-            chart.series[0].addPoint(point, true, shift);
-
-            // call it again after one second
-            setTimeout(requestData, 10000);
-
-            // Add to counter
-            document.getElementById("num_receta").innerHTML=total_rx;
-        },
-        cache: false
-    });
-}
 
 document.addEventListener('DOMContentLoaded', function() {
   window.chart = new Highcharts.Chart({
