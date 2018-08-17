@@ -166,6 +166,7 @@
     var chart; // global
     var HOSTNAME = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
     var TX_STATISTICS_ENDPOINT = HOSTNAME + "/tx-statistics/";
+    var total_rx = {{ total_rx }};
     
     function loadData() {
     $.ajax({
@@ -197,7 +198,7 @@
             setTimeout(requestData, 10000);
 
             // Add to counter
-            document.getElementById("num_receta").innerHTML=point[1];
+            document.getElementById("num_receta").innerHTML=total_rx;
         },
         cache: false
     });
