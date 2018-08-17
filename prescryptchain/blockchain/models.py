@@ -75,8 +75,12 @@ class BlockManager(models.Manager):
         try:
             _poe = PoE() # init proof of existence element
             txid = _poe.journal(new_block.merkleroot)
-            new_block.poetxid = txid
+            if txid is not None:
+                new_block.poetxid = txid
+            else:
+                new_block.poetxid = ""
         except Exception as e:
+            new_block.poetxid = ""
             logger.error("[PoE generate Block Error]: {}, type:{}".format(e, type(e)))
 
         # Save
