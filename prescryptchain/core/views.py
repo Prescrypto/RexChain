@@ -12,6 +12,6 @@ class TxStatistics(View):
 
     def get(self, request):
         ''' GET endpoint for Txs '''
-        total_tx = Prescription.objects.all().count()
-        data = [ get_timestamp(timezone.now()), total_tx ]
+        LAST_HOURS = 10
+        data = Prescription.objects.get_stats_last_hours(hours=LAST_HOURS)
         return JsonResponse(data, safe=False)
