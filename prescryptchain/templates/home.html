@@ -164,8 +164,6 @@
   <!--Real time charts Javascript Code-->
   <script>
     var chart; // global
-    var HOSTNAME = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
-    var TX_STATISTICS_ENDPOINT = HOSTNAME + "/tx-statistics/";
     var total_rx = {{ total_rx }};
     
     function loadData() {
