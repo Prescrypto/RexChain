@@ -151,6 +151,7 @@
   var totalMedic = "{{ total_medics }}";
   var rxByDay = "{{ rx_by_today }}";
   var rxByMonth = "{{ rx_by_month }}";
+  var stats = {{ stats|safe }};
 
   document.getElementById("total_medic").innerHTML = totalMedic;
   document.getElementById("prescriptday").innerHTML = rxByDay;
@@ -159,33 +160,30 @@
 
   <!-- Highcharts source files-->
   <script src="https://code.highcharts.com/highcharts.js"></script>
-  <script src="https://code.highcharts.com/js/themes/dark-unica.js"></script>
 
   <!--Real time charts Javascript Code-->
   <script>
     var chart; // global
-    var HOSTNAME = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
-    var TX_STATISTICS_ENDPOINT = HOSTNAME + "/tx-statistics/";
-    function requestData() {
+    var total_rx = {{ total_rx }};
+    
+    function loadData() {
     $.ajax({
-        url: TX_STATISTICS_ENDPOINT,
+        data : stats,
         success: function(point) {
             var series = chart.series[0],
-                shift = series.data.length > 20; // shift if the series is
-                                                 // longer than 20
+                shift = series.data.length > 9; // shift if the series is
+                                                 // longer than 9
 
             // add the point
-            chart.series[0].addPoint(point, true, shift);
+            chart.series[0].setData({{ stats|safe }});
 
-            // call it again after one second
-            setTimeout(requestData, 1000);
-
-            // Add to counter
-            document.getElementById("num_receta").innerHTML=point[1];
+             // Add to counter
+             document.getElementById("num_receta").innerHTML=total_rx;
         },
         cache: false
     });
 }
+
 
 document.addEventListener('DOMContentLoaded', function() {
   window.chart = new Highcharts.Chart({
@@ -195,15 +193,16 @@ document.addEventListener('DOMContentLoaded', function() {
       animation: Highcharts.svg, // don't animate in old IE
       marginRight: 10,
       events: {
-        load: requestData
+        load: loadData
       }
     },
     title: {
-      text: 'Prescripciones / s'
+      text: 'Historial'
     },
     xAxis: {
       type: 'datetime',
-      tickPixelInterval: 150
+      tickPixelInterval: 150,
+      hour: '%H:%M'
     },
     yAxis: {
       title: {
@@ -217,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     },
     tooltip: {
       formatter: function () {
-        return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+        return Highcharts.dateFormat('%H:%M', this.x) + '<br/>' +
           Highcharts.numberFormat(this.y, 2);
       }
     },
@@ -228,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
       enabled: false
     },
     series: [{
-      name: 'Prescripciones/s',
+      name: 'Historial',
       data: []
     }]
   });
