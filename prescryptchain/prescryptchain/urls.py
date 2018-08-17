@@ -18,7 +18,6 @@ from rest_framework.documentation import include_docs_urls
 
 # Our Models
 from .views import home, humanstxt
-from core.views import TxStatistics
 from blockchain.views import (
     AddPrescriptionView, rx_detail, block_detail,
     rx_priv_key, qr_code, poe, ValidateRxView
@@ -42,8 +41,6 @@ urlpatterns = [
     # Static content
     url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
     url(r'^humans.txt/$', humanstxt, name="humanstxt"),
-    # TxStatics
-    url(r'^tx-statistics/$', TxStatistics.as_view(), name="tx-statistics"),
 
 ]
 
