@@ -186,7 +186,6 @@
     function requestData() {
     $.ajax({
         url: TX_STATISTICS_ENDPOINT,
-        startOnTick :9,
         success: function(point) {
               var series = chart.series[0],
                   shift = series.data.length > 9; // shift if the series is
