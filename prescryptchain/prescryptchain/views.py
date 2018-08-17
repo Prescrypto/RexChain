@@ -20,6 +20,7 @@ def home(request):
     try:
         # Creating context for home view!
         context = {
+            "total_rx" : Prescription.objects.all().count(),
             "stats": json.dumps(Prescription.objects.get_stats_last_hours(hours=LAST_HOURS)),
             "prescriptions" : Prescription.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
