@@ -198,7 +198,7 @@ input.form-control{
   height:310px;
   margin : 7px 0px 0px 7px;
   padding:0;
-  background-color:#fff;
+  background-color:#535353;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .receta_count{
@@ -207,10 +207,10 @@ input.form-control{
 #num_receta{
   font-size:3em;
   font-weight:600;
-  color:#535353;
+  color:#fff;
 }
 .graph_h5{
-  color:#909090;
+  color:#fff;
   font-weight:300;
 }
 .highcharts-credits{
