@@ -273,7 +273,7 @@ class PrescriptionManager(models.Manager):
         # Save signature
         rx.signature = _signature
 
-        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+        if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
             rx.is_valid = True
         else:
             rx.is_valid = False
@@ -324,6 +324,7 @@ class Prescription(models.Model):
     previous_hash = models.CharField(max_length=255, default="")
 
     objects = PrescriptionManager()
+    _crypto = CryptoTools()
 
     # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
     def hash(self):
@@ -334,25 +335,38 @@ class Prescription(models.Model):
     def get_data_base64(self):
         # Return data of prescription on base64
         return {
-            "medic_name" : base64.b64encode(hex2bin(self.medic_name)),
-            "medic_cedula" : base64.b64encode(hex2bin(self.medic_cedula)),
-            "medic_hospital" : base64.b64encode(hex2bin(self.medic_hospital)),
-            "patient_name" : base64.b64encode(hex2bin(self.patient_name)),
-            "patient_age" : base64.b64encode(hex2bin(self.patient_age)),
-            "diagnosis" : base64.b64encode(hex2bin(self.diagnosis))
+            "medic_name" : base64.b64encode(_crypto.hex2bin(self.medic_name)),
+            "medic_cedula" : base64.b64encode(_crypto.hex2bin(self.medic_cedula)),
+            "medic_hospital" : base64.b64encode(_crypto.hex2bin(self.medic_hospital)),
+            "patient_name" : base64.b64encode(_crypto.hex2bin(self.patient_name)),
+            "patient_age" : base64.b64encode(_crypto.hex2bin(self.patient_age)),
+            "diagnosis" : base64.b64encode(_crypto.hex2bin(self.diagnosis))
         }
 
     @property
     def get_priv_key(self):
-        ''' Get private key on Pem string '''
-        _key = un_savify_key(self.private_key)
-        return _key.save_pkcs1(format="PEM")
+        ''' Get private key on Pem string ''' 
+        _key = _crypto.un_savify_key(self.private_key)
+        try:
+            #LEGACY METHOD
+            return _key.save_pkcs1(format="PEM")
+        except: 
+            _key = _crypto.un_savify_key(self.private_key, is_legacy=False)
+            #New library crypto
+            return _key.exportKey('PEM')
+        
 
     @property
     def get_pub_key(self):
         ''' Get public key on Pem string '''
-        _public_key = un_savify_key(self.public_key)
-        return _public_key.save_pkcs1(format="PEM")
+        public_key = _crypto.un_savify_key(self.public_key)
+        try:
+            #LEGACY METHOD
+            return _key.save_pkcs1(format="PEM")
+        except: 
+            public_key = _crypto.un_savify_key(self.public_key, is_legacy=False)
+            #New library crypto
+            return _key.exportKey('PEM')
 
     def create_raw_msg(self):
         # Create raw html and encode
