@@ -232,24 +232,33 @@ class PrescriptionManager(models.Manager):
 
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
+        _crypto = CryptoTools() 
         rx = Prescription()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        pub_key = un_savify_key(raw_pub_key) # Make it usable
+        pub_key = _crypto.un_savify_key(raw_pub_key) # Make it usable
 
         # Extract signature
         _signature = data.pop("signature", None)
 
-        rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
-        rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
-        rx.medic_hospital = bin2hex(encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
-        rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
-        rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
+        try:
+            rx.medic_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
+            rx.medic_cedula = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
+            rx.medic_hospital = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
+            rx.patient_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
+            rx.patient_age = _crypto.bin2hex(_crypto.encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
+        except:
+            rx.medic_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key, is_legacy=False))
+            rx.medic_cedula = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key, is_legacy=False))
+            rx.medic_hospital = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key, is_legacy=False))
+            rx.patient_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key, is_legacy=False))
+            rx.patient_age = _crypto.bin2hex(_crypto.encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key, is_legacy=False))
+
         # Temporary fix overflow problems
         # TODO fix problem with rsa encrypts with too long characters
         if len(data['diagnosis']) > 52:
             data['diagnosis'] = data['diagnosis'][0:50]
-        rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
+        rx.diagnosis = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
 
         # This is basically the address
         rx.public_key = raw_pub_key
