@@ -295,8 +295,8 @@ class PrescriptionManager(models.Manager):
 @python_2_unicode_compatible
 class Prescription(models.Model):
     # Cryptographically enabled fields
-    public_key = models.CharField(max_length=3000, blank=True, default="")
-    private_key = models.CharField(max_length=3000, blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
+    public_key = models.TextField(blank=True, default="")
+    private_key = models.TextField(blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
     medic_name = models.CharField(blank=True, max_length=255, default="")
     medic_cedula = models.CharField(blank=True, max_length=255, default="")
