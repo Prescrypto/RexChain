@@ -2,6 +2,7 @@
 <html lang="es">
   {% load static %}
   <head>
+      {% include "misc/tagmanager_header.html" %}
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
       <title>{% block title %}RxChain | Brindamos la blockchain a las prescripciones médicas electrónicas{% endblock title %}</title>
@@ -16,6 +17,7 @@
       {% endblock cssblock %}
   </head>
   <body class="bg-portrait">
+    {% include "misc/tagmanager_body.html" %}
     <header class="container-fluid bg-blank">
       <article class="row">
         <div class="col-xs-12 col-lg-12">
