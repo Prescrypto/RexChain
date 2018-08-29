@@ -40,8 +40,8 @@ urlpatterns = [
     url(r'^validate/(?P<hash_rx>\w+)/$', ValidateRxView.as_view(), name="validate"),
     # Static content
     url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
-    url(r'^humans.txt/$', humans_txt, name="humans_txt"),
-    url(r'^robots.txt/$', robots_txt, name="robots_txt"),
+    url(r'^humans.txt$', humans_txt, name="humans_txt"),
+    url(r'^robots.txt$', robots_txt, name="robots_txt"),
 
 ]
 
