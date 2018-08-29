@@ -272,7 +272,7 @@ class PrescriptionManager(models.Manager):
         else:
             CryptoTools(has_legacy_keys=False)
             if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
-                rx.is_valid = True:
+                rx.is_valid = True
             
             rx.is_valid = False
 
