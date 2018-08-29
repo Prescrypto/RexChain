@@ -25,7 +25,7 @@ PRODUCTION = ast.literal_eval(os.environ['PRODUCTION'])
 if PRODUCTION:
     ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
 else:
-    ALLOWED_HOSTS = [os.environ['HEROKU_APP_NAME']+".herokuapp.com", "127.0.0.1"]
+    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS'], os.environ['HEROKU_APP_NAME']+".herokuapp.com", "127.0.0.1"]
 
 # SSL
 SESSION_COOKIE_SECURE = ast.literal_eval(os.environ['SECURE_SSL_REDIRECT'])
@@ -92,6 +92,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'prescryptchain.processors.add_production_var',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
