@@ -10,6 +10,7 @@ import cPickle
 import binascii
 import base64
 import logging
+import random
 
 # New cryptographic library
 from Crypto.PublicKey import RSA
@@ -44,19 +45,42 @@ class CryptoTools(object):
     
     def __init__(self, has_legacy_keys=True, *args, **kwargs):
         #This number is the entropy created by the user in FE, your default value is 161  
-        self.ENTROPY_NUMBER = 161
+        self.ENTROPY_NUMBER = self._number_random()
         self.logger = logging.getLogger('django_info')
         self.has_legacy_keys = has_legacy_keys
 
-    def bin2hex(self, binStr): 
+    def _number_random(self):
+        '''Take a number between 180 to 220'''
+        return random.randint(180,220)
+
+    def bin2hex(self, binStr):
         '''convert str to hex '''
         return binascii.hexlify(binStr)
- 
+
     def hex2bin(self, hexStr):
         '''convert hex to str '''
         return binascii.unhexlify(hexStr)
 
-    def savify_key(self, EncryptionKeyObject): 
+    def get_new_asym_keys(self, keysize=2048):
+        ''' Return tuple of public and private key '''
+        # LEGACY METHOD 
+        privatekey = RSA.generate(2048)
+        publickey = privatekey.publickey()
+        return (publickey, privatekey)
+    
+    def _get_new_asym_keys(self, keysize=512):
+        ''' Return tuple of public and private key '''
+        #LEGACY METHOD
+        return rsa.newkeys(keysize)
+
+    def get_pem_priv_format(self, EncryptionPrivateKey):
+        ''' return priv key on pem format '''
+        if self.has_legacy_keys:
+            return EncryptionPrivateKey.save_pkcs1(format="PEM")
+        else:
+            return EncryptionPrivateKey.exportKey('PEM')
+
+    def savify_key(self, EncryptionKeyObject):
         ''' Give it a key, returns a hex string ready to save '''
         if self.has_legacy_keys:
             return self._savify_key(EncryptionKeyObject)
@@ -70,22 +94,22 @@ class CryptoTools(object):
         pickld_key = cPickle.dumps(EncryptionKeyObject)
         return self.bin2hex(pickld_key)
 
-    def un_savify_key(self, HexPickldKey): 
+    def un_savify_key(self, HexPickldKey):
         ''' Give it a hex saved string, returns a Key object ready to use'''
         if self.has_legacy_keys:
             return self._un_savify_key(HexPickldKey)
         else:
             bin_str_key = self.hex2bin(HexPickldKey)
             #return objetc of RSA type  
-            return RSA.import_key(bin_str_key)
-             
+            return RSA.importKey(bin_str_key)
+     
     def _un_savify_key(self, HexPickldKey):
         ''' Give it a hex saved string, returns a Key object ready to use  '''
         # LEGACY METHOD
         bin_str_key = self.hex2bin(HexPickldKey)
         return cPickle.loads(bin_str_key)
 
-    def encrypt_with_public_key(self, message, EncryptionPublicKey): 
+    def encrypt_with_public_key(self, message, EncryptionPublicKey):
         ''' Encrypt with PublicKey object '''
         if self.has_legacy_keys:
             return self._encrypt_with_public_key(message, EncryptionPublicKey)
@@ -108,7 +132,6 @@ class CryptoTools(object):
             decrypt_rsa = PKCS1_OAEP.new(EncryptionPrivateKey)
             message = decrypt_rsa.decrypt(encryptedtext)
             return message
-
 
     def _decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey):
         ''' Decrypt with PrivateKey object '''
