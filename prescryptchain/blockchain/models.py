@@ -231,9 +231,9 @@ class PrescriptionManager(models.Manager):
         return rx
 
     def create_raw_rx(self, data, **kwargs):
-        # This calls the super method saving all clean data first
-        _crypto = CryptoTools() 
+        # This calls the super method saving all clean data first 
         rx = Prescription()
+        _crypto = CryptoTools()
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
         pub_key = _crypto.un_savify_key(raw_pub_key) # Make it usable
@@ -241,24 +241,17 @@ class PrescriptionManager(models.Manager):
         # Extract signature
         _signature = data.pop("signature", None)
 
-        try:
-            rx.medic_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
-            rx.medic_cedula = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
-            rx.medic_hospital = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
-            rx.patient_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
-            rx.patient_age = _crypto.bin2hex(_crypto.encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
-        except:
-            rx.medic_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key, is_legacy=False))
-            rx.medic_cedula = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key, is_legacy=False))
-            rx.medic_hospital = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key, is_legacy=False))
-            rx.patient_name = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key, is_legacy=False))
-            rx.patient_age = _crypto.bin2hex(_crypto.encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key, is_legacy=False))
+        rx.medic_name = _crypto.bin2hex(data["medic_name"].encode("utf-8"))
+        rx.medic_cedula = _crypto.bin2hex(data["medic_cedula"].encode("utf-8"))
+        rx.medic_hospital = _crypto.bin2hex(data["medic_hospital"].encode("utf-8"))
+        rx.patient_name = _crypto.bin2hex(data["patient_name"].encode("utf-8"))
+        rx.patient_age = _crypto.bin2hex(str(data["patient_age"]).encode("utf-8"))
 
         # Temporary fix overflow problems
         # TODO fix problem with rsa encrypts with too long characters
         if len(data['diagnosis']) > 52:
             data['diagnosis'] = data['diagnosis'][0:50]
-        rx.diagnosis = _crypto.bin2hex(_crypto.encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
+        rx.diagnosis = _crypto.bin2hex(data["diagnosis"].encode("utf-8"))
 
         # This is basically the address
         rx.public_key = raw_pub_key
@@ -273,9 +266,14 @@ class PrescriptionManager(models.Manager):
         # Save signature
         rx.signature = _signature
 
+        #This block cath two cases when has_legacy_key is True or False 
         if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
             rx.is_valid = True
         else:
+            CryptoTools(has_legacy_keys=False)
+            if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+                rx.is_valid = True:
+            
             rx.is_valid = False
 
         # Save previous hash
@@ -351,8 +349,9 @@ class Prescription(models.Model):
             #LEGACY METHOD
             return _key.save_pkcs1(format="PEM")
         except: 
-            _key = _crypto.un_savify_key(self.private_key, is_legacy=False)
             #New library crypto
+            _crypto = CryptoTools(has_legacy_keys=False)
+            _key = _crypto.un_savify_key(self.private_key)
             return _key.exportKey('PEM')
         
 
@@ -364,8 +363,9 @@ class Prescription(models.Model):
             #LEGACY METHOD
             return _key.save_pkcs1(format="PEM")
         except: 
-            public_key = _crypto.un_savify_key(self.public_key, is_legacy=False)
             #New library crypto
+            _crypto = CryptoTools(has_legacy_keys=False)
+            public_key = _crypto.un_savify_key(self.public_key)
             return _key.exportKey('PEM')
 
     def create_raw_msg(self):

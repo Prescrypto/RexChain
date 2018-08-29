@@ -42,22 +42,23 @@ def get_genesis_merkle_root():
 class CryptoTools(object):
     ''' Object tools for encrypt and decrypt info '''
     
-    def __init__(self):
+    def __init__(self, has_legacy_keys=True, *args, **kwargs):
         #This number is the entropy created by the user in FE, your default value is 161  
         self.ENTROPY_NUMBER = 161
         self.logger = logging.getLogger('django_info')
+        self.has_legacy_keys = has_legacy_keys
 
-    def bin2hex(self, binStr): #OK
+    def bin2hex(self, binStr): 
         '''convert str to hex '''
         return binascii.hexlify(binStr)
  
-    def hex2bin(self, hexStr):#OK
+    def hex2bin(self, hexStr):
         '''convert hex to str '''
         return binascii.unhexlify(hexStr)
 
-    def savify_key(self, EncryptionKeyObject, is_legacy=True): #OK
+    def savify_key(self, EncryptionKeyObject): 
         ''' Give it a key, returns a hex string ready to save '''
-        if is_legacy:
+        if self.has_legacy_keys:
             return self._savify_key(EncryptionKeyObject)
         else:
             pickld_key = EncryptionKeyObject.exportKey('PEM')
@@ -69,9 +70,9 @@ class CryptoTools(object):
         pickld_key = cPickle.dumps(EncryptionKeyObject)
         return self.bin2hex(pickld_key)
 
-    def un_savify_key(self, HexPickldKey, is_legacy=True): #OK
+    def un_savify_key(self, HexPickldKey): 
         ''' Give it a hex saved string, returns a Key object ready to use'''
-        if is_legacy:
+        if self.has_legacy_keys:
             return self._un_savify_key(HexPickldKey)
         else:
             bin_str_key = self.hex2bin(HexPickldKey)
@@ -84,14 +85,13 @@ class CryptoTools(object):
         bin_str_key = self.hex2bin(HexPickldKey)
         return cPickle.loads(bin_str_key)
 
-    def encrypt_with_public_key(self, message, EncryptionPublicKey, is_legacy=True): #OK
+    def encrypt_with_public_key(self, message, EncryptionPublicKey): 
         ''' Encrypt with PublicKey object '''
-        if is_legacy:
+        if self.has_legacy_keys:
             return self._encrypt_with_public_key(message, EncryptionPublicKey)
         else:
-            rsa_key = EncryptionPublicKey.exportKey('PEM')
-            encrypt_rsa = Crypto.Cipher.PKCS1_OAEP.new(rsa_key)
-            encryptedtext = encrypt_rsa.encrypt(message)
+            encrypt_rsa = PKCS1_OAEP.new(EncryptionPublicKey)
+            encryptedtext = encrypt_rsa.encrypt(message)              
             return encryptedtext
 
     def _encrypt_with_public_key(self, message, EncryptionPublicKey):
@@ -100,15 +100,15 @@ class CryptoTools(object):
         encryptedtext=rsa.encrypt(message, EncryptionPublicKey)
         return encryptedtext
 
-    def decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey, is_legacy=True):#OK
+    def decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey):
         ''' Decrypt with PrivateKey object '''
-        if is_legacy:
+        if self.has_legacy_keys:
             return self._decrypt_with_private_key(encryptedtext, EncryptionPrivateKey) 
         else:
-            rsa_key = EncryptionPrivateKey.exportKey('PEM')
-            decrypt_rsa = PKCS1_OAEP.new(rsa_key)
+            decrypt_rsa = PKCS1_OAEP.new(EncryptionPrivateKey)
             message = decrypt_rsa.decrypt(encryptedtext)
             return message
+
 
     def _decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey):
         ''' Decrypt with PrivateKey object '''
@@ -116,15 +116,13 @@ class CryptoTools(object):
         message =rsa.decrypt(encryptedtext, EncryptionPrivateKey)
         return message
 
-    def sign(self, message, PrivateKey, is_legacy=True):#OK
+    def sign(self, message, PrivateKey):
         ''' Sign a message '''
-        if is_legacy:
+        if self.has_legacy_keys:
             return self._sign(message, PrivateKey)
         else:
-            rsa_key = PrivateKey.exportKey('PEM')
-            encrypt_rsa = RSA.import_key(rsa_key)
             message_hash = SHA256.new(message)
-            signature = pkcs1_15.new(encrypt_rsa).sign(message_hash)
+            signature = pkcs1_15.new(PrivateKey).sign(message_hash)
             return base64.b64encode(signature)
 
     def _sign(self, message, PrivateKey):
@@ -133,17 +131,15 @@ class CryptoTools(object):
         signature = rsa.sign(message, PrivateKey, 'SHA-1')
         return base64.b64encode(signature)
 
-    def verify(self, message, signature, PublicKey, is_legacy=True):#OK
+    def verify(self, message, signature, PublicKey):
         '''Verify if a signed message is valid'''
-        if is_legacy:
+        if self.has_legacy_keys:
             return self._verify(message, signature, PublicKey)
         else:
             signature = base64.b64decode(signature)
-            rsa_key = PublicKey.exportKey('PEM')
-            decrypt_rsa = RSA.import_key(rsa_key)
             message_hash = SHA256.new(message)
             try:
-                pkcs1_15.new(decrypt_rsa).verify(message_hash, signature)
+                pkcs1_15.new(PublicKey).verify(message_hash, signature)
                 return True   
             except Exception as e:
                 self.logger.error("[CryptoTool, verify ERROR ] Signature or message are corrupted")
