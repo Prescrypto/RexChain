@@ -39,9 +39,14 @@ def block_detail(request, block_hash):
 def rx_detail(request, rx_hash):
     return render(request, "blockchain/rx_detail.html", {})
 
-def humanstxt(request):
+def humans_txt(request):
     ''' Show humans txt file '''
     response = render(request, 'humans.txt', {})
     response['Content-Type'] = "text/plain"
     return response
 
+def robots_txt(request):
+    ''' Show humans txt file '''
+    response = render(request, 'robots.txt', {})
+    response['Content-Type'] = "text/plain"
+    return response
