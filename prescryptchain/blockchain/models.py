@@ -231,7 +231,7 @@ class PrescriptionManager(models.Manager):
         return rx
 
     def create_raw_rx(self, data, **kwargs):
-        # This calls the super method saving all clean data first 
+        # This calls the super method saving all clean data first
         rx = Prescription()
         _crypto = CryptoTools()
         # Get Public Key from API
@@ -266,14 +266,14 @@ class PrescriptionManager(models.Manager):
         # Save signature
         rx.signature = _signature
 
-        #This block cath two cases when has_legacy_key is True or False 
+        #This block cath two cases when has_legacy_key is True or False
         if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
             rx.is_valid = True
         else:
             CryptoTools(has_legacy_keys=False)
             if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
                 rx.is_valid = True
-            
+
             rx.is_valid = False
 
         # Save previous hash
@@ -296,30 +296,30 @@ class Prescription(models.Model):
     public_key = models.TextField(blank=True, default="")
     private_key = models.TextField(blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
-    medic_name = models.CharField(blank=True, max_length=255, default="")
-    medic_cedula = models.CharField(blank=True, max_length=255, default="")
-    medic_hospital = models.CharField(blank=True, max_length=255, default="")
-    patient_name = models.CharField(blank=True, max_length=255, default="")
-    patient_age = models.CharField(blank=True, max_length=255, default="")
+    medic_name = models.TextField(blank=True, default="")
+    medic_cedula = models.TextField(blank=True, default="")
+    medic_hospital = models.TextField(blank=True, default="")
+    patient_name = models.TextField(blank=True, default="")
+    patient_age = models.TextField(blank=True, default="")
     diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
     # TODO ADD created_at time of server!
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
-    location = models.CharField(blank=True, max_length=255, default="")
+    location = models.TextField(blank=True, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
     location_lon = models.FloatField(null=True, blank=True, default=0)
     # Rx Specific
-    details = models.TextField(blank=True, max_length=10000, default="")
-    extras = models.TextField(blank=True, max_length=10000, default="")
+    details = models.TextField(blank=True, default="")
+    extras = models.TextField(blank=True, default="")
     bought = models.BooleanField(default=False)
     # Main
     block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
-    signature = models.CharField(max_length=255, null=True, blank=True, default="")
+    signature = models.TextField(null=True, blank=True, default="")
     is_valid = models.BooleanField(default=True, blank=True)
-    rxid = models.CharField(max_length=255, blank=True, default="")
-    previous_hash = models.CharField(max_length=255, default="")
+    rxid = models.TextField(blank=True, default="")
+    previous_hash = models.TextField(default="")
 
     objects = PrescriptionManager()
     _crypto = CryptoTools()
@@ -343,17 +343,17 @@ class Prescription(models.Model):
 
     @property
     def get_priv_key(self):
-        ''' Get private key on Pem string ''' 
+        ''' Get private key on Pem string '''
         _key = _crypto.un_savify_key(self.private_key)
         try:
             #LEGACY METHOD
             return _key.save_pkcs1(format="PEM")
-        except: 
+        except:
             #New library crypto
             _crypto = CryptoTools(has_legacy_keys=False)
             _key = _crypto.un_savify_key(self.private_key)
             return _key.exportKey('PEM')
-        
+
 
     @property
     def get_pub_key(self):
@@ -362,7 +362,7 @@ class Prescription(models.Model):
         try:
             #LEGACY METHOD
             return _key.save_pkcs1(format="PEM")
-        except: 
+        except:
             #New library crypto
             _crypto = CryptoTools(has_legacy_keys=False)
             public_key = _crypto.un_savify_key(self.public_key)
@@ -432,15 +432,15 @@ class Medication(models.Model):
     prescription = models.ForeignKey('blockchain.Prescription',
         related_name='medications'
         )
-    active = models.CharField(blank=True, max_length=255, default="")
-    presentation = models.CharField(
-        blank=True, max_length=255,
+    active = models.TextField(blank=True, default="")
+    presentation = models.TextField(
+        blank=True,
     )
     instructions = models.TextField(blank=True, default="")
-    frequency = models.CharField(blank=True, max_length=255, default="")
-    dose = models.CharField(blank=True, max_length=255, default="")
+    frequency = models.TextField(blank=True, default="")
+    dose = models.TextField(blank=True, default="")
     bought = models.BooleanField(default=False)
-    drug_upc = models.CharField(blank=True, max_length=255, default="", db_index=True)
+    drug_upc = models.TextField(blank=True, default="", db_index=True)
 
     objects = MedicationManager()
 
