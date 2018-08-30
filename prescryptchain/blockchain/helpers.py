@@ -42,9 +42,9 @@ def get_genesis_merkle_root():
 
 class CryptoTools(object):
     ''' Object tools for encrypt and decrypt info '''
-    
+
     def __init__(self, has_legacy_keys=True, *args, **kwargs):
-        #This number is the entropy created by the user in FE, your default value is 161  
+        #This number is the entropy created by the user in FE, your default value is 161
         self.ENTROPY_NUMBER = self._number_random()
         self.logger = logging.getLogger('django_info')
         self.has_legacy_keys = has_legacy_keys
@@ -63,11 +63,11 @@ class CryptoTools(object):
 
     def get_new_asym_keys(self, keysize=2048):
         ''' Return tuple of public and private key '''
-        # LEGACY METHOD 
+        # LEGACY METHOD
         privatekey = RSA.generate(2048)
         publickey = privatekey.publickey()
         return (publickey, privatekey)
-    
+
     def _get_new_asym_keys(self, keysize=512):
         ''' Return tuple of public and private key '''
         #LEGACY METHOD
@@ -87,7 +87,7 @@ class CryptoTools(object):
         else:
             pickld_key = EncryptionKeyObject.exportKey('PEM')
             return self.bin2hex(pickld_key)
-     
+
     def _savify_key(self, EncryptionKeyObject):
         ''' Give it a key, returns a hex string ready to save '''
         # LEGAY METHOD
@@ -100,9 +100,9 @@ class CryptoTools(object):
             return self._un_savify_key(HexPickldKey)
         else:
             bin_str_key = self.hex2bin(HexPickldKey)
-            #return objetc of RSA type  
+            #return objetc of RSA type
             return RSA.importKey(bin_str_key)
-     
+
     def _un_savify_key(self, HexPickldKey):
         ''' Give it a hex saved string, returns a Key object ready to use  '''
         # LEGACY METHOD
@@ -115,7 +115,7 @@ class CryptoTools(object):
             return self._encrypt_with_public_key(message, EncryptionPublicKey)
         else:
             encrypt_rsa = PKCS1_OAEP.new(EncryptionPublicKey)
-            encryptedtext = encrypt_rsa.encrypt(message)              
+            encryptedtext = encrypt_rsa.encrypt(message)
             return encryptedtext
 
     def _encrypt_with_public_key(self, message, EncryptionPublicKey):
@@ -127,7 +127,7 @@ class CryptoTools(object):
     def decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey):
         ''' Decrypt with PrivateKey object '''
         if self.has_legacy_keys:
-            return self._decrypt_with_private_key(encryptedtext, EncryptionPrivateKey) 
+            return self._decrypt_with_private_key(encryptedtext, EncryptionPrivateKey)
         else:
             decrypt_rsa = PKCS1_OAEP.new(EncryptionPrivateKey)
             message = decrypt_rsa.decrypt(encryptedtext)
@@ -163,7 +163,7 @@ class CryptoTools(object):
             message_hash = SHA256.new(message)
             try:
                 pkcs1_15.new(PublicKey).verify(message_hash, signature)
-                return True   
+                return True
             except Exception as e:
                 self.logger.error("[CryptoTool, verify ERROR ] Signature or message are corrupted")
                 return False
@@ -177,3 +177,42 @@ class CryptoTools(object):
         except Exception as e:
             self.logger.error("[CryptoTool, verify ERROR ] Signature or message are corrupted")
             return False
+
+    def entropy(self, number):
+        '''This method verify if entropy is enough'''
+        if self.ENTROPY_NUMBER > 160:
+            return os.urandom(self.ENTROPY_NUMBER)
+        else:
+            raise ValueError('Error')
+
+    def create_key_with_entropy(self):
+        '''This method create a pair RSA keys with entropy created by the user in FE'''
+        try:
+            privatekey = RSA.generate(2048, randfunc=self.entropy)
+        except Exception as e:
+            self.logger.error('{}'.format(e))
+            self.logger.error("[CryptoTool, create_key_with_entropy ERROR] Entropy not enough")
+            privatekey = None
+
+        if privatekey is None:
+            publickey = None
+        else:
+            publickey = privatekey.publickey()
+
+        return (publickey, privatekey)
+
+    def fiel_to_rsakeys(directory_file, password):
+        '''This method generates your private key and public key in pem format
+        from your FIEL file in key format
+        directorty_file: Only copy the direction file without extension, i.e.,
+        wihtout .key
+        password: enter password of your FIEL
+        '''
+        privatekey = None
+        with open(directory_file+'.key', 'rb') as file:
+            privatekey = RSA.import_key(file.read(), passphrase=password)
+
+        public_key = prk.publickey()
+        return (publickey, privatekey)
+
+
