@@ -234,24 +234,25 @@ class PrescriptionManager(models.Manager):
         # This calls the super method saving all clean data first
         rx = Prescription()
         _crypto = CryptoTools()
-        # Get Public Key from API
+
+        # Get Public Key from API, First try its with legacy crypto tools, then New Keys
         raw_pub_key = data.get("public_key")
-        pub_key = _crypto.un_savify_key(raw_pub_key) # Make it usable
+        try:
+            pub_key = _crypto.un_savify_key(raw_pub_key) # Make it usable
+        except Exception as e:
+            logger.info("[CREATE RAW RX, change to New Keys]")
+            _crypto = CryptoTools(has_legacy_keys=False)
+            pub_key = _crypto.un_savify_key(raw_pub_key)
 
         # Extract signature
         _signature = data.pop("signature", None)
 
-        rx.medic_name = _crypto.bin2hex(data["medic_name"].encode("utf-8"))
-        rx.medic_cedula = _crypto.bin2hex(data["medic_cedula"].encode("utf-8"))
-        rx.medic_hospital = _crypto.bin2hex(data["medic_hospital"].encode("utf-8"))
-        rx.patient_name = _crypto.bin2hex(data["patient_name"].encode("utf-8"))
-        rx.patient_age = _crypto.bin2hex(str(data["patient_age"]).encode("utf-8"))
-
-        # Temporary fix overflow problems
-        # TODO fix problem with rsa encrypts with too long characters
-        if len(data['diagnosis']) > 52:
-            data['diagnosis'] = data['diagnosis'][0:50]
-        rx.diagnosis = _crypto.bin2hex(data["diagnosis"].encode("utf-8"))
+        rx.medic_name = data["medic_name"]
+        rx.medic_cedula = data["medic_cedula"]
+        rx.medic_hospital = data["medic_hospital"]
+        rx.patient_name = data["patient_name"]
+        rx.patient_age = data["patient_age"]
+        rx.diagnosis = data["diagnosis"]
 
         # This is basically the address
         rx.public_key = raw_pub_key
@@ -267,13 +268,9 @@ class PrescriptionManager(models.Manager):
         rx.signature = _signature
 
         #This block cath two cases when has_legacy_key is True or False
-        if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+        if _crypto.verify(json.dumps(sorted(data)), _signature, pub_key):
             rx.is_valid = True
         else:
-            CryptoTools(has_legacy_keys=False)
-            if _crypto.verify_signature(json.dumps(sorted(data)), _signature, pub_key):
-                rx.is_valid = True
-
             rx.is_valid = False
 
         # Save previous hash
