@@ -319,7 +319,6 @@ class Prescription(models.Model):
     previous_hash = models.TextField(default="")
 
     objects = PrescriptionManager()
-    _crypto = CryptoTools()
 
     # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
     def hash(self):
@@ -330,40 +329,28 @@ class Prescription(models.Model):
     def get_data_base64(self):
         # Return data of prescription on base64
         return {
-            "medic_name" : base64.b64encode(_crypto.hex2bin(self.medic_name)),
-            "medic_cedula" : base64.b64encode(_crypto.hex2bin(self.medic_cedula)),
-            "medic_hospital" : base64.b64encode(_crypto.hex2bin(self.medic_hospital)),
-            "patient_name" : base64.b64encode(_crypto.hex2bin(self.patient_name)),
-            "patient_age" : base64.b64encode(_crypto.hex2bin(self.patient_age)),
-            "diagnosis" : base64.b64encode(_crypto.hex2bin(self.diagnosis))
+            "medic_name" : self.medic_name,
+            "medic_cedula" : self.medic_cedula,
+            "medic_hospital" : self.medic_hospital,
+            "patient_name" : self.patient_name,
+            "patient_age" : self.patient_age,
+            "diagnosis" : self.diagnosis
         }
 
     @property
     def get_priv_key(self):
         ''' Get private key on Pem string '''
-        _key = _crypto.un_savify_key(self.private_key)
-        try:
-            #LEGACY METHOD
-            return _key.save_pkcs1(format="PEM")
-        except:
-            #New library crypto
-            _crypto = CryptoTools(has_legacy_keys=False)
-            _key = _crypto.un_savify_key(self.private_key)
-            return _key.exportKey('PEM')
+        # Symbolic pass
+        # Removing legacy code
+        return ""
 
 
     @property
     def get_pub_key(self):
         ''' Get public key on Pem string '''
-        public_key = _crypto.un_savify_key(self.public_key)
-        try:
-            #LEGACY METHOD
-            return _key.save_pkcs1(format="PEM")
-        except:
-            #New library crypto
-            _crypto = CryptoTools(has_legacy_keys=False)
-            public_key = _crypto.un_savify_key(self.public_key)
-            return _key.exportKey('PEM')
+        # Symbolic pass
+        # Removing legacy code
+        return ""
 
     def create_raw_msg(self):
         # Create raw html and encode
@@ -430,9 +417,7 @@ class Medication(models.Model):
         related_name='medications'
         )
     active = models.TextField(blank=True, default="")
-    presentation = models.TextField(
-        blank=True,
-    )
+    presentation = models.TextField(blank=True, default="")
     instructions = models.TextField(blank=True, default="")
     frequency = models.TextField(blank=True, default="")
     dose = models.TextField(blank=True, default="")
