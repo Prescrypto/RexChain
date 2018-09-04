@@ -13,7 +13,7 @@ Markdown==2.6.11
 djangorestframework==3.7.7
 
 # crypto
-pycrypto==2.6.1
+pycryptodome==3.6.5
 rsa==3.4.2
 merkletools==1.0.2
 pysha3==1.0b1
