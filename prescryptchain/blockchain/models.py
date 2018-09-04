@@ -25,12 +25,9 @@ from django.core.cache import cache
 from core.helpers import safe_set_cache, get_timestamp
 from core.utils import Hashcash
 from .utils import (
-    un_savify_key, savify_key,
-    encrypt_with_public_key, decrypt_with_private_key,
-    calculate_hash, bin2hex, hex2bin,  get_new_asym_keys, get_merkle_root,
-    verify_signature, PoE
+    calculate_hash, get_merkle_root, PoE
 )
-from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root
+from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 
@@ -236,23 +233,26 @@ class PrescriptionManager(models.Manager):
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
         rx = Prescription()
-        # Get Public Key from API
+        _crypto = CryptoTools()
+
+        # Get Public Key from API, First try its with legacy crypto tools, then New Keys
         raw_pub_key = data.get("public_key")
-        pub_key = un_savify_key(raw_pub_key) # Make it usable
+        try:
+            pub_key = _crypto.un_savify_key(raw_pub_key) # Make it usable
+        except Exception as e:
+            logger.info("[CREATE RAW RX, change to New Keys]")
+            _crypto = CryptoTools(has_legacy_keys=False)
+            pub_key = _crypto.un_savify_key(raw_pub_key)
 
         # Extract signature
         _signature = data.pop("signature", None)
 
-        rx.medic_name = bin2hex(encrypt_with_public_key(data["medic_name"].encode("utf-8"), pub_key))
-        rx.medic_cedula = bin2hex(encrypt_with_public_key(data["medic_cedula"].encode("utf-8"), pub_key))
-        rx.medic_hospital = bin2hex(encrypt_with_public_key(data["medic_hospital"].encode("utf-8"), pub_key))
-        rx.patient_name = bin2hex(encrypt_with_public_key(data["patient_name"].encode("utf-8"), pub_key))
-        rx.patient_age = bin2hex(encrypt_with_public_key(str(data["patient_age"]).encode("utf-8"), pub_key))
-        # Temporary fix overflow problems
-        # TODO fix problem with rsa encrypts with too long characters
-        if len(data['diagnosis']) > 52:
-            data['diagnosis'] = data['diagnosis'][0:50]
-        rx.diagnosis = bin2hex(encrypt_with_public_key(data["diagnosis"].encode("utf-8"), pub_key))
+        rx.medic_name = data["medic_name"]
+        rx.medic_cedula = data["medic_cedula"]
+        rx.medic_hospital = data["medic_hospital"]
+        rx.patient_name = data["patient_name"]
+        rx.patient_age = data["patient_age"]
+        rx.diagnosis = data["diagnosis"]
 
         # This is basically the address
         rx.public_key = raw_pub_key
@@ -267,7 +267,8 @@ class PrescriptionManager(models.Manager):
         # Save signature
         rx.signature = _signature
 
-        if verify_signature(json.dumps(sorted(data)), _signature, pub_key):
+        #This block cath two cases when has_legacy_key is True or False
+        if _crypto.verify(json.dumps(sorted(data)), _signature, pub_key):
             rx.is_valid = True
         else:
             rx.is_valid = False
@@ -289,33 +290,33 @@ class PrescriptionManager(models.Manager):
 @python_2_unicode_compatible
 class Prescription(models.Model):
     # Cryptographically enabled fields
-    public_key = models.CharField(max_length=3000, blank=True, default="")
-    private_key = models.CharField(max_length=3000, blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
+    public_key = models.TextField(blank=True, default="")
+    private_key = models.TextField(blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
     ### Patient and Medic data (encrypted)
-    medic_name = models.CharField(blank=True, max_length=255, default="")
-    medic_cedula = models.CharField(blank=True, max_length=255, default="")
-    medic_hospital = models.CharField(blank=True, max_length=255, default="")
-    patient_name = models.CharField(blank=True, max_length=255, default="")
-    patient_age = models.CharField(blank=True, max_length=255, default="")
+    medic_name = models.TextField(blank=True, default="")
+    medic_cedula = models.TextField(blank=True, default="")
+    medic_hospital = models.TextField(blank=True, default="")
+    patient_name = models.TextField(blank=True, default="")
+    patient_age = models.TextField(blank=True, default="")
     diagnosis = models.TextField(default="")
     ### Public fields (not encrypted)
     # Misc
     # TODO ADD created_at time of server!
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
-    location = models.CharField(blank=True, max_length=255, default="")
+    location = models.TextField(blank=True, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
     location_lon = models.FloatField(null=True, blank=True, default=0)
     # Rx Specific
-    details = models.TextField(blank=True, max_length=10000, default="")
-    extras = models.TextField(blank=True, max_length=10000, default="")
+    details = models.TextField(blank=True, default="")
+    extras = models.TextField(blank=True, default="")
     bought = models.BooleanField(default=False)
     # Main
     block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
-    signature = models.CharField(max_length=255, null=True, blank=True, default="")
+    signature = models.TextField(null=True, blank=True, default="")
     is_valid = models.BooleanField(default=True, blank=True)
-    rxid = models.CharField(max_length=255, blank=True, default="")
-    previous_hash = models.CharField(max_length=255, default="")
+    rxid = models.TextField(blank=True, default="")
+    previous_hash = models.TextField(default="")
 
     objects = PrescriptionManager()
 
@@ -328,25 +329,28 @@ class Prescription(models.Model):
     def get_data_base64(self):
         # Return data of prescription on base64
         return {
-            "medic_name" : base64.b64encode(hex2bin(self.medic_name)),
-            "medic_cedula" : base64.b64encode(hex2bin(self.medic_cedula)),
-            "medic_hospital" : base64.b64encode(hex2bin(self.medic_hospital)),
-            "patient_name" : base64.b64encode(hex2bin(self.patient_name)),
-            "patient_age" : base64.b64encode(hex2bin(self.patient_age)),
-            "diagnosis" : base64.b64encode(hex2bin(self.diagnosis))
+            "medic_name" : self.medic_name,
+            "medic_cedula" : self.medic_cedula,
+            "medic_hospital" : self.medic_hospital,
+            "patient_name" : self.patient_name,
+            "patient_age" : self.patient_age,
+            "diagnosis" : self.diagnosis
         }
 
     @property
     def get_priv_key(self):
         ''' Get private key on Pem string '''
-        _key = un_savify_key(self.private_key)
-        return _key.save_pkcs1(format="PEM")
+        # Symbolic pass
+        # Removing legacy code
+        return ""
+
 
     @property
     def get_pub_key(self):
         ''' Get public key on Pem string '''
-        _public_key = un_savify_key(self.public_key)
-        return _public_key.save_pkcs1(format="PEM")
+        # Symbolic pass
+        # Removing legacy code
+        return ""
 
     def create_raw_msg(self):
         # Create raw html and encode
@@ -412,15 +416,13 @@ class Medication(models.Model):
     prescription = models.ForeignKey('blockchain.Prescription',
         related_name='medications'
         )
-    active = models.CharField(blank=True, max_length=255, default="")
-    presentation = models.CharField(
-        blank=True, max_length=255,
-    )
+    active = models.TextField(blank=True, default="")
+    presentation = models.TextField(blank=True, default="")
     instructions = models.TextField(blank=True, default="")
-    frequency = models.CharField(blank=True, max_length=255, default="")
-    dose = models.CharField(blank=True, max_length=255, default="")
+    frequency = models.TextField(blank=True, default="")
+    dose = models.TextField(blank=True, default="")
     bought = models.BooleanField(default=False)
-    drug_upc = models.CharField(blank=True, max_length=255, default="", db_index=True)
+    drug_upc = models.TextField(blank=True, default="", db_index=True)
 
     objects = MedicationManager()
 
