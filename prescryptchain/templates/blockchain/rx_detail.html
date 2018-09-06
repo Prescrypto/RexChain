@@ -83,80 +83,8 @@
               </tr>
             </table>
           </article>
-          <article class="col-xs-12">
-            <p style="padding-top:30px;color:#626262;">Public Key: <pre>{{ rx.public_key }}</pre></p>
-          </article>
-          <article class="col-xs-12 col-lg-6">
-            <p class="text-center"><a href="/validate/{{rx.rxid}}/" class="greybutton btn btn-primary" style="padding: .5em 4em; font-size:2em;">Validar</a></p>
-          </article>
+        </div>
+    </div>
+  </section>
 
-        </div>
-    </div>
-  </section>
-  <section style="color:#626262;" class="container-fluid padding-2em bg-midnight">
-    <div class="row padding-2em">
-      <article class="col-xs-12 col-lg-8 col-lg-offset-2">
-        ¿Tienes la clave privada para esta receta? Puedes visualizarla de manera segura aquí
-        <button id="visualize-button" class="greybutton btn btn-primary btn-lg" type="button">Visualizar</button>
-        <div id="encrypt-box" class="padding-2em">
-          <div class="form-group">
-            <textarea id="priv_key_id"rows="4" class="form-control" name="private-key-chain" placeholder="Pega tu clave privada aquí"></textarea>
-            <button style="margin-top:10px;" id="decrypt-button" class="btn btn-primary btn-lg" type="submit">Desencriptar</button>
-            <p id="message"></p>
-            <div id="qr-box" class="hidden">
-              <p>Posiciona tu código QR aquí y dale clic en desencyptar</p>
-              <div id="reader" style="width:100%;height:370px"></div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
 {% endblock content %}
-
-{% block jsblock %}
-  <script src="{% static "js/jsencrypt.min.js" %}"></script>
-  <script src="{% static "js/html5-qrcode.min.js" %}"></script>
-  <script src="{% static "js/jsqrcode-combined.min.js" %}"></script>
-  <script>
-
-    $("#qr-box").toggleClass("hidden");
-
-    $('#reader').html5_qrcode(function(data){
-        // do something when code is read
-        console.log(data);
-        $('#messages').html("QR encontrado!");
-        $('#priv_key_id').val(data);
-        $('#reader').html5_qrcode_stop();
-        $("#qr-box").toggleClass("hidden");
-
-      }, function(error){
-        //show read errors
-        // Uncomment this to debug
-        console.log(error);
-
-      }, function(videoError){
-        //the video stream could be opened
-        // Uncomment this to debug
-        console.log(error);
-      }
-    );
-    //DECRYPT FUNCTION BUTTON
-    $("#decrypt-button").click(function() {
-      decryptBase("#medic_name");
-      decryptBase("#medic_cedula");
-      decryptBase("#medic_hospital");
-      decryptBase("#patient_name");
-      decryptBase("#patient_age");
-      decryptBase("#diagnosis");
-    });
-    function decryptBase(baseTextID){
-      var encrypted = $(baseTextID).html();
-      // Decrypt with the private key...
-      var decrypt = new JSEncrypt();
-      decrypt.setPrivateKey($("#priv_key_id").val());
-      var uncrypted = decrypt.decrypt(encrypted);
-      $(baseTextID).html(uncrypted);
-    };
-</script>
-{% endblock jsblock %}
