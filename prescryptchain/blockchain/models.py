@@ -19,7 +19,13 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
 
 # Our methods
-from .managers import BlockManager, MedicationManager, PrescriptionManager, TransactionManager
+from core.behaviors import Timestampable
+from .managers import (
+    BlockManager,
+    MedicationManager,
+    PrescriptionManager,
+    TransactionManager
+)
 from .utils import get_merkle_root
 from .helpers import CryptoTools
 
@@ -124,12 +130,13 @@ class Transaction(models.Model):
         return self.txid
 
 
-# Simplified Rx Model
 @python_2_unicode_compatible
-class Prescription(models.Model):
+class Prescription(Timestampable, models.Model):
+    ''' Simplified Rx Model '''
+
     # Cryptographically enabled fields
     public_key = models.TextField(blank=True, default="")
-    private_key = models.TextField(blank=True, default="") # Aquí puedes guardar el PrivateKey para desencriptar
+
     ### Patient and Medic data (encrypted)
     medic_name = models.TextField(blank=True, default="")
     medic_cedula = models.TextField(blank=True, default="")
@@ -137,26 +144,33 @@ class Prescription(models.Model):
     patient_name = models.TextField(blank=True, default="")
     patient_age = models.TextField(blank=True, default="")
     diagnosis = models.TextField(default="")
+
     ### Public fields (not encrypted)
-    # Misc
-    # TODO ADD created_at time of server!
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     location = models.TextField(blank=True, default="")
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
-    location_lat = models.FloatField(null=True, blank=True, default=0) # For coordinates
+
+    # For coordinates
+    location_lat = models.FloatField(null=True, blank=True, default=0)
     location_lon = models.FloatField(null=True, blank=True, default=0)
+
     # Rx Specific
     details = models.TextField(blank=True, default="")
     extras = models.TextField(blank=True, default="")
     bought = models.BooleanField(default=False)
-    # Main
-    block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
-    signature = models.TextField(null=True, blank=True, default="")
+
+    # For TxTransfer
+    transaction = models.ForeignKey('blockchain.Transaction', related_name='prescriptions', null=True, blank=True)
+    readable = models.BooleanField(default=False, blank=True) # Filter against this when
     is_valid = models.BooleanField(default=True, blank=True)
     rxid = models.TextField(blank=True, default="")
     previous_hash = models.TextField(default="")
 
     objects = PrescriptionManager()
+
+    # Must delete after migrate manually old legacy
+    block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
+    signature = models.TextField(null=True, blank=True, default="")
 
     # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
     def hash(self):
@@ -174,21 +188,6 @@ class Prescription(models.Model):
             "patient_age" : self.patient_age,
             "diagnosis" : self.diagnosis
         }
-
-    @property
-    def get_priv_key(self):
-        ''' Get private key on Pem string '''
-        # Symbolic pass
-        # Removing legacy code
-        return ""
-
-
-    @property
-    def get_pub_key(self):
-        ''' Get public key on Pem string '''
-        # Symbolic pass
-        # Removing legacy code
-        return ""
 
     def create_raw_msg(self):
         # Create raw html and encode
