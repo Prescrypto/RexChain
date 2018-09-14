@@ -22,7 +22,7 @@ from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
 from .utils import calculate_hash, get_merkle_root, PoE
-from .querysets import PrescriptionQueryset
+from .querysets import PrescriptionQueryset, TransactionQueryset
 
 logger = logging.getLogger('django_info')
 
@@ -77,6 +77,148 @@ class BlockManager(models.Manager):
         return new_block
 
 
+class TransactionManager(models.Manager):
+    ''' Manager for prescriptions '''
+
+    def get_queryset(self):
+        return TransactionQueryset(self.model, using=self._db)
+
+    def has_not_block(self):
+        return self.get_queryset().has_not_block()
+
+    def create_block_attempt(self):
+        '''
+            Use PoW hashcash algoritm to attempt to create a block
+        '''
+        _hashcash_tools = Hashcash(debug=settings.DEBUG)
+        if not cache.get('challenge') and not cache.get('counter') == 0:
+            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
+            safe_set_cache('challenge', challenge)
+            safe_set_cache('counter', 0)
+
+        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
+
+        if is_valid_hashcash:
+            block = Block.objects.create_block(self.has_not_block()) # TODO add on creation hash and merkle
+            block.hashcash = hashcash_string
+            block.nonce = cache.get('counter')
+            block.save()
+            safe_set_cache('challenge', None)
+            safe_set_cache('counter', None)
+
+        else:
+            counter = cache.get('counter') + 1
+            safe_set_cache('counter', counter)
+
+
+    def is_transfer_valid(self, data, _previous_hash, pub_key, _signature):
+        ''' Method to handle transfer validity!'''
+        Prescription = apps.get_model('blockchain','Prescription')
+        if not Prescription.objects.check_existence(data['previous_hash']):
+            logger.info("[IS_TRANSFER_VALID] Send a transfer with a wrong reference previous_hash!")
+            return (False, None)
+
+        rx = Prescription.objects.get(hash_id=data['previous_hash'])
+
+        if not rx.readable:
+            logger.info("[IS_TRANSFER_VALID]The rx is not readable")
+            return (False, rx)
+
+        _msg = json.dumps(data['data'], separators=(',',':'))
+        # TODO add verify files data too
+
+        if not  verify_signature(_msg, _signature, un_savify_key(rx.public_key)):
+            logger.info("[IS_TRANSFER_VALID]Signature is not valid!")
+            return (False, rx)
+
+        logger.info("[IS_TRANSFER_VALID] Success")
+        return (True, rx)
+
+
+
+    def create_tx(self, data, **kwargs):
+        ''' Custom method for create Tx with rx item '''
+
+        ''' Get initial data '''
+        _signature = data.pop("signature", None)
+        # Get Public Key from API
+        raw_pub_key = data.get("public_key")
+        # Initalize some data
+        _msg = json.dumps(data['data'], separators=(',',':'))
+        _is_valid_tx = False
+        _rx_before = None
+
+        try:
+            pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
+        except Exception as e:
+            # Attempt to create public key with base64
+            pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
+
+        hex_raw_pub_key = savify_key(pub_key)
+
+        ''' Get previous hash '''
+        _previous_hash = data.get('previous_hash', '0')
+        logger.info("previous_hash: {}".format(_previous_hash))
+
+        ''' Check initial or transfer '''
+        if _previous_hash == '0':
+            # It's a initial transaction
+            if verify_signature(_msg, _signature, pub_key):
+                logger.info("[CREATE_TX] Tx valid!")
+                _is_valid_tx = True
+
+        else:
+            # Its a transfer, so check validite transaction
+            _is_valid_tx, _rx_before = self.is_transfer_valid(data, _previous_hash, pub_key, _signature)
+
+
+        ''' FIRST Create the Transaction '''
+        tx = self.create_raw_tx(data, _is_valid_tx=_is_valid_tx, _signature=_signature, pub_key=pub_key)
+
+        ''' THEN Create the Data Item(prescription) '''
+        Prescription = apps.get_model('blockchain','Prescription')
+        rx = Prescription.objects.create_rx(
+            data,
+            _signature=_signature,
+            pub_key=hex_raw_pub_key, # This is basically the address
+            _is_valid_tx=_is_valid_tx,
+            _rx_before=_rx_before,
+            transaction=tx,
+        )
+
+        ''' LAST do create block attempt '''
+        self.create_block_attempt()
+
+        # Return the transaction object
+        return rx
+
+    def create_raw_tx(self, data, **kwargs):
+        ''' This method just create the transaction instance '''
+
+        ''' START TX creation '''
+        Transaction = apps.get_model('blockchain','Transaction')
+        tx = Transaction()
+        # Get Public Key from API
+        pub_key = kwargs.get("pub_key", None) # Make it usable
+        tx.signature = kwargs.get("_signature", None)
+        tx.is_valid = kwargs.get("_is_valid_tx", False)
+        tx.timestamp = timezone.now()
+
+        # Set previous hash
+        if self.last() is None:
+            tx.previous_hash = "0"
+        else:
+            tx.previous_hash = self.last().txid
+
+        # Create raw data to generate hash and save it
+        tx.create_raw_msg()
+        tx.hash()
+        tx.save()
+
+        ''' RETURN TX '''
+        return tx
+
+
 class MedicationManager(models.Manager):
     ''' Manager to create Medication from API '''
     def create_medication(self, prescription, **kwargs):
@@ -117,28 +259,6 @@ class PrescriptionManager(models.Manager):
             _list.append([get_timestamp(_time), self.range_by_hour(_time).count()])
 
         return _list
-
-    def create_block_attempt(self):
-        ''' Use PoW hashcash algoritm to attempt to create a block '''
-        _hashcash_tools = Hashcash(debug=True)
-        if not cache.get('challenge') and not cache.get('counter') == 0:
-            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
-            safe_set_cache('challenge', challenge)
-            safe_set_cache('counter', 0)
-
-        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
-
-        if is_valid_hashcash:
-            block = Block.objects.create_block(self.non_validated_rxs()) # TODO add on creation hash and merkle
-            block.hashcash = hashcash_string
-            block.nonce = cache.get('counter')
-            block.save()
-            safe_set_cache('challenge', None)
-            safe_set_cache('counter', None)
-
-        else:
-            counter = cache.get('counter') + 1
-            safe_set_cache('counter', counter)
 
 
     def create_rx(self, data, **kwargs):
@@ -203,7 +323,6 @@ class PrescriptionManager(models.Manager):
 
         rx.save()
 
-        self.create_block_attempt()
+        # self.create_block_attempt()
 
         return rx
-

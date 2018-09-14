@@ -21,3 +21,10 @@ class PrescriptionQueryset(models.QuerySet):
         _date = date_filter.date()
         _time = date_filter.time()
         return self.filter(timestamp__year=_date.year).filter(timestamp__month=_date.month).filter(timestamp__day=_date.day).filter(timestamp__hour=_time.hour)
+
+
+class TransactionQueryset(models.QuerySet):
+    ''' Add custom querysets'''
+
+    def has_not_block(self):
+        return self.filter(block=None)

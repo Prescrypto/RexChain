@@ -19,7 +19,9 @@ from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
 
 # Our methods
-from .managers import BlockManager, MedicationManager, PrescriptionManager
+from .managers import BlockManager, MedicationManager, PrescriptionManager, TransactionManager
+from .utils import get_merkle_root
+from .helpers import CryptoTools
 
 logger = logging.getLogger('django_info')
 
@@ -78,6 +80,48 @@ class Block(models.Model):
     def __str__(self):
         return self.hash_block
 
+
+@python_2_unicode_compatible
+class Transaction(models.Model):
+    ''' Tx Model '''
+    # Cryptographically enabled fields
+    # Necessary infomation
+    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
+    raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
+    # block information
+    block = models.ForeignKey('blockchain.Block', related_name='transactions', null=True, blank=True)
+    signature = models.TextField(blank=True, default="")
+    is_valid = models.BooleanField(default=False, blank=True)
+    txid = models.TextField(blank=True, default="")
+    previous_hash = models.TextField(blank=True, default="")
+    # Details
+    details = JSONField(default={}, blank=True)
+
+    objects = TransactionManager()
+
+
+    # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
+    def hash(self):
+        hash_object = hashlib.sha256(self.raw_msg)
+        self.txid = hash_object.hexdigest()
+
+    def create_raw_msg(self):
+        # Create raw html and encode
+        msg = (
+            self.timestamp.isoformat() +
+            self.signature +
+            str(self.is_valid) +
+            self.previous_hash
+        )
+        self.raw_msg = msg.encode('utf-8')
+
+    @cached_property
+    def get_previous_hash(self):
+        ''' Get before hash transaction '''
+        return self.previous_hash
+
+    def __str__(self):
+        return self.txid
 
 
 # Simplified Rx Model
