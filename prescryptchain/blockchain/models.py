@@ -50,20 +50,21 @@ class Block(models.Model):
     @cached_property
     def raw_size(self):
         # get the size of the raw html
+        # TODO need improve
         size = (len(self.get_before_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
 
-    def get_block_data(self, rx_queryset):
-        # Get the sum of hashes of last prescriptions in block size
+    def get_block_data(self, tx_queryset):
+        # Get the sum of hashes of last transaction in block size
         sum_hashes = ""
         try:
             self.data["hashes"] = []
-            for rx in rx_queryset:
-                sum_hashes += rx.rxid
-                self.data["hashes"].append(rx.rxid)
-                rx.block = self
-                rx.save()
-            merkleroot = get_merkle_root(rx_queryset)
+            for tx in tx_queryset:
+                sum_hashes += tx.txid
+                self.data["hashes"].append(tx.txid)
+                tx.block = self
+                tx.save()
+            merkleroot = get_merkle_root(tx_queryset)
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
         except Exception as e:
@@ -197,7 +198,9 @@ class Prescription(Timestampable, models.Model):
             self.medic_hospital +
             self.patient_name +
             self.patient_age +
-            self.diagnosis
+            self.diagnosis +
+            timezone.now().isoformat() +
+            self.previous_hash
         )
         self.raw_msg = msg.encode('utf-8')
 
@@ -223,7 +226,8 @@ class Prescription(Timestampable, models.Model):
             len(self.location) + len(self.rxid) +
             len(self.medic_name) + len(self.medic_cedula) +
             len(self.medic_hospital) + len(self.patient_name) +
-            len(self.patient_age) + len(str(self.get_formatted_date()))
+            len(self.patient_age) + len(str(self.get_formatted_date())) +
+            self.timestamp.isoformat()
         )
         if self.medications.all() is not None:
             for med in self.medications.all():

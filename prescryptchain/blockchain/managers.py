@@ -21,7 +21,7 @@ from core.helpers import safe_set_cache, get_timestamp
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
-from .utils import calculate_hash, get_merkle_root, PoE
+from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa
 from .querysets import PrescriptionQueryset, TransactionQueryset
 
 logger = logging.getLogger('django_info')
@@ -29,15 +29,15 @@ logger = logging.getLogger('django_info')
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
 
-    def create_block(self, rx_queryset):
+    def create_block(self, tx_queryset):
         # Do initial block or create next block
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
-            return self.generate_next_block(genesis.hash_block, rx_queryset)
+            return self.generate_next_block(genesis.hash_block, tx_queryset)
 
         else:
-            return self.generate_next_block(last_block.hash_block, rx_queryset)
+            return self.generate_next_block(last_block.hash_block, tx_queryset)
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
@@ -50,12 +50,12 @@ class BlockManager(models.Manager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, hash_before, rx_queryset):
+    def generate_next_block(self, hash_before, tx_queryset):
         # Generete a new block
 
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
-        data_block = new_block.get_block_data(rx_queryset)
+        data_block = new_block.get_block_data(tx_queryset)
         new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
@@ -79,6 +79,8 @@ class BlockManager(models.Manager):
 
 class TransactionManager(models.Manager):
     ''' Manager for prescriptions '''
+
+    _crypto = CryptoTools(has_legacy_keys=False)
 
     def get_queryset(self):
         return TransactionQueryset(self.model, using=self._db)
@@ -118,21 +120,22 @@ class TransactionManager(models.Manager):
             logger.info("[IS_TRANSFER_VALID] Send a transfer with a wrong reference previous_hash!")
             return (False, None)
 
-        rx = Prescription.objects.get(hash_id=data['previous_hash'])
+        before_rx = Prescription.objects.get(hash_id=data['previous_hash'])
 
-        if not rx.readable:
-            logger.info("[IS_TRANSFER_VALID]The rx is not readable")
-            return (False, rx)
+        if not before_rx.readable:
+            logger.info("[IS_TRANSFER_VALID]The before_rx is not readable")
+            return (False, before_rx)
 
+        # TODO ordered data
         _msg = json.dumps(data['data'], separators=(',',':'))
         # TODO add verify files data too
 
-        if not  verify_signature(_msg, _signature, un_savify_key(rx.public_key)):
+        if not self._crypto.verify_signature(_msg, _signature, self._crypto.un_savify_key(before_rx.public_key)):
             logger.info("[IS_TRANSFER_VALID]Signature is not valid!")
-            return (False, rx)
+            return (False, before_rx)
 
         logger.info("[IS_TRANSFER_VALID] Success")
-        return (True, rx)
+        return (True, before_rx)
 
 
 
@@ -149,12 +152,13 @@ class TransactionManager(models.Manager):
         _rx_before = None
 
         try:
-            pub_key = pubkey_string_to_rsa(raw_pub_key) # Make it usable
+            # Prescript unsavify method
+            pub_key = _crypto.un_savify_key(raw_pub_key)
         except Exception as e:
-            # Attempt to create public key with base64
+            # Attempt to create public key with base64 with js payload
             pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
-        hex_raw_pub_key = savify_key(pub_key)
+        hex_raw_pub_key = self._crypto.savify_key(pub_key)
 
         ''' Get previous hash '''
         _previous_hash = data.get('previous_hash', '0')
@@ -163,7 +167,7 @@ class TransactionManager(models.Manager):
         ''' Check initial or transfer '''
         if _previous_hash == '0':
             # It's a initial transaction
-            if verify_signature(_msg, _signature, pub_key):
+            if self._crypto.verify_signature(_msg, _signature, pub_key):
                 logger.info("[CREATE_TX] Tx valid!")
                 _is_valid_tx = True
 
@@ -260,6 +264,8 @@ class PrescriptionManager(models.Manager):
 
         return _list
 
+    def check_existence(self, previous_hash):
+        return self.get_queryset().check_existence(previous_hash)
 
     def create_rx(self, data, **kwargs):
 
