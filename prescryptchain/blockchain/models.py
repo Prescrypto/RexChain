@@ -173,8 +173,11 @@ class Prescription(Timestampable, models.Model):
     block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
     signature = models.TextField(null=True, blank=True, default="")
 
-    # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
+    def __str__(self):
+        return self.rxid
+
     def hash(self):
+        ''' Hashes msg_html with utf-8 encoding, saves this in and hash in _signature '''
         hash_object = hashlib.sha256(self.raw_msg)
         self.rxid = hash_object.hexdigest()
 
@@ -240,8 +243,31 @@ class Prescription(Timestampable, models.Model):
         return self.previous_hash
 
 
-    def __str__(self):
-        return self.rxid
+    def transfer_ownership(self):
+        ''' These method only appear when Rx is transfer succesfully'''
+        self.readable = False
+        self.destroy_data()
+        self.save()
+        logger.info("[TRANSFER_OWNERSHIP]Success destroy data!")
+
+
+    def destroy_data(self):
+        ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
+        _data = self.data
+        _files = self.files
+
+        # TODO hashing Data fields instead data dict
+        if _data:
+            for _dict in _data:
+                _dict.update((key, hashlib.sha256(value).hexdigest()) for key, value in _dict.iteritems())
+
+            self.data = _data
+
+        # Hashing Files
+        if _files:
+            _files = [hashlib.sha256(value).hexdigest() for value in _files]
+
+            self.files = _files
 
 
 

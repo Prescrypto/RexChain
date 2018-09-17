@@ -280,20 +280,26 @@ class PrescriptionManager(models.Manager):
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
         Prescription = apps.get_model('blockchain','Prescription')
-        rx = Prescription()
-        _crypto = CryptoTools()
 
-        # Get Public Key from API, First try its with legacy crypto tools, then New Keys
-        raw_pub_key = data.get("public_key")
-        try:
-            pub_key = _crypto.un_savify_key(raw_pub_key) # Make it usable
-        except Exception as e:
-            logger.info("[CREATE RAW RX, change to New Keys]")
-            _crypto = CryptoTools(has_legacy_keys=False)
-            pub_key = _crypto.un_savify_key(raw_pub_key)
+        _rx_before = kwargs.get('_rx_before', None)
 
-        # Extract signature
-        _signature = data.pop("signature", None)
+        rx = Prescription(
+            timestamp=data.get("timestamp", timezone.now()),
+            public_key=kwargs.get("pub_key", ""),
+            signature=kwargs.get("_signature", ""),
+            is_valid=kwargs.get("_is_valid_tx", False),
+            transaction=kwargs.get("transaction", None)
+        )
+
+        if "data" in data:
+            rx.data = data["data"]
+
+        if "files" in data:
+            rx.files = data["files"]
+
+        if "location" in data:
+            rx.location = data["location"]
+
 
         rx.medic_name = data["medic_name"]
         rx.medic_cedula = data["medic_cedula"]
@@ -302,33 +308,25 @@ class PrescriptionManager(models.Manager):
         rx.patient_age = data["patient_age"]
         rx.diagnosis = data["diagnosis"]
 
-        # This is basically the address
-        rx.public_key = raw_pub_key
-
-        if "location" in data:
-            rx.location = data["location"]
-
-        rx.timestamp = data["timestamp"]
-        rx.create_raw_msg()
-
-        rx.hash()
-        # Save signature
-        rx.signature = _signature
-
-        #This block cath two cases when has_legacy_key is True or False
-        if _crypto.verify(json.dumps(sorted(data)), _signature, pub_key):
-            rx.is_valid = True
-        else:
-            rx.is_valid = False
 
         # Save previous hash
-        if self.last() is None:
+        if _rx_before is None:
+            logger.info("[CREATE_RX] New transaction!")
             rx.previous_hash = "0"
+            rx.readable = True
         else:
-            rx.previous_hash = self.last().rxid
+            logger.info("[CREATE_RX] New transaction transfer!")
+            rx.previous_hash = _rx_before.hash_id
+            if rx.is_valid:
+                logger.info("[CREATE_RX] Tx transfer is valid!")
+                rx.readable = True
+                _rx_before.transfer_ownership()
+            else:
+                logger.info("[CREATE_RX] Tx transfer not valid!")
 
+
+        rx.create_raw_msg()
+        rx.hash()
         rx.save()
-
-        # self.create_block_attempt()
 
         return rx
