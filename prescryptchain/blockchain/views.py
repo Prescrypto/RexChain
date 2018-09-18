@@ -49,16 +49,22 @@ def rx_detail(request, hash_rx=False):
 
     if hash_rx:
         context = {}
+
         try:
             rx = Prescription.objects.get(rxid=hash_rx)
-            medications = get_simplified_medication_json(rx.medications.all())
-            context["rx"] = rx
-            context["medications"] = medications
-            return render(request, "blockchain/rx_detail.html", context)
-
         except Exception as e:
-            print("Error :%s, type(%s)" % (e, type(e)))
-            return redirect("/block/?block_hash=%s" % hash_rx)
+            try:
+                rx = Prescription.objects.get(tx_txid=hash_rx)
+            except Exception as e:
+                print("Error :%s, type(%s)" % (e, type(e)))
+                return redirect("/block/?block_hash=%s" % hash_rx)
+
+
+        medications = get_simplified_medication_json(rx.medications.all())
+        context["rx"] = rx
+        context["medications"] = medications
+        return render(request, "blockchain/rx_detail.html", context)
+
 
     return redirect("/")
 

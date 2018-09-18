@@ -93,6 +93,7 @@ class TransactionManager(models.Manager):
             Use PoW hashcash algoritm to attempt to create a block
         '''
         _hashcash_tools = Hashcash(debug=settings.DEBUG)
+
         if not cache.get('challenge') and not cache.get('counter') == 0:
             challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
             safe_set_cache('challenge', challenge)
@@ -147,14 +148,19 @@ class TransactionManager(models.Manager):
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
         # Initalize some data
-        _msg = json.dumps(data['data'], separators=(',',':'))
+        try:
+            _msg = json.dumps(data['data'], separators=(',',':'))
+        except:
+            _msg = json.dumps(sorted(data))
+
         _is_valid_tx = False
         _rx_before = None
 
         try:
             # Prescript unsavify method
-            pub_key = _crypto.un_savify_key(raw_pub_key)
+            pub_key = self._crypto.un_savify_key(raw_pub_key)
         except Exception as e:
+            logger.error("[ERROR]: {}, type:{}".format(e, type(e)))
             # Attempt to create public key with base64 with js payload
             pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
@@ -189,11 +195,10 @@ class TransactionManager(models.Manager):
             _rx_before=_rx_before,
             transaction=tx,
         )
-
         ''' LAST do create block attempt '''
         self.create_block_attempt()
 
-        # Return the transaction object
+        # Return the rx for transaction object
         return rx
 
     def create_raw_tx(self, data, **kwargs):
