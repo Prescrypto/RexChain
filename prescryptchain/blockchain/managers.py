@@ -269,9 +269,10 @@ class PrescriptionManager(models.Manager):
 
     def create_rx(self, data, **kwargs):
 
-        rx = self.create_raw_rx(data)
+        rx = self.create_raw_rx(data, **kwargs)
 
-        if "medications" in data and len(data["medications"]) != 0:
+        if len(data["medications"]) > 0:
+            Medication = apps.get_model('blockchain','Medication')
             for med in data["medications"]:
                 Medication.objects.create_medication(prescription=rx, **med)
 
