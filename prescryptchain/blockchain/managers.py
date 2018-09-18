@@ -131,7 +131,7 @@ class TransactionManager(models.Manager):
         _msg = json.dumps(data['data'], separators=(',',':'))
         # TODO add verify files data too
 
-        if not self._crypto.verify_signature(_msg, _signature, self._crypto.un_savify_key(before_rx.public_key)):
+        if not self._crypto.verify(_msg, _signature, self._crypto.un_savify_key(before_rx.public_key)):
             logger.info("[IS_TRANSFER_VALID]Signature is not valid!")
             return (False, before_rx)
 
@@ -173,7 +173,7 @@ class TransactionManager(models.Manager):
         ''' Check initial or transfer '''
         if _previous_hash == '0':
             # It's a initial transaction
-            if self._crypto.verify_signature(_msg, _signature, pub_key):
+            if self._crypto.verify(_msg, _signature, pub_key):
                 logger.info("[CREATE_TX] Tx valid!")
                 _is_valid_tx = True
 
