@@ -230,7 +230,7 @@ class Prescription(Timestampable, models.Model):
             len(self.medic_name) + len(self.medic_cedula) +
             len(self.medic_hospital) + len(self.patient_name) +
             len(self.patient_age) + len(str(self.get_formatted_date())) +
-            self.timestamp.isoformat()
+            len(self.timestamp.isoformat())
         )
         if self.medications.all() is not None:
             for med in self.medications.all():
