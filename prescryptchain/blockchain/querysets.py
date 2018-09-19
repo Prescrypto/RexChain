@@ -31,3 +31,14 @@ class TransactionQueryset(models.QuerySet):
 
     def has_not_block(self):
         return self.filter(block=None)
+
+
+class AddressQueryset(models.QuerySet):
+    ''' Add custom querysets'''
+
+    def check_existence(self, public_key_b64):
+        return self.filter(public_key_b64=public_key_b64).exists()
+
+    def get_rsa_address(self, public_key_b64):
+        _record = self.filter(public_key_b64=public_key_b64).first()
+        return _record.address
