@@ -27,7 +27,7 @@ from .managers import (
     TransactionManager,
     AddressManager,
 )
-from .utils import get_merkle_root
+from .utils import get_merkle_root, pubkey_base64_to_rsa
 from .helpers import CryptoTools
 
 logger = logging.getLogger('django_info')
