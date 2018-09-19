@@ -90,11 +90,16 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
         raw_public_key = self.request.query_params.get('public_key', None)
         if raw_public_key:
             _crypto = CryptoTools(has_legacy_keys=False)
+
+            pub_key, raw_public_key = pubkey_base64_to_rsa(raw_public_key)
+
             try:
-                pub_key = pubkey_string_to_rsa(raw_public_key)
-            except:
-                pub_key , raw_public_key = pubkey_base64_to_rsa(raw_public_key)
-            hex_raw_pub_key = _crypto.savify_key(pub_key)
+                hex_raw_pub_key = _crypto.savify_key(pub_key)
+            except Exception as e:
+                _crypto = CryptoTools(has_legacy_keys=True)
+                hex_raw_pub_key = _crypto.savify_key(pub_key)
+
+
             return Prescription.objects.filter(public_key=hex_raw_pub_key).order_by('-id')
         else:
             return Prescription.objects.all().order_by('-id')
