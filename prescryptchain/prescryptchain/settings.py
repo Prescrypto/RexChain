@@ -69,6 +69,8 @@ INSTALLED_APPS = [
     'api',
     'blockchain',
     'core',
+    # CORS
+    'corsheaders',
 
 ]
 
@@ -80,8 +82,13 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # CORS Middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CORS configuration
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'prescryptchain.urls'
 
