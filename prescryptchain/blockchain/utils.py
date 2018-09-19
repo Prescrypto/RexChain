@@ -13,6 +13,7 @@ from django.utils.encoding import python_2_unicode_compatible
 # FOr signing
 import md5
 import merkletools
+from Crypto.PublicKey import RSA
 # PoE
 from blockcypher import embed_data, get_transaction_details
 from django.conf import settings
@@ -102,7 +103,7 @@ def pubkey_string_to_rsa(string_key):
     with open('pubkey.pem','rb') as file:
         pub_key = file.read()
 
-    pubkey = rsa.PublicKey.load_pkcs1_openssl_pem(pub_key)
+    pubkey = RSA.importKey(pub_key)
     #data is rsa type
     return pubkey
 
@@ -114,7 +115,6 @@ def pubkey_base64_from_uri(base64_key):
 
 def pubkey_base64_to_rsa(base64_key):
     ''' Convert base64 pub key to pem file and then pub key rsa object '''
-
     LINE_SIZE = 64
     BEGIN_LINE = "-----BEGIN PUBLIC KEY-----"
     END_LINE = "-----END PUBLIC KEY-----"

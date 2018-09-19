@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 # REST
+import logging
+
 from rest_framework.viewsets import ViewSetMixin
 from rest_framework import routers, serializers, viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
@@ -19,6 +21,7 @@ from blockchain.helpers import CryptoTools
 
 # Define router
 router = routers.DefaultRouter()
+logger = logging.getLogger('django_info')
 
 
 class MedicationNestedSerializer(serializers.ModelSerializer):
@@ -69,7 +72,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         ''' Method to control Extra Keys on Payload!'''
         extra_keys = set(self.initial_data.keys()) - set(self.fields.keys())
         if extra_keys:
-            print("Extra Keys: ", extra_keys)
+            logger.info("Extra Keys: ", extra_keys)
         return data
 
     def create(self, validated_data):
@@ -94,11 +97,11 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
             pub_key, raw_public_key = pubkey_base64_to_rsa(raw_public_key)
 
             try:
+                # pub_key = _crypto.get_pub_key_from_pem(raw_public_key)
                 hex_raw_pub_key = _crypto.savify_key(pub_key)
             except Exception as e:
-                _crypto = CryptoTools(has_legacy_keys=True)
-                hex_raw_pub_key = _crypto.savify_key(pub_key)
-
+                logger.error("[Public Key Error]:{}, type:{}".format(e, type(e)))
+                raise e
 
             return Prescription.objects.filter(public_key=hex_raw_pub_key).order_by('-id')
         else:
