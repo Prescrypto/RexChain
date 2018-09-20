@@ -307,9 +307,6 @@ class PrescriptionManager(models.Manager):
             transaction=kwargs.get("transaction", None)
         )
 
-        if "data" in data:
-            rx.data = data["data"]
-
         if "files" in data:
             rx.files = data["files"]
 
