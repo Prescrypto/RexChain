@@ -127,7 +127,7 @@ class TransactionManager(models.Manager):
             logger.info("[IS_TRANSFER_VALID] Send a transfer with a wrong reference previous_hash!")
             return (False, None)
 
-        before_rx = Prescription.objects.get(hash_id=data['previous_hash'])
+        before_rx = Prescription.objects.get(rxid=data['previous_hash'])
 
         if not before_rx.readable:
             logger.info("[IS_TRANSFER_VALID]The before_rx is not readable")
@@ -328,7 +328,7 @@ class PrescriptionManager(models.Manager):
             rx.readable = True
         else:
             logger.info("[CREATE_RX] New transaction transfer!")
-            rx.previous_hash = _rx_before.hash_id
+            rx.previous_hash = _rx_before.rxid
             if rx.is_valid:
                 logger.info("[CREATE_RX] Tx transfer is valid!")
                 rx.readable = True
