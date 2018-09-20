@@ -251,25 +251,13 @@ class Prescription(Timestampable, models.Model):
         self.save()
         logger.info("[TRANSFER_OWNERSHIP]Success destroy data!")
 
-
     def destroy_data(self):
         ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
-        _data = self.data
-        _files = self.files
-
-        # TODO hashing Data fields instead data dict
-        if _data:
-            for _dict in _data:
-                _dict.update((key, hashlib.sha256(value).hexdigest()) for key, value in _dict.iteritems())
-
-            self.data = _data
-
-        # Hashing Files
-        if _files:
-            _files = [hashlib.sha256(value).hexdigest() for value in _files]
-
-            self.files = _files
-
+        self.medic_name = hashlib.sha256(self.medic_name).hexdigest()
+        self.medic_cedula = hashlib.sha256(self.medic_cedula).hexdigest()
+        self.patient_name = hashlib.sha256(self.patient_name).hexdigest()
+        self.patient_age = hashlib.sha256(self.patient_age).hexdigest()
+        self.diagnosis = hashlib.sha256(self.diagnosis).hexdigest()
 
 
 @python_2_unicode_compatible
