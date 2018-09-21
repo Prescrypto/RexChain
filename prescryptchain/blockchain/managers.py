@@ -15,13 +15,14 @@ from django.apps import apps
 from django.conf import settings
 from django.utils import timezone
 from django.core.cache import cache
+from django.core.serializers.json import DjangoJSONEncoder
 
 from core.utils import Hashcash
 from core.helpers import safe_set_cache, get_timestamp
 from api.exceptions import EmptyMedication, FailedVerifiedSignature
 
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
-from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa
+from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data
 from .querysets import (
     PrescriptionQueryset,
     TransactionQueryset,
@@ -154,14 +155,23 @@ class TransactionManager(models.Manager):
         ''' Custom method for create Tx with rx item '''
 
         ''' Get initial data '''
+        _payload = ""
         _signature = data.pop("signature", None)
+        _previous_hash = data.pop("previous_hash", "0")
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
+        timestamp =  data["timestamp"].replace(tzinfo=timezone.utc)
+        data["timestamp"]= timestamp.isoformat()
+
         # Initalize some data
         try:
-            _msg = json.dumps(data['data'], separators=(',',':'))
-        except:
-            _msg = json.dumps(sorted(data))
+            data["medications"] = ordered_data(data["medications"])
+            _payload = json.dumps(ordered_data(data), separators=(',',':'))
+
+
+        except Exception as e:
+            logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
+
 
         _is_valid_tx = False
         _rx_before = None
@@ -170,25 +180,26 @@ class TransactionManager(models.Manager):
             # Prescript unsavify method
             pub_key = self._crypto.un_savify_key(raw_pub_key)
         except Exception as e:
-            logger.error("[ERROR]: {}, type:{}".format(e, type(e)))
+            logger.error("[Key is b64 WARNING]: {}, type:{}".format(e, type(e)))
             # Attempt to create public key with base64 with js payload
             pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
         hex_raw_pub_key = self._crypto.savify_key(pub_key)
 
         ''' Get previous hash '''
-        _previous_hash = data.get('previous_hash', '0')
+        #_previous_hash = data.get('previous_hash', '0')
         logger.info("previous_hash: {}".format(_previous_hash))
 
         ''' Check initial or transfer '''
         if _previous_hash == '0':
             # It's a initial transaction
-            if self._crypto.verify(_msg, _signature, pub_key):
+            if self._crypto.verify(_payload, _signature, pub_key):
                 logger.info("[CREATE_TX] Tx valid!")
                 _is_valid_tx = True
 
         else:
             # Its a transfer, so check validite transaction
+            data["previous_hash"] = _previous_hash
             _is_valid_tx, _rx_before = self.is_transfer_valid(data, _previous_hash, pub_key, _signature)
 
 

@@ -18,6 +18,9 @@ from Crypto.PublicKey import RSA
 from blockcypher import embed_data, get_transaction_details
 from django.conf import settings
 
+from collections import OrderedDict
+
+
 def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
     hash_obj = hashlib.sha256(str(index) + previousHash + str(timestamp) + data)
@@ -90,7 +93,7 @@ class PoE(object):
         try:
             return get_transaction_details(txid, coin_symbol=settings.CHAIN)
         except Exception as e:
-            print("[PoE ERROR] Error returning transantion details :%s, type(%s)" % (e, type(e)))
+            self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
             raise e
 
 
@@ -132,3 +135,27 @@ def pubkey_base64_to_rsa(base64_key):
     raw_key += "{}".format(END_LINE)
 
     return pubkey_string_to_rsa(raw_key), raw_key
+
+def ordered_data(data):
+    ''' Orderer data '''
+    logger = logging.getLogger('django_info')
+
+    if data is None:
+        return data
+
+    if isinstance(data, list):
+        _new_list = []
+        for item in data:
+            _new_list.append(OrderedDict(sorted(item.items(), key=lambda x: x[0])))
+
+        return _new_list
+
+    else:
+        _new_dict = {}
+        try:
+            _new_dict = OrderedDict(sorted(data.items(), key=lambda x: x[0]))
+        except Exception as e:
+            logger.error("[ordered data ERROR]: {}, type:{}".format(e, type(e)))
+            return data
+
+        return _new_dict
