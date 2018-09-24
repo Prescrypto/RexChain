@@ -156,12 +156,14 @@ class TransactionManager(models.Manager):
 
         ''' Get initial data '''
         _payload = ""
+        format = '%Y-%m-%dT%H:%M:%S%z'
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        timestamp =  data["timestamp"].replace(tzinfo=timezone.utc)
-        data["timestamp"]= timestamp.isoformat()
+        timestamp =  data["timestamp"]
+        timestamp.replace(tzinfo=timezone.utc)
+        data["timestamp"] = timestamp.isoformat()
 
         # Initalize some data
         try:
