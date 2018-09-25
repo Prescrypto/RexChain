@@ -9,33 +9,11 @@ from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import View, CreateView, ListView
 # Our Models
 from django.conf import settings
-from .forms import NewPrescriptionForm
 from .models import Prescription, Block
 from .utils import get_qr_code, is_rx_in_block
 # Blockcypher
 from blockchain.utils import PoE
 
-
-class AddPrescriptionView(View):
-    ''' Simple Rx Form '''
-    template = 'blockchain/blockchain/new_rx.html'
-
-    def get(self, request, *args, **kwargs):
-        template = 'blockchain/new_rx.html'
-        form = NewPrescriptionForm
-        return render(request, template, {"form": form,})
-
-    def post(self, request, *args, **kwargs):
-        template = 'blockchain/new_rx.html'
-        form = NewPrescriptionForm(request.POST)
-        if form.is_valid():
-            rx = form.save(commit = False)
-            rx.save()
-            hash_object = hashlib.sha256(str(rx.timestamp))
-            rx.rxid = hash_object.hexdigest()
-            rx.save()
-
-        return redirect('/')
 
 class ValidateRxView(View):
     template = "blockchain/validate.html"
@@ -71,16 +49,22 @@ def rx_detail(request, hash_rx=False):
 
     if hash_rx:
         context = {}
+
         try:
             rx = Prescription.objects.get(rxid=hash_rx)
-            medications = get_simplified_medication_json(rx.medications.all())
-            context["rx"] = rx
-            context["medications"] = medications
-            return render(request, "blockchain/rx_detail.html", context)
-
         except Exception as e:
-            print("Error :%s, type(%s)" % (e, type(e)))
-            return redirect("/block/?block_hash=%s" % hash_rx)
+            try:
+                rx = Prescription.objects.get(tx_txid=hash_rx)
+            except Exception as e:
+                print("Error :%s, type(%s)" % (e, type(e)))
+                return redirect("/block/?block_hash=%s" % hash_rx)
+
+
+        medications = get_simplified_medication_json(rx.medications.all())
+        context["rx"] = rx
+        context["medications"] = medications
+        return render(request, "blockchain/rx_detail.html", context)
+
 
     return redirect("/")
 

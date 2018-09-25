@@ -69,6 +69,8 @@ INSTALLED_APPS = [
     'api',
     'blockchain',
     'core',
+    # CORS
+    'corsheaders',
 
 ]
 
@@ -80,8 +82,13 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # CORS Middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CORS configuration
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'prescryptchain.urls'
 
@@ -141,11 +148,12 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Mexico_City'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_L10N = True
+
 
 USE_TZ = True
 

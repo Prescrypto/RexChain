@@ -100,8 +100,11 @@ class CryptoTools(object):
             return self._un_savify_key(HexPickldKey)
         else:
             bin_str_key = self.hex2bin(HexPickldKey)
-            #return objetc of RSA type
             return RSA.importKey(bin_str_key)
+
+    def get_pub_key_from_pem(self, pem_string):
+        ''' Return Pub Key object from PEM'''
+        return RSA.importKey(pem_string)
 
     def _un_savify_key(self, HexPickldKey):
         ''' Give it a hex saved string, returns a Key object ready to use  '''
