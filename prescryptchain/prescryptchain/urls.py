@@ -19,7 +19,7 @@ from rest_framework.documentation import include_docs_urls
 # Our Models
 from .views import home, humans_txt, robots_txt
 from blockchain.views import (
-    AddPrescriptionView, rx_detail, block_detail,
+    rx_detail, block_detail,
     rx_priv_key, qr_code, poe, ValidateRxView
 )
 

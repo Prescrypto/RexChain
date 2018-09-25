@@ -2,6 +2,7 @@
 # AESCipher
 # from core.utils import AESCipher
 ## Hash lib
+import rsa
 import hashlib
 import logging
 from datetime import timedelta, datetime
@@ -12,9 +13,13 @@ from django.utils.encoding import python_2_unicode_compatible
 # FOr signing
 import md5
 import merkletools
+from Crypto.PublicKey import RSA
 # PoE
 from blockcypher import embed_data, get_transaction_details
 from django.conf import settings
+
+from collections import OrderedDict
+
 
 def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
@@ -88,5 +93,69 @@ class PoE(object):
         try:
             return get_transaction_details(txid, coin_symbol=settings.CHAIN)
         except Exception as e:
-            print("[PoE ERROR] Error returning transantion details :%s, type(%s)" % (e, type(e)))
+            self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
             raise e
+
+
+def pubkey_string_to_rsa(string_key):
+    '''Take a public key created with jsencrypt and convert it into
+    a rsa data of python'''
+    with open('pubkey.pem','wb') as file:
+        file.write(string_key)
+
+    with open('pubkey.pem','rb') as file:
+        pub_key = file.read()
+
+    pubkey = RSA.importKey(pub_key)
+    #data is rsa type
+    return pubkey
+
+
+def pubkey_base64_from_uri(base64_key):
+    ''' Get pub_key from base64 uri '''
+    return base64_key.replace(" ", "+")
+
+
+def pubkey_base64_to_rsa(base64_key):
+    ''' Convert base64 pub key to pem file and then pub key rsa object '''
+    LINE_SIZE = 64
+    BEGIN_LINE = "-----BEGIN PUBLIC KEY-----"
+    END_LINE = "-----END PUBLIC KEY-----"
+
+    # Replace spaces with plus string, who is remove it when django gets from uri param
+    base64_key.replace(" ", "+")
+
+    lines = [base64_key[i:i+LINE_SIZE] for i in range(0, len(base64_key), LINE_SIZE)]
+
+    raw_key = "{}\n".format(BEGIN_LINE)
+    for line in lines:
+        # iter lines and create s unique string with \n
+        raw_key += "{}\n".format(line)
+
+    raw_key += "{}".format(END_LINE)
+
+    return pubkey_string_to_rsa(raw_key), raw_key
+
+def ordered_data(data):
+    ''' Orderer data '''
+    logger = logging.getLogger('django_info')
+
+    if data is None:
+        return data
+
+    if isinstance(data, list):
+        _new_list = []
+        for item in data:
+            _new_list.append(OrderedDict(sorted(item.items(), key=lambda x: x[0])))
+
+        return _new_list
+
+    else:
+        _new_dict = {}
+        try:
+            _new_dict = OrderedDict(sorted(data.items(), key=lambda x: x[0]))
+        except Exception as e:
+            logger.error("[ordered data ERROR]: {}, type:{}".format(e, type(e)))
+            return data
+
+        return _new_dict
