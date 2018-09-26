@@ -33,7 +33,7 @@ $ python manage.py runserver [::]:8000
 Wake Up Redis Worker
 Open a new window console enter to ssh of vagrant and run these commands
 $ cd /vagrant/rexchain
-$
+$ python manage.py rqworker high default low
 ```
 
 
