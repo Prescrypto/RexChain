@@ -4,7 +4,7 @@
 echo "=> Begin post compile script..."
 # First, apply migrations to the schema
 if [ $AUTO_MIGRATE == True ]; then
-  python ./prescryptchain/manage.py migrate
+  python ./rxchain/manage.py migrate
   echo "=> Finish migrate!"
 else
   echo "=> Config not automatically migrate!"
@@ -12,7 +12,7 @@ fi
 
 if [ $LOAD_FIXTURES == True ]; then
   echo "=> Loading fixtures..."
-  python ./prescryptchain/manage.py loaddata ./prescryptchain/fixtures/initial_data.json
+  python ./rxchain/manage.py loaddata ./rxchain/fixtures/initial_data.json
   echo "=> Fixtures loaded!"
 else
   echo "=> Config not loading fixtures!"
