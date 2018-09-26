@@ -46,7 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Provision application
-  config.vm.provision "shell", privileged: false, run: "always", path: "config/environ_variables.sh"
+  config.vm.provision "shell", privileged: false, run: "always", path: "config/vagrantvars"
   config.vm.provision "shell", privileged: false, run: "always", path: "bin/setup_box.sh"
 
 end
