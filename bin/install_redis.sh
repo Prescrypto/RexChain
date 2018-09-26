@@ -16,7 +16,5 @@ sudo apt-key add dotdeb.gpg
 sudo apt-get update
 sudo apt-get install -y redis-server
 
-cd /vagrant/prescryptchain
-
 echo "Instalation complete"
 echo "run redis-cli for test."

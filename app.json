@@ -1,6 +1,6 @@
 {
-  "name": "Prescrypt Chain",
-  "description": "Made Cryptography to Mexican Health Environ",
+  "name": "RexChain",
+  "description": "Made Cryptography to General Purpose",
   "scripts": {
     "postdeploy": "bin/post_compile"
   },

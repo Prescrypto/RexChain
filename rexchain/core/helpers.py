@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-''' Helper tools for rxchain '''
+''' Helper tools for RexChain '''
 import logging
 import time
 from django_rq import job
