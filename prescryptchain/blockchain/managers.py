@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 '''
-Model Managers RxChain
+Model Managers RexChain
 BlockManager
 RXmanager
 TXmanager

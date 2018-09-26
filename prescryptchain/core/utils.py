@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-''' Utils tools for rxchain '''
+''' Util tools for RexChain '''
 import logging
 from hashlib import sha256
 from string import ascii_letters
