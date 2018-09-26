@@ -1,2 +1,2 @@
-web: sh -c 'cd rxchain && gunicorn rxchain.wsgi:application'
-worker: python ./rxchain/manage.py rqworker high default low
+web: sh -c 'cd rexchain && gunicorn rexchain.wsgi:application'
+worker: python ./rexchain/manage.py rqworker high default low

@@ -2,5 +2,5 @@
 *.pyc
 config/
 temp/
-rxchain/staticfiles/
+rexchain/staticfiles/
 .vagrant/
