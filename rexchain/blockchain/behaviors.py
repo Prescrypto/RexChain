@@ -4,18 +4,22 @@
 '''
 import json
 import hashlib
+import logging
+from datetime import timedelta
 
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.contrib.postgres.fields import JSONField
+from django.utils.dateformat import DateFormat
+
+logger = logging.getLogger('django_info')
 
 
 class IOBlockchainize(models.Model):
     '''
        Input Output Blockchainize Abstract Model
     '''
-    # Owner track
-    public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True)
 
     # Time purpose
     timestamp = models.DateTimeField("Datetime object",blank=True, default=timezone.now)
@@ -33,11 +37,8 @@ class IOBlockchainize(models.Model):
 
     data = JSONField('Raw Data from Payload', blank=True, default={})
 
-    signature = models.TextField("Signature for the IO/Script", blank=True, default="")
-
     class Meta:
         abstract = True
-
 
     def hash(self):
         ''' Hashes msg_html with utf-8 encoding, saves this in and hash in _signature '''
@@ -57,7 +58,6 @@ class IOBlockchainize(models.Model):
         )
         self.raw_msg = msg.encode('utf-8')
 
-
     def raw_size(self):
         ''' get size of model '''
         _size = (
@@ -65,5 +65,33 @@ class IOBlockchainize(models.Model):
             self.hash_id
         )
         return len(size) * 8
+
+    @cached_property
+    def get_data_base64(self):
+        # Return data of prescription on base64
+        return {
+            "data" : self.data
+        }
+
+    @cached_property
+    def raw_size(self):
+        # get the size of the raw rx
+        _size = (
+            json.dumps(self.data) +
+            self.timestamp.isoformat()
+        )
+        return len(_size) * 8
+
+    def transfer_ownership(self):
+        ''' These method only appear when Rx is transfer succesfully'''
+        self.readable = False
+        self.destroy_data()
+        self.save()
+        logger.info("[TRANSFER_OWNERSHIP]Success destroy data!")
+
+    def destroy_data(self):
+        ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
+        self.data = hashlib.sha256(json.dumps(self.data)).hexdigest()
+
 
 
