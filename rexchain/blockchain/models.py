@@ -23,7 +23,6 @@ from core.behaviors import Timestampable
 from .behaviors import IOBlockchainize
 from .managers import (
     BlockManager,
-    MedicationManager,
     PrescriptionManager,
     TransactionManager,
     AddressManager,
@@ -169,25 +168,6 @@ class Prescription(Timestampable, IOBlockchainize, models.Model):
         ''' Get before hash prescription '''
         return self.previous_hash
 
-
-
-@python_2_unicode_compatible
-class Medication(models.Model):
-    prescription = models.ForeignKey('blockchain.Prescription',
-        related_name='medications'
-        )
-    active = models.TextField(blank=True, default="")
-    presentation = models.TextField(blank=True, default="")
-    instructions = models.TextField(blank=True, default="")
-    frequency = models.TextField(blank=True, default="")
-    dose = models.TextField(blank=True, default="")
-    bought = models.BooleanField(default=False)
-    drug_upc = models.TextField(blank=True, default="", db_index=True)
-
-    objects = MedicationManager()
-
-    def __str__(self):
-        return self.presentation
 
 
 class Address(Timestampable, models.Model):

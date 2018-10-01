@@ -4,7 +4,6 @@ Model Managers RexChain
 BlockManager
 RXmanager
 TXmanager
-MedicationManager
 '''
 import json
 import logging
@@ -19,7 +18,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from core.utils import Hashcash
 from core.helpers import safe_set_cache, get_timestamp
-from api.exceptions import EmptyMedication, FailedVerifiedSignature
+from api.exceptions import FailedVerifiedSignature
 
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
 from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data
@@ -251,14 +250,6 @@ class TransactionManager(models.Manager):
         return tx
 
 
-class MedicationManager(models.Manager):
-    ''' Manager to create Medication from API '''
-    def create_medication(self, prescription, **kwargs):
-        med = self.create(prescription=prescription, **kwargs)
-        med.save()
-        return med
-
-
 class PrescriptionManager(models.Manager):
     ''' Manager for prescriptions '''
 
@@ -298,11 +289,6 @@ class PrescriptionManager(models.Manager):
     def create_rx(self, data, **kwargs):
 
         rx = self.create_raw_rx(data, **kwargs)
-
-        if len(data["medications"]) > 0:
-            Medication = apps.get_model('blockchain','Medication')
-            for med in data["medications"]:
-                Medication.objects.create_medication(prescription=rx, **med)
 
         return rx
 

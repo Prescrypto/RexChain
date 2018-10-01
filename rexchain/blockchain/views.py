@@ -109,13 +109,3 @@ def block_detail(request, block_hash=False):
             print("Error found: %s, type: %s" % (e, type(e)))
 
     return redirect("/")
-
-def get_simplified_medication_json(medications):
-    medication_json = []
-    for medication in medications:
-        json = {}
-        json['instructions'] = medication.instructions
-        json['presentation'] = medication.presentation
-        medication_json.append(json)
-    return medication_json[::-1] # This 'pythonesque' code reverts order of lists
-

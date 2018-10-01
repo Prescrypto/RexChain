@@ -14,7 +14,7 @@ from rest_framework import mixins, generics
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 # our models
-from blockchain.models import Block, Prescription, Medication, Transaction, Address
+from blockchain.models import Block, Prescription, Transaction, Address
 from blockchain.utils import pubkey_string_to_rsa, pubkey_base64_to_rsa, pubkey_base64_from_uri
 
 from blockchain.helpers import CryptoTools
@@ -26,23 +26,10 @@ router = routers.DefaultRouter()
 logger = logging.getLogger('django_info')
 
 
-class MedicationNestedSerializer(serializers.ModelSerializer):
-    """ Medication Nested in Prescription """
-    class Meta:
-        model = Medication
-        fields = ('id', 'presentation', 'instructions', 'drug_upc',)
-        read_only_fields = ('id',)
-        extra_kwargs = {
-            'presentation': { 'required': 'False', 'min_length': 4},
-            'instructions': { 'required': 'False', 'min_length': 4}
-        }
 
 class PrescriptionSerializer(serializers.ModelSerializer):
     """ Prescription serializer """
-    medications = MedicationNestedSerializer(
-        many=True, required=False,
-        help_text = "Medication Nested Serializer"
-    )
+
     timestamp = serializers.DateTimeField(read_only=False)
     previous_hash = serializers.CharField(read_only=False, required=False, default="0")
 
