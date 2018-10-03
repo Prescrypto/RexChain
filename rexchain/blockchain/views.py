@@ -21,7 +21,7 @@ class ValidateRxView(View):
     def get(self, request, *args, **kwargs):
         hash_rx = kwargs.get("hash_rx")
         # Temporary solution
-        rx = Prescription.objects.get(rxid=hash_rx)
+        rx = Prescription.objects.get(hash_id=hash_rx)
 
         if hash_rx:
             # init
@@ -71,7 +71,7 @@ def tx_detail(request, hash_id=False):
 def rx_priv_key(request, hash_rx=False):
     # Temporary way to show key just for test, remove later
     try:
-        rx = Prescription.objects.get(rxid=hash_rx)
+        rx = Prescription.objects.get(hash_id=hash_rx)
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
     except Exception as e:
         return HttpResponse("Not Found", content_type="text/plain")
@@ -80,7 +80,7 @@ def rx_priv_key(request, hash_rx=False):
 def qr_code(request, hash_rx=False):
     # Temporary way to show qrcode just for test, remove later
     try:
-        rx = Prescription.objects.get(rxid=hash_rx)
+        rx = Prescription.objects.get(hash_id=hash_rx)
         img = get_qr_code(rx.get_priv_key)
         return HttpResponse(img, content_type="image/jpeg"
 )
