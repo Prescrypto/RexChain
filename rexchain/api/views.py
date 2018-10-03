@@ -35,7 +35,6 @@ class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
         fields = (
-            'id',
             'data',
             'signature',
             'previous_hash',
@@ -44,7 +43,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             'transaction',
             'readable',
         )
-        read_only_fields = ('id', 'hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
+        read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
 
     def validate(self, data):
         ''' Method to control Extra Keys on Payload!'''
