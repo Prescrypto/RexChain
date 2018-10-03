@@ -68,15 +68,9 @@ class IOBlockchainize(models.Model):
         return len(size) * 8
 
     @cached_property
-    def get_data_base64(self):
-        # Return data of prescription on base64
-        return {
-            "data" : self.data
-        }
-
-    @cached_property
     def raw_size(self):
-        # get the size of the raw rx
+        # Get the size of the raw rx
+        # TODO make improvements here
         _size = (
             json.dumps(self.data) +
             self.timestamp.isoformat()

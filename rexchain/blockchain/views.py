@@ -42,27 +42,27 @@ def poe(request):
     ''' Proof of existence explanation '''
     return render(request, "blockchain/poe.html")
 
-def rx_detail(request, hash_rx=False):
-    ''' Get a hash and return the rx '''
-    if request.GET.get("hash_rx", False):
-        hash_rx = request.GET.get("hash_rx")
+def tx_detail(request, hash_id=False):
+    ''' Get a hash and return the blockchain model '''
+    if request.GET.get("hash_id", False):
+        hash_id = request.GET.get("hash_id")
 
-    if hash_rx:
+    if hash_id:
         context = {}
-
+        import code; code.interact(local=locals())
         try:
-            rx = Prescription.objects.get(rxid=hash_rx)
+            rx = Prescription.objects.get(hash_id=hash_id)
         except Exception as e:
             try:
-                rx = Prescription.objects.get(tx_txid=hash_rx)
+                rx = Prescription.objects.get(tx_txid=hash_id)
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
-                return redirect("/block/?block_hash=%s" % hash_rx)
+                return redirect("/block/?block_hash=%s" % hash_id)
 
-
-        medications = get_simplified_medication_json(rx.medications.all())
-        context["rx"] = rx
-        context["medications"] = medications
+        context = {
+            "medications": rx.data["medications"],
+            "rx": rx
+        }
         return render(request, "blockchain/rx_detail.html", context)
 
 

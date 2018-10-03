@@ -132,10 +132,10 @@
             </tr>
           {% for rx in prescriptions %}
           <tr>
-            <td><a class="a_purple" href="/hash/{{ rx.rxid }}/"> {{ rx.raw_size }} bytes</a></td>
-            <td class="text-center hidden-xs"><a class="a_grey" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
-            <td class="text-center visible-xs-block signature-mobile"><a class="a_grey" href="/hash/{{ rx.rxid }}/">{{ rx.rxid }}</a></td>
-            <td class="text-center"><a class="a_green" href="/hash/{{ rx.rxid }}/"><span>{{ rx.get_delta_datetime|timezone:"America/Mexico_City"|timesince }}</span></a></td>
+            <td><a class="a_purple" href="/hash/{{ rx.hash_id }}/"> {{ rx.raw_size }} bytes</a></td>
+            <td class="text-center hidden-xs"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
+            <td class="text-center visible-xs-block signature-mobile"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
+            <td class="text-center"><a class="a_green" href="/hash/{{ rx.hash_id }}/"><span>{{ rx.get_delta_datetime|timezone:"America/Mexico_City"|timesince }}</span></a></td>
           </tr>
           {% endfor %}
         </table>
@@ -165,7 +165,7 @@
   <script>
     var chart; // global
     var total_rx = {{ total_rx }};
-    
+
     function loadData() {
     $.ajax({
         data : stats,
