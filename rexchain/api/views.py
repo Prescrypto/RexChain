@@ -63,7 +63,7 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
     # authentication_classes = (TokenAuthentication, BasicAuthentication, )
     # permission_classes = (IsAuthenticated, )
     serializer_class = PrescriptionSerializer
-    lookup_field = "rxid"
+    lookup_field = "hash_id"
     http_method_names = ['get', 'post', 'options']
 
     def get_queryset(self):
