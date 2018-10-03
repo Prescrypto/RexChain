@@ -154,15 +154,18 @@ class TransactionManager(models.Manager):
         ''' Custom method for create Tx with rx item '''
 
         ''' Get initial data '''
+
         _payload = ""
-        format = '%Y-%m-%dT%H:%M:%S%z'
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
+        data = data["data"]
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        timestamp =  data["timestamp"]
-        timestamp.replace(tzinfo=timezone.utc)
-        data["timestamp"] = timestamp.isoformat()
+
+        ''' When timestamp is convert to python datetime needs this patch '''
+        # timestamp =  data["timestamp"]
+        # timestamp.replace(tzinfo=timezone.utc)
+        # data["timestamp"] = timestamp.isoformat()
 
         # Initalize some data
         try:
@@ -172,7 +175,6 @@ class TransactionManager(models.Manager):
 
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
-
 
         _is_valid_tx = False
         _rx_before = None
@@ -299,6 +301,7 @@ class PrescriptionManager(models.Manager):
         _rx_before = kwargs.get('_rx_before', None)
 
         rx = Prescription(
+            data=data,
             timestamp=data.get("timestamp", timezone.now()),
             public_key=kwargs.get("pub_key", ""),
             signature=kwargs.get("_signature", ""),
