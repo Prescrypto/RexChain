@@ -27,6 +27,7 @@ class IOBlockchainize(models.Model):
     # For Validate Transaction
     readable = models.BooleanField("Check if data is readable(synonym spent)", default=False, blank=True) # Filter against this when
     is_valid = models.BooleanField("Check if signature validation was valid", default=True, blank=True)
+    signature  = models.TextField("Signature with PK and data transaction ", blank=True, default="")
 
     # For tracking Inputs and Outputs
     hash_id = models.TextField("Hash for Blockchainize Object", blank=True, default="")

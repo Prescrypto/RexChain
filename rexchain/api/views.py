@@ -29,33 +29,22 @@ logger = logging.getLogger('django_info')
 
 class PrescriptionSerializer(serializers.ModelSerializer):
     """ Prescription serializer """
-
-    timestamp = serializers.DateTimeField(read_only=False)
     previous_hash = serializers.CharField(read_only=False, required=False, default="0")
+    data = serializers.JSONField(binary=False, read_only=False, required=False)
 
     class Meta:
         model = Prescription
         fields = (
             'id',
-            'public_key',
-            'medic_name',
-            'medic_cedula',
-            'medic_hospital',
-            'patient_name',
-            'patient_age',
-            'diagnosis',
-            'medications',
-            'location',
-            'timestamp',
+            'data',
             'signature',
             'previous_hash',
-            'raw_size',
-            'rxid',
+            'hash_id',
             'is_valid',
             'transaction',
             'readable',
         )
-        read_only_fields = ('id', 'rxid', 'previous_hash', 'is_valid', 'transaction')
+        read_only_fields = ('id', 'hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
 
     def validate(self, data):
         ''' Method to control Extra Keys on Payload!'''
