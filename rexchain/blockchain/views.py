@@ -49,7 +49,6 @@ def tx_detail(request, hash_id=False):
 
     if hash_id:
         context = {}
-        import code; code.interact(local=locals())
         try:
             rx = Prescription.objects.get(hash_id=hash_id)
         except Exception as e:
