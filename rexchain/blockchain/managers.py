@@ -317,14 +317,6 @@ class PrescriptionManager(models.Manager):
             rx.location = data["location"]
 
 
-        rx.medic_name = data["medic_name"]
-        rx.medic_cedula = data["medic_cedula"]
-        rx.medic_hospital = data["medic_hospital"]
-        rx.patient_name = data["patient_name"]
-        rx.patient_age = data["patient_age"]
-        rx.diagnosis = data["diagnosis"]
-
-
         # Save previous hash
         if _rx_before is None:
             logger.info("[CREATE_RX] New transaction!")

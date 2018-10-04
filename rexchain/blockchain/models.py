@@ -59,12 +59,14 @@ class Block(models.Model):
         # Get the sum of hashes of last transaction in block size
         sum_hashes = ""
         try:
-            self.data["hashes"] = []
+            hashes = []
             for tx in tx_queryset:
                 sum_hashes += tx.txid
-                self.data["hashes"].append(tx.txid)
+                hashes.append(tx.txid)
                 tx.block = self
                 tx.save()
+
+            self.data["hashes"] = hashes
             merkleroot = get_merkle_root(tx_queryset)
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 

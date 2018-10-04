@@ -27,13 +27,13 @@ def calculate_hash(index, previousHash, timestamp, data):
     return hash_obj.hexdigest()
 
 # Merkle root - gets a list of prescriptions and returns a merkle root
-def get_merkle_root(prescriptions):
+def get_merkle_root(transantions):
     # Generate merkle tree
     logger = logging.getLogger('django_info')
     mt = merkletools.MerkleTools() # Default is SHA256
     # Build merkle tree with Rxs
-    for rx in prescriptions:
-        mt.add_leaf(rx.hash_id)
+    for tx in transantions:
+        mt.add_leaf(tx.txid)
     mt.make_tree();
     # Just to check
     logger.error("Leaf Count: {}".format(mt.get_leaf_count()))
