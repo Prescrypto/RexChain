@@ -53,7 +53,7 @@ def tx_detail(request, hash_id=False):
             rx = Prescription.objects.get(hash_id=hash_id)
         except Exception as e:
             try:
-                rx = Prescription.objects.get(tx_txid=hash_id)
+                rx = Prescription.objects.get(transaction__txid=hash_id)
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
                 return redirect("/block/?block_hash=%s" % hash_id)
