@@ -37,6 +37,7 @@ class BlockManager(models.Manager):
 
     def create_block(self, tx_queryset):
         # Do initial block or create next block
+        Block = apps.get_model('blockchain','Block')
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
@@ -58,7 +59,6 @@ class BlockManager(models.Manager):
 
     def generate_next_block(self, hash_before, tx_queryset):
         # Generete a new block
-
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
         data_block = new_block.get_block_data(tx_queryset)
