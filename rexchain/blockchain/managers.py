@@ -98,6 +98,7 @@ class TransactionManager(models.Manager):
         '''
             Use PoW hashcash algoritm to attempt to create a block
         '''
+        Block = apps.get_model('blockchain','Block')
         _hashcash_tools = Hashcash(debug=settings.DEBUG)
 
         if not cache.get('challenge') and not cache.get('counter') == 0:
