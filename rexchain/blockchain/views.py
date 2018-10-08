@@ -21,7 +21,7 @@ class ValidateRxView(View):
     def get(self, request, *args, **kwargs):
         hash_rx = kwargs.get("hash_rx")
         # Temporary solution
-        rx = Prescription.objects.get(rxid=hash_rx)
+        rx = Prescription.objects.get(hash_id=hash_rx)
 
         if hash_rx:
             # init
@@ -42,27 +42,26 @@ def poe(request):
     ''' Proof of existence explanation '''
     return render(request, "blockchain/poe.html")
 
-def rx_detail(request, hash_rx=False):
-    ''' Get a hash and return the rx '''
-    if request.GET.get("hash_rx", False):
-        hash_rx = request.GET.get("hash_rx")
+def tx_detail(request, hash_id=False):
+    ''' Get a hash and return the blockchain model '''
+    if request.GET.get("hash_id", False):
+        hash_id = request.GET.get("hash_id")
 
-    if hash_rx:
+    if hash_id:
         context = {}
-
         try:
-            rx = Prescription.objects.get(rxid=hash_rx)
+            rx = Prescription.objects.get(hash_id=hash_id)
         except Exception as e:
             try:
-                rx = Prescription.objects.get(tx_txid=hash_rx)
+                rx = Prescription.objects.get(transaction__txid=hash_id)
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
-                return redirect("/block/?block_hash=%s" % hash_rx)
+                return redirect("/block/?block_hash=%s" % hash_id)
 
-
-        medications = get_simplified_medication_json(rx.medications.all())
-        context["rx"] = rx
-        context["medications"] = medications
+        context = {
+            "medications": rx.data["medications"],
+            "rx": rx
+        }
         return render(request, "blockchain/rx_detail.html", context)
 
 
@@ -72,7 +71,7 @@ def rx_detail(request, hash_rx=False):
 def rx_priv_key(request, hash_rx=False):
     # Temporary way to show key just for test, remove later
     try:
-        rx = Prescription.objects.get(rxid=hash_rx)
+        rx = Prescription.objects.get(hash_id=hash_rx)
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
     except Exception as e:
         return HttpResponse("Not Found", content_type="text/plain")
@@ -81,7 +80,7 @@ def rx_priv_key(request, hash_rx=False):
 def qr_code(request, hash_rx=False):
     # Temporary way to show qrcode just for test, remove later
     try:
-        rx = Prescription.objects.get(rxid=hash_rx)
+        rx = Prescription.objects.get(hash_id=hash_rx)
         img = get_qr_code(rx.get_priv_key)
         return HttpResponse(img, content_type="image/jpeg"
 )
@@ -109,13 +108,3 @@ def block_detail(request, block_hash=False):
             print("Error found: %s, type: %s" % (e, type(e)))
 
     return redirect("/")
-
-def get_simplified_medication_json(medications):
-    medication_json = []
-    for medication in medications:
-        json = {}
-        json['instructions'] = medication.instructions
-        json['presentation'] = medication.presentation
-        medication_json.append(json)
-    return medication_json[::-1] # This 'pythonesque' code reverts order of lists
-

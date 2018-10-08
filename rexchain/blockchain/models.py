@@ -20,9 +20,9 @@ from django.utils.dateformat import DateFormat
 
 # Our methods
 from core.behaviors import Timestampable
+from .behaviors import IOBlockchainize
 from .managers import (
     BlockManager,
-    MedicationManager,
     PrescriptionManager,
     TransactionManager,
     AddressManager,
@@ -59,12 +59,14 @@ class Block(models.Model):
         # Get the sum of hashes of last transaction in block size
         sum_hashes = ""
         try:
-            self.data["hashes"] = []
+            hashes = []
             for tx in tx_queryset:
                 sum_hashes += tx.txid
-                self.data["hashes"].append(tx.txid)
+                hashes.append(tx.txid)
                 tx.block = self
                 tx.save()
+
+            self.data["hashes"] = hashes
             merkleroot = get_merkle_root(tx_queryset)
             return {"sum_hashes": sum_hashes, "merkleroot": merkleroot}
 
@@ -133,82 +135,23 @@ class Transaction(models.Model):
 
 
 @python_2_unicode_compatible
-class Prescription(Timestampable, models.Model):
+class Prescription(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Rx Model '''
 
-    # Cryptographically enabled fields
-    public_key = models.TextField(blank=True, default="")
-
-    ### Patient and Medic data (encrypted)
-    medic_name = models.TextField(blank=True, default="")
-    medic_cedula = models.TextField(blank=True, default="")
-    medic_hospital = models.TextField(blank=True, default="")
-    patient_name = models.TextField(blank=True, default="")
-    patient_age = models.TextField(blank=True, default="")
-    diagnosis = models.TextField(default="")
-
-    ### Public fields (not encrypted)
-    timestamp = models.DateTimeField(default=timezone.now, db_index=True)
-    location = models.TextField(blank=True, default="")
-    raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
-
-    # For coordinates
-    location_lat = models.FloatField(null=True, blank=True, default=0)
-    location_lon = models.FloatField(null=True, blank=True, default=0)
-
-    # Rx Specific
-    details = models.TextField(blank=True, default="")
-    extras = models.TextField(blank=True, default="")
-    bought = models.BooleanField(default=False)
+    # Owner track
+    public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True)
 
     # For TxTransfer
     transaction = models.ForeignKey('blockchain.Transaction', related_name='prescriptions', null=True, blank=True)
-    readable = models.BooleanField(default=False, blank=True) # Filter against this when
-    is_valid = models.BooleanField(default=True, blank=True)
-    rxid = models.TextField(blank=True, default="")
-    previous_hash = models.TextField(default="")
 
     objects = PrescriptionManager()
 
-    # Must delete after migrate manually old legacy
-    block = models.ForeignKey('blockchain.Block', related_name='block', null=True, blank=True)
-    signature = models.TextField(null=True, blank=True, default="")
 
     def __str__(self):
-        return self.rxid
+        return self.hash_id
 
-    def hash(self):
-        ''' Hashes msg_html with utf-8 encoding, saves this in and hash in _signature '''
-        hash_object = hashlib.sha256(self.raw_msg)
-        self.rxid = hash_object.hexdigest()
-
+    # There are here Personalized methods for Blockchinize model
     @cached_property
-    def get_data_base64(self):
-        # Return data of prescription on base64
-        return {
-            "medic_name" : self.medic_name,
-            "medic_cedula" : self.medic_cedula,
-            "medic_hospital" : self.medic_hospital,
-            "patient_name" : self.patient_name,
-            "patient_age" : self.patient_age,
-            "diagnosis" : self.diagnosis
-        }
-
-    def create_raw_msg(self):
-        # Create raw html and encode
-        msg = (
-            self.medic_name +
-            self.medic_cedula +
-            self.medic_hospital +
-            self.patient_name +
-            self.patient_age +
-            self.diagnosis +
-            timezone.now().isoformat() +
-            self.previous_hash
-        )
-        self.raw_msg = msg.encode('utf-8')
-
-
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
         localised_date = self.timestamp
@@ -223,60 +166,10 @@ class Prescription(Timestampable, models.Model):
         return self.timestamp - timedelta(hours=6)
 
     @cached_property
-    def raw_size(self):
-        # get the size of the raw rx
-        size = (
-            len(self.raw_msg) + len(self.diagnosis) +
-            len(self.location) + len(self.rxid) +
-            len(self.medic_name) + len(self.medic_cedula) +
-            len(self.medic_hospital) + len(self.patient_name) +
-            len(self.patient_age) + len(str(self.get_formatted_date())) +
-            len(self.timestamp.isoformat())
-        )
-        if self.medications.all() is not None:
-            for med in self.medications.all():
-                size += len(med.presentation) +len(med.instructions)
-        return size * 8
-
-    @cached_property
     def get_before_hash(self):
         ''' Get before hash prescription '''
         return self.previous_hash
 
-
-    def transfer_ownership(self):
-        ''' These method only appear when Rx is transfer succesfully'''
-        self.readable = False
-        self.destroy_data()
-        self.save()
-        logger.info("[TRANSFER_OWNERSHIP]Success destroy data!")
-
-    def destroy_data(self):
-        ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
-        self.medic_name = hashlib.sha256(self.medic_name).hexdigest()
-        self.medic_cedula = hashlib.sha256(self.medic_cedula).hexdigest()
-        self.patient_name = hashlib.sha256(self.patient_name).hexdigest()
-        self.patient_age = hashlib.sha256(self.patient_age).hexdigest()
-        self.diagnosis = hashlib.sha256(self.diagnosis).hexdigest()
-
-
-@python_2_unicode_compatible
-class Medication(models.Model):
-    prescription = models.ForeignKey('blockchain.Prescription',
-        related_name='medications'
-        )
-    active = models.TextField(blank=True, default="")
-    presentation = models.TextField(blank=True, default="")
-    instructions = models.TextField(blank=True, default="")
-    frequency = models.TextField(blank=True, default="")
-    dose = models.TextField(blank=True, default="")
-    bought = models.BooleanField(default=False)
-    drug_upc = models.TextField(blank=True, default="", db_index=True)
-
-    objects = MedicationManager()
-
-    def __str__(self):
-        return self.presentation
 
 
 class Address(Timestampable, models.Model):

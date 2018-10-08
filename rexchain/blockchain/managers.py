@@ -4,7 +4,6 @@ Model Managers RexChain
 BlockManager
 RXmanager
 TXmanager
-MedicationManager
 '''
 import json
 import logging
@@ -19,7 +18,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from core.utils import Hashcash
 from core.helpers import safe_set_cache, get_timestamp
-from api.exceptions import EmptyMedication, FailedVerifiedSignature
+from api.exceptions import FailedVerifiedSignature
 
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
 from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data
@@ -38,6 +37,7 @@ class BlockManager(models.Manager):
 
     def create_block(self, tx_queryset):
         # Do initial block or create next block
+        Block = apps.get_model('blockchain','Block')
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
@@ -59,7 +59,6 @@ class BlockManager(models.Manager):
 
     def generate_next_block(self, hash_before, tx_queryset):
         # Generete a new block
-
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
         data_block = new_block.get_block_data(tx_queryset)
@@ -99,6 +98,7 @@ class TransactionManager(models.Manager):
         '''
             Use PoW hashcash algoritm to attempt to create a block
         '''
+        Block = apps.get_model('blockchain','Block')
         _hashcash_tools = Hashcash(debug=settings.DEBUG)
 
         if not cache.get('challenge') and not cache.get('counter') == 0:
@@ -128,7 +128,7 @@ class TransactionManager(models.Manager):
             logger.info("[IS_TRANSFER_VALID] Send a transfer with a wrong reference previous_hash!")
             return (False, None)
 
-        before_rx = Prescription.objects.get(rxid=data['previous_hash'])
+        before_rx = Prescription.objects.get(hash_id=data['previous_hash'])
 
         if not before_rx.readable:
             logger.info("[IS_TRANSFER_VALID]The before_rx is not readable")
@@ -155,15 +155,18 @@ class TransactionManager(models.Manager):
         ''' Custom method for create Tx with rx item '''
 
         ''' Get initial data '''
+
         _payload = ""
-        format = '%Y-%m-%dT%H:%M:%S%z'
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
+        data = data["data"]
         # Get Public Key from API
         raw_pub_key = data.get("public_key")
-        timestamp =  data["timestamp"]
-        timestamp.replace(tzinfo=timezone.utc)
-        data["timestamp"] = timestamp.isoformat()
+
+        ''' When timestamp is convert to python datetime needs this patch '''
+        # timestamp =  data["timestamp"]
+        # timestamp.replace(tzinfo=timezone.utc)
+        # data["timestamp"] = timestamp.isoformat()
 
         # Initalize some data
         try:
@@ -173,7 +176,6 @@ class TransactionManager(models.Manager):
 
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
-
 
         _is_valid_tx = False
         _rx_before = None
@@ -251,14 +253,6 @@ class TransactionManager(models.Manager):
         return tx
 
 
-class MedicationManager(models.Manager):
-    ''' Manager to create Medication from API '''
-    def create_medication(self, prescription, **kwargs):
-        med = self.create(prescription=prescription, **kwargs)
-        med.save()
-        return med
-
-
 class PrescriptionManager(models.Manager):
     ''' Manager for prescriptions '''
 
@@ -299,11 +293,6 @@ class PrescriptionManager(models.Manager):
 
         rx = self.create_raw_rx(data, **kwargs)
 
-        if len(data["medications"]) > 0:
-            Medication = apps.get_model('blockchain','Medication')
-            for med in data["medications"]:
-                Medication.objects.create_medication(prescription=rx, **med)
-
         return rx
 
     def create_raw_rx(self, data, **kwargs):
@@ -313,6 +302,7 @@ class PrescriptionManager(models.Manager):
         _rx_before = kwargs.get('_rx_before', None)
 
         rx = Prescription(
+            data=data,
             timestamp=data.get("timestamp", timezone.now()),
             public_key=kwargs.get("pub_key", ""),
             signature=kwargs.get("_signature", ""),
@@ -327,14 +317,6 @@ class PrescriptionManager(models.Manager):
             rx.location = data["location"]
 
 
-        rx.medic_name = data["medic_name"]
-        rx.medic_cedula = data["medic_cedula"]
-        rx.medic_hospital = data["medic_hospital"]
-        rx.patient_name = data["patient_name"]
-        rx.patient_age = data["patient_age"]
-        rx.diagnosis = data["diagnosis"]
-
-
         # Save previous hash
         if _rx_before is None:
             logger.info("[CREATE_RX] New transaction!")
@@ -342,7 +324,7 @@ class PrescriptionManager(models.Manager):
             rx.readable = True
         else:
             logger.info("[CREATE_RX] New transaction transfer!")
-            rx.previous_hash = _rx_before.rxid
+            rx.previous_hash = _rx_before.hash_id
             if rx.is_valid:
                 logger.info("[CREATE_RX] Tx transfer is valid!")
                 rx.readable = True
