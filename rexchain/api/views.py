@@ -14,7 +14,7 @@ from rest_framework import mixins, generics
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 # our models
-from blockchain.models import Block, Prescription, Medication, Transaction, Address
+from blockchain.models import Block, Prescription, Transaction, Address
 from blockchain.utils import pubkey_string_to_rsa, pubkey_base64_to_rsa, pubkey_base64_from_uri
 
 from blockchain.helpers import CryptoTools
@@ -26,49 +26,24 @@ router = routers.DefaultRouter()
 logger = logging.getLogger('django_info')
 
 
-class MedicationNestedSerializer(serializers.ModelSerializer):
-    """ Medication Nested in Prescription """
-    class Meta:
-        model = Medication
-        fields = ('id', 'presentation', 'instructions', 'drug_upc',)
-        read_only_fields = ('id',)
-        extra_kwargs = {
-            'presentation': { 'required': 'False', 'min_length': 4},
-            'instructions': { 'required': 'False', 'min_length': 4}
-        }
 
 class PrescriptionSerializer(serializers.ModelSerializer):
     """ Prescription serializer """
-    medications = MedicationNestedSerializer(
-        many=True, required=False,
-        help_text = "Medication Nested Serializer"
-    )
-    timestamp = serializers.DateTimeField(read_only=False)
     previous_hash = serializers.CharField(read_only=False, required=False, default="0")
+    data = serializers.JSONField(binary=False, read_only=False, required=False)
 
     class Meta:
         model = Prescription
         fields = (
-            'id',
-            'public_key',
-            'medic_name',
-            'medic_cedula',
-            'medic_hospital',
-            'patient_name',
-            'patient_age',
-            'diagnosis',
-            'medications',
-            'location',
-            'timestamp',
+            'data',
             'signature',
             'previous_hash',
-            'raw_size',
-            'rxid',
+            'hash_id',
             'is_valid',
             'transaction',
             'readable',
         )
-        read_only_fields = ('id', 'rxid', 'previous_hash', 'is_valid', 'transaction')
+        read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
 
     def validate(self, data):
         ''' Method to control Extra Keys on Payload!'''
@@ -87,7 +62,7 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
     # authentication_classes = (TokenAuthentication, BasicAuthentication, )
     # permission_classes = (IsAuthenticated, )
     serializer_class = PrescriptionSerializer
-    lookup_field = "rxid"
+    lookup_field = "hash_id"
     http_method_names = ['get', 'post', 'options']
 
     def get_queryset(self):

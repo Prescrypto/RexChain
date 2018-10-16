@@ -19,7 +19,7 @@ from rest_framework.documentation import include_docs_urls
 # Our Models
 from .views import home, humans_txt, robots_txt
 from blockchain.views import (
-    rx_detail, block_detail,
+    tx_detail, block_detail,
     rx_priv_key, qr_code, poe, ValidateRxView
 )
 
@@ -32,12 +32,12 @@ urlpatterns = [
     url(r'^api/v1/', include('api.urls')),
     # Explorer
     url(r'^$', home, name='home'),
-    url(r'^hash/$', rx_detail, name="rx_search"),
-    url(r'^hash/(?P<hash_rx>\w+)/$', rx_detail, name="rx_detail"),
+    url(r'^hash/$', tx_detail, name="tx_search"),
+    url(r'^hash/(?P<hash_id>\w+)/$', tx_detail, name="tx_detail"),
     url(r'^block/$', block_detail, name="block_search"),
     url(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
     # Attest PoE
-    url(r'^validate/(?P<hash_rx>\w+)/$', ValidateRxView.as_view(), name="validate"),
+    url(r'^validate/(?P<hash_id>\w+)/$', ValidateRxView.as_view(), name="validate"),
     # Static content
     url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
     url(r'^humans.txt$', humans_txt, name="humans_txt"),

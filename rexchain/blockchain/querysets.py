@@ -5,7 +5,7 @@ class PrescriptionQueryset(models.QuerySet):
     ''' Add custom querysets'''
 
     def check_existence(self, previous_hash):
-        return self.filter(rxid=previous_hash).exists()
+        return self.filter(hash_id=previous_hash).exists()
 
     def non_validated_rxs(self):
         return self.filter(is_valid=True).filter(block=None)
