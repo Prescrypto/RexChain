@@ -53,7 +53,7 @@ class BlockManager(models.Manager):
             hash_block=genesis_hash_generator(),
             data=GENESIS_INIT_DATA,
             merkleroot=get_genesis_merkle_root())
-        genesis_block.hash_before = "0"
+        genesis_block.previous_hash = "0"
         genesis_block.save()
         return genesis_block
 
