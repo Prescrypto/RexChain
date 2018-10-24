@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 # Python libs
 import hashlib
+import json
 # Django packages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
@@ -64,7 +65,7 @@ def tx_detail(request, hash_id=False):
         context = {
             "medications": rx.data["medications"],
             "rx": rx,
-            "payload": _payload.data,
+            "payload": json.dumps(_payload.data),
         }
         return render(request, "blockchain/rx_detail.html", context)
 
