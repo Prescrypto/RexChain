@@ -13,35 +13,10 @@
     <div class="row padding-2em">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
-
-          <article class="shadowed_details col-xs-12 col-lg-6">
-            {#Hashes info#}
-            <table style="margin-bottom:0px!important;" id="crypto-table" class="a_grey table table-striped">
-              <tr>
-                <td class="a_grey" colspan="2"><strong>Hashes</strong></td>
-              </tr>
-              <tr>
-                  <td>Hash:</td>
-                  <td><a class="a_grey" href="/hash/{{rx.hash_id}}">{{ rx.hash_id }}</a></td>
-              </tr>
-              <tr>
-                  <td>Hash Anterior:</td>
-
-                  {% if rx.get_before_hash == '0' %}
-                    {# Initial transaction #}
-                    <td>{{ rx.get_before_hash }}</td>
-                    }
-                  {% else %}
-                    <td><a class="a_grey" href="/hash/{{ rx.get_before_hash }}">{{ rx.get_before_hash }}</a></td>
-                  {% endif %}
-              </tr>
-            </table>
-          </article>
-
           <article class="col-xs-12 col-lg-12">
-                <code><pre>
-                  {{ payload }}
-                </pre></code>
+            <code><pre>
+{{ payload }}
+            </pre></code>
           </article>
         </div>
     </div>
