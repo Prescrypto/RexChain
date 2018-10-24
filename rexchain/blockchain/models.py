@@ -52,7 +52,7 @@ class Block(models.Model):
     def raw_size(self):
         # get the size of the raw html
         # TODO need improve
-        size = (len(self.get_before_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
+        size = (len(self.previous_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
         return size
 
     def get_block_data(self, tx_queryset):
@@ -81,11 +81,6 @@ class Block(models.Model):
         if not settings.DEBUG:
             localised_date = localised_date - timedelta(hours=6)
         return DateFormat(localised_date).format(format_time)
-
-    @cached_property
-    def get_before_hash(self):
-        ''' Get before hash block '''
-        return self.previous_hash
 
     def __str__(self):
         return self.hash_block
