@@ -23,7 +23,7 @@ from core.behaviors import Timestampable
 from .behaviors import IOBlockchainize
 from .managers import (
     BlockManager,
-    PrescriptionManager,
+    PayloadManager,
     TransactionManager,
     AddressManager,
 )
@@ -130,16 +130,16 @@ class Transaction(models.Model):
 
 
 @python_2_unicode_compatible
-class Prescription(Timestampable, IOBlockchainize, models.Model):
+class Payload(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Rx Model '''
 
     # Owner track
     public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True)
 
     # For TxTransfer
-    transaction = models.ForeignKey('blockchain.Transaction', related_name='prescriptions', null=True, blank=True)
+    transaction = models.ForeignKey('blockchain.Transaction', related_name='payloads', null=True, blank=True)
 
-    objects = PrescriptionManager()
+    objects = PayloadManager()
 
 
     def __str__(self):
@@ -162,7 +162,7 @@ class Prescription(Timestampable, IOBlockchainize, models.Model):
 
     @cached_property
     def get_before_hash(self):
-        ''' Get before hash prescription '''
+        ''' Get before hash Payload '''
         return self.previous_hash
 
 

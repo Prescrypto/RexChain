@@ -23,7 +23,7 @@ from api.exceptions import FailedVerifiedSignature
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
 from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data
 from .querysets import (
-    PrescriptionQueryset,
+    PayloadQueryset,
     TransactionQueryset,
     AddressQueryset,
 )
@@ -84,7 +84,7 @@ class BlockManager(models.Manager):
 
 
 class TransactionManager(models.Manager):
-    ''' Manager for prescriptions '''
+    ''' Manager for Payloads '''
 
     _crypto = CryptoTools(has_legacy_keys=False)
 
@@ -123,12 +123,12 @@ class TransactionManager(models.Manager):
 
     def is_transfer_valid(self, data, _previous_hash, pub_key, _signature):
         ''' Method to handle transfer validity!'''
-        Prescription = apps.get_model('blockchain','Prescription')
-        if not Prescription.objects.check_existence(data['previous_hash']):
+        Payload = apps.get_model('blockchain','Payload')
+        if not Payload.objects.check_existence(data['previous_hash']):
             logger.info("[IS_TRANSFER_VALID] Send a transfer with a wrong reference previous_hash!")
             return (False, None)
 
-        before_rx = Prescription.objects.get(hash_id=data['previous_hash'])
+        before_rx = Payload.objects.get(hash_id=data['previous_hash'])
 
         if not before_rx.readable:
             logger.info("[IS_TRANSFER_VALID]The before_rx is not readable")
@@ -210,9 +210,9 @@ class TransactionManager(models.Manager):
         ''' FIRST Create the Transaction '''
         tx = self.create_raw_tx(data, _is_valid_tx=_is_valid_tx, _signature=_signature, pub_key=pub_key)
 
-        ''' THEN Create the Data Item(prescription) '''
-        Prescription = apps.get_model('blockchain','Prescription')
-        rx = Prescription.objects.create_rx(
+        ''' THEN Create the Data Item(Payload) '''
+        Payload = apps.get_model('blockchain','Payload')
+        rx = Payload.objects.create_rx(
             data,
             _signature=_signature,
             pub_key=hex_raw_pub_key, # This is basically the address
@@ -253,11 +253,11 @@ class TransactionManager(models.Manager):
         return tx
 
 
-class PrescriptionManager(models.Manager):
-    ''' Manager for prescriptions '''
+class PayloadManager(models.Manager):
+    ''' Manager for Payload Model '''
 
     def get_queryset(self):
-        return PrescriptionQueryset(self.model, using=self._db)
+        return PayloadQueryset(self.model, using=self._db)
 
     def range_by_hour(self, date_filter):
         return self.get_queryset().range_by_hour(date_filter)
@@ -297,11 +297,11 @@ class PrescriptionManager(models.Manager):
 
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
-        Prescription = apps.get_model('blockchain','Prescription')
+        Payload = apps.get_model('blockchain','Payload')
 
         _rx_before = kwargs.get('_rx_before', None)
 
-        rx = Prescription(
+        rx = Payload(
             data=data,
             timestamp=data.get("timestamp", timezone.now()),
             public_key=kwargs.get("pub_key", ""),
