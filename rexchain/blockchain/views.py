@@ -13,6 +13,7 @@ from .models import Payload, Block
 from .utils import get_qr_code, is_rx_in_block
 # Blockcypher
 from blockchain.utils import PoE
+from api.views import PayloadSerializer
 
 
 class ValidateRxView(View):
@@ -58,9 +59,12 @@ def tx_detail(request, hash_id=False):
                 print("Error :%s, type(%s)" % (e, type(e)))
                 return redirect("/block/?block_hash=%s" % hash_id)
 
+        _payload = PayloadSerializer(rx)
+
         context = {
             "medications": rx.data["medications"],
-            "rx": rx
+            "rx": rx,
+            "payload": _payload.data,
         }
         return render(request, "blockchain/rx_detail.html", context)
 
