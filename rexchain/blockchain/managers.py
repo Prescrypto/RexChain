@@ -155,9 +155,6 @@ class TransactionManager(models.Manager):
         ''' Custom method for create Tx with rx item '''
 
         ''' Get initial data '''
-        # REMOVE LATER (TEST ONLY)
-        logger.info("Payload:")
-        logger.info(json.dumps(data))
 
         _payload = ""
         _signature = data.pop("signature", None)
