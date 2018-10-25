@@ -5,7 +5,7 @@
   Rx Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; margin-left:4em;font-weight:700;">Detalle de la receta</h2>
+  <h2 style="color:#000; margin-left:4em;font-weight:700;">Detalle del Payload</h2>
 {% endblock subtitle %}
 {% block content %}
   {# RX Detail #}
@@ -13,82 +13,10 @@
     <div class="row padding-2em">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
-          <article class="shadowed_details col-xs-12 col-lg-6">
-            {# Rx info #}
-            <table style="margin-bottom:0px!important;" id="crypto-table" class="a_grey table table-striped">
-              <tr>
-                <td colspan="2"><strong>Detalles</strong></td>
-              </tr>
-              {# for field in prescription #}
-                <tr>
-                  <td>Tamaño:</td>
-                  <td class="a_purple">{{ rx.raw_size }} bytes</td>
-                </tr>
-                <tr>
-                  <td>Timestamp:</td>
-                  <td class="a_green">{{ rx.get_delta_datetime|timezone:"America/Mexico_City" }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Name:</td>
-                  <td id="medic_name">{{ rx.data.medic_name }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Cedula:</td>
-                  <td id="medic_cedula">{{ rx.data.medic_cedula }}</td>
-                </tr>
-                <tr>
-                  <td>Medic Hospital:</td>
-                  <td id="medic_hospital">{{ rx.data.medic_hospital }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Name:</td>
-                  <td id="patient_name">{{ rx.data.patient_name }}</td>
-                </tr>
-                <tr>
-                  <td>Patient Age:</td>
-                  <td id="patient_age">{{ rx.data.patient_age }}</td>
-                </tr>
-                <tr>
-                  <td>Diagnostico:</td>
-                  <td id="diagnosis">{{ rx.data.diagnosis}}</td>
-                </tr>
-              {# endfor #}
-                <tr><td colspan="2"><strong>Medicamentos:</strong></td></tr>
-              {% for med in medications %}
-                <tr>
-                  <td>Medicamento {{ forloop.counter }}:</td>
-                  <td id="medication">{{ med.presentation }}</td>
-                </tr>
-                <tr>
-                  <td>Instrucciones {{ forloop.counter }}:</td>
-                  <td id="instrucciones">{{ med.instructions }}</td>
-                </tr>
-              {% endfor %}
-              </table>
-          </article>
-
-          <article class="shadowed_details col-xs-12 col-lg-6">
-            {#Hashes info#}
-            <table style="margin-bottom:0px!important;" id="crypto-table" class="a_grey table table-striped">
-              <tr>
-                <td class="a_grey" colspan="2"><strong>Hashes</strong></td>
-              </tr>
-              <tr>
-                  <td>Hash:</td>
-                  <td><a class="a_grey" href="/hash/{{rx.hash_id}}">{{ rx.hash_id }}</a></td>
-              </tr>
-              <tr>
-                  <td>Hash Anterior:</td>
-
-                  {% if rx.get_before_hash == '0' %}
-                    {# Initial transaction #}
-                    <td>{{ rx.get_before_hash }}</td>
-                    }
-                  {% else %}
-                    <td><a class="a_grey" href="/hash/{{ rx.get_before_hash }}">{{ rx.get_before_hash }}</a></td>
-                  {% endif %}
-              </tr>
-            </table>
+          <article class="col-xs-12 col-lg-12">
+            <code><pre>
+{{ payload }}
+            </pre></code>
           </article>
         </div>
     </div>

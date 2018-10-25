@@ -4,6 +4,7 @@
 import hashlib
 import base64
 import logging
+import json
 # Date
 from datetime import timedelta, datetime
 from operator import itemgetter
@@ -23,7 +24,7 @@ from core.behaviors import Timestampable
 from .behaviors import IOBlockchainize
 from .managers import (
     BlockManager,
-    PrescriptionManager,
+    PayloadManager,
     TransactionManager,
     AddressManager,
 )
@@ -48,11 +49,15 @@ class Block(models.Model):
 
     objects = BlockManager()
 
-    @cached_property
     def raw_size(self):
-        # get the size of the raw html
+        ''' Get the size of the raw message '''
         # TODO need improve
-        size = (len(self.previous_hash)+len(self.hash_block)+ len(self.get_formatted_date())) * 8
+        size = (
+            len(json.dumps(self.data)) +
+            len(self.previous_hash) +
+            len(self.hash_block) +
+            len(self.get_formatted_date())
+        ) * 8
         return size
 
     def get_block_data(self, tx_queryset):
@@ -90,7 +95,7 @@ class Block(models.Model):
 class Transaction(models.Model):
     ''' Tx Model '''
     # Cryptographically enabled fields
-    # Necessary infomation
+
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
     # block information
@@ -130,16 +135,16 @@ class Transaction(models.Model):
 
 
 @python_2_unicode_compatible
-class Prescription(Timestampable, IOBlockchainize, models.Model):
-    ''' Simplified Rx Model '''
+class Payload(Timestampable, IOBlockchainize, models.Model):
+    ''' Simplified Payload Model '''
 
     # Owner track
     public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True)
 
     # For TxTransfer
-    transaction = models.ForeignKey('blockchain.Transaction', related_name='prescriptions', null=True, blank=True)
+    transaction = models.ForeignKey('blockchain.Transaction', related_name='payloads', null=True, blank=True)
 
-    objects = PrescriptionManager()
+    objects = PayloadManager()
 
 
     def __str__(self):
@@ -162,9 +167,8 @@ class Prescription(Timestampable, IOBlockchainize, models.Model):
 
     @cached_property
     def get_before_hash(self):
-        ''' Get before hash prescription '''
+        ''' Get before hash Payload '''
         return self.previous_hash
-
 
 
 class Address(Timestampable, models.Model):
