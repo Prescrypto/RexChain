@@ -3,16 +3,18 @@ from __future__ import unicode_literals
 
 # Python libs
 import hashlib
+import json
 # Django packages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import View, CreateView, ListView
 # Our Models
 from django.conf import settings
-from .models import Prescription, Block
+from .models import Payload, Block
 from .utils import get_qr_code, is_rx_in_block
 # Blockcypher
 from blockchain.utils import PoE
+from api.views import PayloadSerializer
 
 
 class ValidateRxView(View):
@@ -21,7 +23,7 @@ class ValidateRxView(View):
     def get(self, request, *args, **kwargs):
         hash_rx = kwargs.get("hash_rx")
         # Temporary solution
-        rx = Prescription.objects.get(hash_id=hash_rx)
+        rx = Payload.objects.get(hash_id=hash_rx)
 
         if hash_rx:
             # init
@@ -50,17 +52,20 @@ def tx_detail(request, hash_id=False):
     if hash_id:
         context = {}
         try:
-            rx = Prescription.objects.get(hash_id=hash_id)
+            rx = Payload.objects.get(hash_id=hash_id)
         except Exception as e:
             try:
-                rx = Prescription.objects.get(transaction__txid=hash_id)
+                rx = Payload.objects.get(transaction__txid=hash_id)
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
                 return redirect("/block/?block_hash=%s" % hash_id)
 
+        _payload = PayloadSerializer(rx)
+
         context = {
             "medications": rx.data["medications"],
-            "rx": rx
+            "rx": rx,
+            "payload": json.dumps(_payload.data, sort_keys=True, indent=4),
         }
         return render(request, "blockchain/rx_detail.html", context)
 
@@ -71,7 +76,7 @@ def tx_detail(request, hash_id=False):
 def rx_priv_key(request, hash_rx=False):
     # Temporary way to show key just for test, remove later
     try:
-        rx = Prescription.objects.get(hash_id=hash_rx)
+        rx = Payload.objects.get(hash_id=hash_rx)
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
     except Exception as e:
         return HttpResponse("Not Found", content_type="text/plain")
@@ -80,7 +85,7 @@ def rx_priv_key(request, hash_rx=False):
 def qr_code(request, hash_rx=False):
     # Temporary way to show qrcode just for test, remove later
     try:
-        rx = Prescription.objects.get(hash_id=hash_rx)
+        rx = Payload.objects.get(hash_id=hash_rx)
         img = get_qr_code(rx.get_priv_key)
         return HttpResponse(img, content_type="image/jpeg"
 )

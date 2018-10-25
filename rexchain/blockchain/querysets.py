@@ -1,7 +1,7 @@
 ''' List of querysets '''
 from django.db import models
 
-class PrescriptionQueryset(models.QuerySet):
+class PayloadQueryset(models.QuerySet):
     ''' Add custom querysets'''
 
     def check_existence(self, previous_hash):

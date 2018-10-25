@@ -5,4 +5,7 @@ from django.conf import settings
 
 def add_production_var(request):
     ''' add production var to templates '''
-    return {"PRODUCTION": settings.PRODUCTION}
+    return {
+        "PRODUCTION": settings.PRODUCTION,
+        "WALLET_URL": settings.WALLET_URL,
+    }

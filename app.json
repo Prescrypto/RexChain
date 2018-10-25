@@ -48,6 +48,9 @@
     "HC_RANDOM_STRING_SIZE": {
       "required": true
     },
+   "WALLET_URL": {
+      "required": true
+    },
     "HC_WORD_INITIAL": {
       "required": true
     }

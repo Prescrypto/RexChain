@@ -14,7 +14,7 @@ from rest_framework import mixins, generics
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 # our models
-from blockchain.models import Block, Prescription, Transaction, Address
+from blockchain.models import Block, Payload, Transaction, Address
 from blockchain.utils import pubkey_string_to_rsa, pubkey_base64_to_rsa, pubkey_base64_from_uri
 
 from blockchain.helpers import CryptoTools
@@ -27,13 +27,13 @@ logger = logging.getLogger('django_info')
 
 
 
-class PrescriptionSerializer(serializers.ModelSerializer):
-    """ Prescription serializer """
+class PayloadSerializer(serializers.ModelSerializer):
+    """ Payload serializer """
     previous_hash = serializers.CharField(read_only=False, required=False, default="0")
     data = serializers.JSONField(binary=False, read_only=False, required=False)
 
     class Meta:
-        model = Prescription
+        model = Payload
         fields = (
             'data',
             'signature',
@@ -56,12 +56,12 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         return Transaction.objects.create_tx(data=validated_data)
 
 
-class PrescriptionViewSet(viewsets.ModelViewSet):
-    """ Prescription Viewset """
+class PayloadViewSet(viewsets.ModelViewSet):
+    """ Payload Viewset """
     # Temporally without auth
     # authentication_classes = (TokenAuthentication, BasicAuthentication, )
     # permission_classes = (IsAuthenticated, )
-    serializer_class = PrescriptionSerializer
+    serializer_class = PayloadSerializer
     lookup_field = "hash_id"
     http_method_names = ['get', 'post', 'options']
 
@@ -80,17 +80,18 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
                 logger.error("[Public Key Error]:{}, type:{}".format(e, type(e)))
                 raise NonValidPubKey
 
-            return Prescription.objects.filter(public_key=hex_raw_pub_key).order_by('-id')
+            return Payload.objects.filter(public_key=hex_raw_pub_key).order_by('-id')
         else:
-            return Prescription.objects.all().order_by('-id')
+            return Payload.objects.all().order_by('-id')
 
 
 # add patient filter by email, after could modify with other
-router.register(r'rx-endpoint', PrescriptionViewSet, 'prescription-endpoint')
+# TODO change for new endpoint url
+router.register(r'rx-endpoint', PayloadViewSet, 'payload-endpoint')
 
 
 class BlockSerializer(serializers.ModelSerializer):
-    """ Prescription serializer """
+    """ Payload serializer """
     class Meta:
         model = Block
         fields = (
@@ -108,7 +109,7 @@ class BlockSerializer(serializers.ModelSerializer):
 
 
 class BlockViewSet(viewsets.ModelViewSet):
-    """ Prescription Viewset """
+    """ Block Viewset """
     serializer_class = BlockSerializer
 
     def get_queryset(self):
@@ -135,7 +136,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class AddressViewSet(viewsets.ModelViewSet):
-    """ Prescription Viewset """
+    """ Address Viewset """
     serializer_class = AddressSerializer
     lookup_field = "address"
     http_method_names = ['get', 'options']
