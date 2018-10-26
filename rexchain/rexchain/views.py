@@ -20,13 +20,19 @@ def home(request):
     try:
         # Creating context for home view!
         context = {
-            "payloads_total" : Payload.objects.all().count(),
-            # "stats": json.dumps(Payload.objects.get_stats_last_hours(hours=LAST_HOURS)),
-            "prescriptions" : Payload.objects.all().order_by('-id')[:LIMIT_SEARCH],
+
+            # Render
+            "payloads" : Payload.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
+
+            # Stats
+            "payloads_total" : Payload.objects.all().count(),
             "total_medics": Payload.objects.total_medics().count(),
             "rx_by_today": Payload.objects.rx_by_today(_now).count(),
-            "rx_by_month": Payload.objects.rx_by_month(_now).count(),
+
+            # Deactivated
+            # "rx_by_month": Payload.objects.rx_by_month(_now).count(),
+            # "stats": json.dumps(Payload.objects.get_stats_last_hours(hours=LAST_HOURS)),
         }
         return render(request, "home.html", context)
     except Exception as e:

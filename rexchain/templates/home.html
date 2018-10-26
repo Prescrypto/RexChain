@@ -71,15 +71,14 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <h3>PRESCRIPCIONES RECIENTES</h3>
-        {# last 5 rx #}
+        <h3>PAYLOADS RECIENTES</h3>
         <table id="crypto-table" class="table table-striped">
           <tr>
             <td>Tamaño</td>
             <td>Hash</td>
             <td class="text-center">Cuándo</td>
             </tr>
-          {% for rx in prescriptions %}
+          {% for rx in payloads %}
           <tr>
             <td><a class="a_purple" href="/hash/{{ rx.hash_id }}/"> {{ rx.raw_size }} bytes</a></td>
             <td class="text-center hidden-xs"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
