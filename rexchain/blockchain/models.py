@@ -139,7 +139,7 @@ class Payload(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Payload Model '''
 
     # Owner track
-    public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True)
+    public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True, db_index=True)
 
     # For TxTransfer
     transaction = models.ForeignKey('blockchain.Transaction', related_name='payloads', null=True, blank=True)
@@ -175,7 +175,7 @@ class Address(Timestampable, models.Model):
     ''' Table of addresses '''
 
     public_key_b64 = models.TextField("Public Key", default="", help_text='Format: Base 64', unique=True)
-    address =  models.CharField("Address to get transactions", max_length=255, default="", help_text='Format: Base 58 and valid bitcoin address')
+    address =  models.CharField("Address to get transactions", max_length=255, default="", help_text='Format: Base 58 and valid bitcoin address', db_index=True)
     is_valid = models.BooleanField("Check if address is valid", blank=True, default=True)
 
     objects = AddressManager()
