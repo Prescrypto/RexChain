@@ -27,7 +27,7 @@ def home(request):
 
             # Stats
             "payloads_total" : Payload.objects.all().count(),
-            "total_medics": Payload.objects.total_medics().count(),
+            "total_medics": Payload.objects.total_medics(),
             "rx_by_today": Payload.objects.rx_by_today(_now).count(),
 
             # Deactivated
