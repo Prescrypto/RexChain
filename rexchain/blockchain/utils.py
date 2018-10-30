@@ -101,7 +101,7 @@ class PoE(object):
     def journal(self, merkle_root):
 
         login_json = self.login_stampd_API()
-        if login_json in not None:
+        if login_json is not None:
             # Post a hash 
             try:
                 post_request = requests.post(api_url_base + '/hash?hash=',
@@ -136,7 +136,6 @@ class PoE(object):
                 return None  
         except Exception as e:
             self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
-            raise e
 
     def _journal(self, merkle_root):
         try:
