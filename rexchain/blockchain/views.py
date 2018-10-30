@@ -29,9 +29,10 @@ class ValidateRxView(View):
             # init
             context = {}
             _poe = PoE()
+            dash_tx = attest(rx.block.merkleroot)
             try:
-                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+rx.block.poetxid+"/"
-                context["poe"] = _poe.attest(rx.block.poetxid)
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+dash_tx+"/"
+                context["poe"] = dash_tx
                 context["merkle_root"] = rx.block.merkleroot
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
