@@ -2,8 +2,6 @@
 from django.db import models
 from django.core.cache import cache
 
-from core.helpers import safe_set_cache
-
 class PayloadQueryset(models.QuerySet):
     ''' Add custom querysets'''
 
@@ -15,14 +13,7 @@ class PayloadQueryset(models.QuerySet):
 
     def total_medics(self):
         ''' Get total medics but performance search with cache '''
-        if not cache.get('total_medics'):
-            # TODO ADD on hour script or something we can control
-            total = 0
-            total = self.values("public_key").distinct("public_key").count()
-            safe_set_cache("total_medics", total)
-
         return cache.get('total_medics', '90')
-
 
     def rx_by_today(self, date_filter):
         return self.filter(timestamp__date=date_filter.date())
