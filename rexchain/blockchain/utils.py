@@ -83,7 +83,7 @@ class PoE(object):
     api_url_base = 'https://stampd.io/api/v2' 
     
     def login_stampd_API(self):
-        # Logion to APi service
+        '''This method is for logging in to the Stampd API service'''
         try:
             login_request = requests.get(
                 api_url_base + '/init?client_id=' + client_id + '&secret_key=' + secret_key
@@ -99,10 +99,10 @@ class PoE(object):
             return None
     
     def journal(self, merkle_root):
-
+        '''This method is for stamp a merkle root in Dash Blockchain'''
         login_json = self.login_stampd_API()
         if login_json is not None:
-            # Post a hash 
+            # Post a merkle root 
             try:
                 post_request = requests.post(api_url_base + '/hash?hash=',
                     data = {
@@ -124,7 +124,7 @@ class PoE(object):
             return False
     
     def attest(self, merkle_root):
-        # Get a hash
+        '''This method try get a tx_id of Dash Blockchain''' 
         try:
             get_request = requests.get(
                 api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + blockchain
