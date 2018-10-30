@@ -81,8 +81,8 @@ class PoE(object):
     secret_key = settings.STAMPD_KEY
     blockchain = settings.CHAIN
     api_url_base = 'https://stampd.io/api/v2' 
-
-    def journal(self, merkle_root):
+    
+    def login_stampd_API(self):
         # Logion to APi service
         try:
             login_request = requests.get(
@@ -90,28 +90,39 @@ class PoE(object):
                 )
             login_json = login_request.json()
             if 'code' in login_json and login_json['code'] == 300:
-                self.logger.error("[PoE Success] Logged in successfully")
+                return login_json
             else:
                 self.logger.error("[PoE ERROR] Login FAILED")
+                return None
         except Exception as e:
             self.logger.error("[PoE ERROR] Login in STAMPD FAILED: {}, type({})".format(e, type(e)))
+            return None
+    
+    def journal(self, merkle_root):
 
-        # Post a hash 
-        try:
-            post_request = requests.post(
-                api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' blockchain
-                )
-            post_json = post_request.json()
-            if 'code' in login_json and login_json['code'] == 301:
-                return True
-                self.logger.error("[PoE Success] Post Successfully")
-            else:
-                self.logger.error("[PoE ERROR] Post FAILED")
-                return False
-        except Exception as e:
-            self.logger.error("[PoE ERROR] Error to make POST: {}, type({})".format(e, type(e)))
-            return False     
-
+        login_json = self.login_stampd_API()
+        if login_json in not None:
+            # Post a hash 
+            try:
+                post_request = requests.post(api_url_base + '/hash?hash=',
+                    data = {
+                        'session_id': login_json['session_id'],
+                        'blockchain' : blockchain,
+                        'hash' : merkle_root,
+                    })
+                post_json = post_request.json()
+                if 'code' in login_json and login_json['code'] == 301:
+                    self.logger.info("[PoE Success] Post Successfully")
+                    return True
+                else:
+                    self.logger.error("[PoE ERROR] Post FAILED")
+                    return False
+            except Exception as e:
+                self.logger.error("[PoE ERROR] Error to make POST: {}, type({})".format(e, type(e)))
+                return False     
+        else:
+            return False
+    
     def attest(self, merkle_root):
         # Get a hash
         try:
