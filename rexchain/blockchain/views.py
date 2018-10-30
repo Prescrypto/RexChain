@@ -88,8 +88,7 @@ def qr_code(request, hash_rx=False):
     try:
         rx = Payload.objects.get(hash_id=hash_rx)
         img = get_qr_code(rx.get_priv_key)
-        return HttpResponse(img, content_type="image/jpeg"
-)
+        return HttpResponse(img, content_type="image/jpeg")
     except Exception as e:
         print("Error :%s, type(%s)" % (e, type(e)))
         return HttpResponse("Not Found", content_type="text/plain")
@@ -103,11 +102,15 @@ def block_detail(request, block_hash=False):
 
     if block_hash:
         context = {}
+        _poe = PoE()
+        dash_tx = attest(rx.block.merkleroot)
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
             # Create URL
-            context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+block.poetxid+"/"
+            if dash_tx in no None:
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"dash_tx+"/"
+            
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:
