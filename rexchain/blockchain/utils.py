@@ -79,7 +79,7 @@ class PoE(object):
     logger = logging.getLogger('django_info')
     client_id = settings.STAMPD_ID
     secret_key = settings.STAMPD_KEY
-    blockchain = settings.STAMPD_BLOCKCHAIN
+    blockchain = settings.CHAIN
     api_url_base = 'https://stampd.io/api/v2' 
 
     def journal(self, merkle_root):
@@ -103,11 +103,14 @@ class PoE(object):
                 )
             post_json = post_request.json()
             if 'code' in login_json and login_json['code'] == 301:
+                return True
                 self.logger.error("[PoE Success] Post Successfully")
             else:
                 self.logger.error("[PoE ERROR] Post FAILED")
+                return False
         except Exception as e:
-            self.logger.error("[PoE ERROR] Error to make POST: {}, type({})".format(e, type(e)))     
+            self.logger.error("[PoE ERROR] Error to make POST: {}, type({})".format(e, type(e)))
+            return False     
 
     def attest(self, merkle_root):
         # Get a hash
