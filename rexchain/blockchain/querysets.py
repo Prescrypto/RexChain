@@ -1,5 +1,6 @@
 ''' List of querysets '''
 from django.db import models
+from django.core.cache import cache
 
 class PayloadQueryset(models.QuerySet):
     ''' Add custom querysets'''
@@ -11,7 +12,8 @@ class PayloadQueryset(models.QuerySet):
         return self.filter(is_valid=True).filter(block=None)
 
     def total_medics(self):
-        return self.values("public_key").distinct("public_key").count()
+        ''' Get total medics but performance search with cache '''
+        return cache.get('total_medics', '90')
 
     def rx_by_today(self, date_filter):
         return self.filter(timestamp__date=date_filter.date())
