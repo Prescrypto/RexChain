@@ -115,16 +115,16 @@ class PoE(object):
                 post_json = post_request.json()
                 
                 if post_json['code'] == 301:
-                    self.logger.info("[PoE Success] Post Successfully: {}".format(login_json['code']))
+                    self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
                     return True
                 elif post_json['code'] == 202:
-                    self.logger.info("[PoE Success] Post Successfully: {}".format(login_json['code']))
+                    self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
                     return True
                 elif post_json['code'] == 106:
-                    self.logger.info("[PoE ERROR] Post FAILED: {}".format(login_json['code']))
+                    self.logger.info("[PoE ERROR] Post FAILED: {}".format(post_json['code']))
                     return False
                 else:
-                    self.logger.error("[PoE ERROR] Post FAILED : {}".format(login_json['code']))
+                    self.logger.error("[PoE ERROR] Post FAILED : {}".format(post_json['code']))
                     return False    
             
             except Exception as e:
