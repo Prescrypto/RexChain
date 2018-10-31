@@ -103,7 +103,7 @@ def block_detail(request, block_hash=False):
     if block_hash:
         context = {}
         _poe = PoE()
-        dash_tx = attest(rx.block.merkleroot)
+        dash_tx = _poe.attest(rx.block.merkleroot)
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
