@@ -125,17 +125,21 @@ class PoE(object):
     
     def attest(self, merkle_root):
         '''This method try get a tx_id of Dash Blockchain''' 
-        try:
-            get_request = requests.get(
-                api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + blockchain
-                )
-            get_json = get_request.json()
-            if get_json['code'] == 302:
-                return get_json['transactionID']
-            else: 
-                return None  
-        except Exception as e:
-            self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
+        login_json = self.login_stampd_API()
+        if login_json is not None:
+            try:
+                get_request = requests.get(
+                    api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + blockchain
+                    )
+                get_json = get_request.json()
+                if get_json['code'] == 302:
+                    return get_json['transactionID']
+                else: 
+                    return None  
+            except Exception as e:
+                self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
+        else:
+            return None
 
     def _journal(self, merkle_root):
         try:
