@@ -53,6 +53,12 @@
     },
     "HC_WORD_INITIAL": {
       "required": true
+    },
+    "STAMPD_ID": {
+      "required": true
+    },
+    "STAMPD_KEY": {
+      "required": true
     }
   },
   "formation": {
