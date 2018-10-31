@@ -106,7 +106,7 @@ class PoE(object):
         if login_json is not None:
             # Post a merkle root 
             try:
-                post_request = requests.post(self.api_url_base + '/hash?hash=',
+                post_request = requests.post(self.api_url_base + '/hash',
                     data = {
                         'session_id': login_json['session_id'],
                         'blockchain' : self.blockchain,
