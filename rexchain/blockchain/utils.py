@@ -112,9 +112,19 @@ class PoE(object):
                         'hash' : merkle_root,
                     })
                 post_json = post_request.json()
-                if 'code' in login_json and login_json['code'] == 301:
-                    self.logger.info("[PoE Success] Post Successfully")
-                    return True
+                if 'code' in login_json:
+                    if login_json['code'] == 301:
+                        self.logger.info("[PoE Success] Post Successfully: {}".format(login_json['code']))
+                        return True
+                    elif logging['code'] == 202:
+                        self.logger.info("[PoE Success] Post Successfully: {}".format(login_json['code']))
+                        return True
+                    elif logging['code'] == 106:
+                        self.logger.info("[PoE ERROR] Post FAILED: {}".format(login_json['code']))
+                        return False
+                    else:
+                        self.logger.error("[PoE ERROR] Post FAILED : {}".format(login_json['code']))
+                    return False    
                 else:
                     self.logger.error("[PoE ERROR] Post FAILED")
                     return False
