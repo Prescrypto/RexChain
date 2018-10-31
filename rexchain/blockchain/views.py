@@ -103,10 +103,10 @@ def block_detail(request, block_hash=False):
     if block_hash:
         context = {}
         _poe = PoE()
-        dash_tx = _poe.attest(rx.block.merkleroot)
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
+            dash_tx = _poe.attest(block.merkleroot)
             # Create URL
             if dash_tx is not None:
                 context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+dash_tx+"/"
