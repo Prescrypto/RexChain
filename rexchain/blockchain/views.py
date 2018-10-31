@@ -109,7 +109,7 @@ def block_detail(request, block_hash=False):
             context["block_object"] = block
             # Create URL
             if dash_tx is not None:
-                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"dash_tx+"/"
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+dash_tx+"/"
             
             return render(request, "blockchain/block_detail.html", context)
 
