@@ -75,18 +75,19 @@ def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
         return f.read()
 
 class PoE(object):
-    ''' Object tools for encrypt and decrypt info '''
-    logger = logging.getLogger('django_info')
-    client_id = settings.STAMPD_ID
-    secret_key = settings.STAMPD_KEY
-    blockchain = settings.CHAIN
-    api_url_base = 'https://stampd.io/api/v2' 
+    def __init__(self, *args, **kwargs):
+        '''Global Variables'''
+        self.logger = logging.getLogger('django_info')
+        self.client_id = settings.STAMPD_ID
+        self.secret_key = settings.STAMPD_KEY
+        self.blockchain = settings.CHAIN
+        self.api_url_base = 'https://stampd.io/api/v2' 
     
     def login_stampd_API(self):
         '''This method is for logging in to the Stampd API service'''
         try:
             login_request = requests.get(
-                api_url_base + '/init?client_id=' + client_id + '&secret_key=' + secret_key
+                self.api_url_base + '/init?client_id=' + self.client_id + '&secret_key=' + self.secret_key
                 )
             login_json = login_request.json()
             if 'code' in login_json and login_json['code'] == 300:
@@ -104,10 +105,10 @@ class PoE(object):
         if login_json is not None:
             # Post a merkle root 
             try:
-                post_request = requests.post(api_url_base + '/hash?hash=',
+                post_request = requests.post(self.api_url_base + '/hash?hash=',
                     data = {
                         'session_id': login_json['session_id'],
-                        'blockchain' : blockchain,
+                        'blockchain' : self.blockchain,
                         'hash' : merkle_root,
                     })
                 post_json = post_request.json()
@@ -129,7 +130,7 @@ class PoE(object):
         if login_json is not None:
             try:
                 get_request = requests.get(
-                    api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + blockchain
+                    self.api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + self.blockchain
                     )
                 get_json = get_request.json()
                 if get_json['code'] == 302:
