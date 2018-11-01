@@ -105,13 +105,13 @@ def block_detail(request, block_hash=False):
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
             if block.poetxid == "True":
-                context["message_poe"] = "With PoE in process validation"
+                context["message_poe"] = "PoE en proceso"
             elif block.poetxid == "False" or block.poetxid.strip() == "":
-                context["message_poe"] = "Whitout PoE for the moment"
+                context["message_poe"] = "Sin PoE por el momento"
             else:
                 # Create URL
                 context["poe_url"] = "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid)
-                context["message_poe"] = "With PoE success validated"
+                context["message_poe"] = "PoE válida"
 
             return render(request, "blockchain/block_detail.html", context)
 
