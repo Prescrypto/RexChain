@@ -91,6 +91,9 @@ class PoE(object):
                 self.api_url_base + '/init?client_id=' + self.client_id + '&secret_key=' + self.secret_key
                 )
             login_json = login_request.json()
+            if not isinstance(login_json, dict):
+                return None
+                
             if 'code' in login_json and login_json['code'] == 300:
                 return login_json
             else:
@@ -146,8 +149,11 @@ class PoE(object):
         if login_json is not None:
             try:
                 get_request = requests.get(
-                    self.api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + self.blockchain
-                    )
+                                    '{}/hash?hash={}&blockchain={}&session_id={}'.format(
+                                                    self.api_url_base, 
+                                                    merkle_root, 
+                                                    self.blockchain, 
+                                                    login_json['session_id']))
                 get_json = get_request.json()
                 if isinstance(get_json, dict):
                     return get_json
