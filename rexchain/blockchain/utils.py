@@ -113,16 +113,21 @@ class PoE(object):
                         'hash' : merkle_root,
                     })
                 post_json = post_request.json()
+                if not isinstance(post_json, dict):
+                    return False
                 
                 if post_json['code'] == 301:
                     self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
                     return True
+                
                 elif post_json['code'] == 202:
                     self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
                     return True
+                
                 elif post_json['code'] == 106:
                     self.logger.info("[PoE ERROR] Post FAILED: {}".format(post_json['code']))
                     return False
+                
                 else:
                     self.logger.error("[PoE ERROR] Post FAILED : {}".format(post_json['code']))
                     return False    
@@ -137,20 +142,22 @@ class PoE(object):
     def attest(self, merkle_root):
         '''This method try get a tx_id of Dash Blockchain''' 
         login_json = self.login_stampd_API()
+        error_found = {"code": "500"}
         if login_json is not None:
             try:
                 get_request = requests.get(
                     self.api_url_base + '/hash?hash=' + merkle_root + '&blockchain=' + self.blockchain
                     )
                 get_json = get_request.json()
-                if get_json['code'] == 302:
-                    return get_json['transactionID']
+                if isinstance(get_json, dict):
+                    return get_json
                 else: 
-                    return None  
+                    return error_found  
             except Exception as e:
                 self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
+                return error_found
         else:
-            return None
+            return error_found
 
     def _journal(self, merkle_root):
         try:

@@ -13,7 +13,6 @@ from django.conf import settings
 from .models import Payload, Block
 from .utils import get_qr_code, is_rx_in_block
 # Blockcypher
-from blockchain.utils import PoE
 from api.views import PayloadSerializer
 
 
@@ -96,21 +95,24 @@ def qr_code(request, hash_rx=False):
 
 
 def block_detail(request, block_hash=False):
-    ''' Get a hash and return the block '''
+    ''' Get a hash and return the block'''
     if request.GET.get("block_hash", False):
         block_hash = request.GET.get("block_hash")
 
     if block_hash:
         context = {}
-        _poe = PoE()
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
-            dash_tx = _poe.attest(block.merkleroot)
-            # Create URL
-            if dash_tx is not None:
-                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+dash_tx+"/"
-            
+            if block.poetxid == "True":
+                contex["message_poe"] = "With PoE in process validation"
+            elif block.poetxid == "False" or block.poetxid.strip() == "":
+                contex["message_poe"] = "Whitout PoE for the moment"
+            else:
+                # Create URL
+                context["poe_url"] = "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid)
+                contex["message_poe"] = "With PoE success validated"
+
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:
