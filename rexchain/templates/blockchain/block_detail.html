@@ -35,13 +35,11 @@
           <td>Merkle Root:</td>
           <td>{{ block_object.merkleroot }}</td>
         </tr>
-        {% if block_object.poetxid %}
           <tr>
-            <td>Proof of Existence: <a class="a_grey" href="/proof-of-existence/">(What is this?)</a></td>
             <td>Prueba de Existencia: <a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-            <td><a class="a_grey" href="{{ poe_url }}" target="_blank">{{ block_object.poetxid }}</a></td>
-          </tr>
-        {% endif %}
+
+            <td><a class="a_grey" href="{% if poe_url %}{{ poe_url }}{% else %}#{% endif %}" target="_blank"> {{ message_poe }} </a></td>
+          </tr>  
       </table>
     </article>
     <article class="col-xs-12 col-lg-6 col-lg-offset-3 padding-2em">
