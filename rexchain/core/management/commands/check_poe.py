@@ -21,4 +21,4 @@ class Command(BaseCommand):
                 self.stdout.write("Saved Dash txid in block wiht hash: {}".format(block.hash_block))
 
         self.stdout.write("Finish update PoE, total blocks updated: {}".format(count))
-  
+
