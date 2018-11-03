@@ -51,42 +51,46 @@
       <div class="col-xs-12">
         <h3>BLOCKS RECIENTES</h3>
         {# last 5 blocks #}
-        <table id="crypto-table" class="table table-striped">
-          <tr>
-            <td>Tamaño</td>
-            <td>Hash</td>
-            <td class="text-center">Cuándo</td>
-          </tr>
-          {% for rx_block in rx_blocks %}
+        <div class="table-responsive">
+          <table id="crypto-table" class="table table-striped">
             <tr>
-              <td><a class="a_purple" href="/block/{{ rx_block.hash_block }}/"> {{ rx_block.raw_size }} bytes</a></td>
-              <td class="text-center hidden-xs"><a class="a_grey" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-              <td class="text-center visible-xs-block hash_block-mobile"><a class="a_grey" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
-              <td class="text-center"><a class="a_green" href="/block/{{ rx_block.hash_block }}/"><span>{{ rx_block.timestamp|timezone:"America/Mexico_City"|timesince }}</span></a></td>
+              <td>Tamaño</td>
+              <td>Hash</td>
+              <td class="text-center">Cuándo</td>
             </tr>
-          {% endfor %}
-        </table>
+            {% for rx_block in rx_blocks %}
+              <tr>
+                <td><a class="a_purple" href="/block/{{ rx_block.hash_block }}/"> {{ rx_block.raw_size }} bytes</a></td>
+                <td class="text-center hidden-xs"><a class="a_grey" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
+                <td class="text-center visible-xs-block hash_block-mobile"><a class="a_grey" href="/block/{{ rx_block.hash_block }}/">{{ rx_block.hash_block }}</a></td>
+                <td class="text-center"><a class="a_green" href="/block/{{ rx_block.hash_block }}/"><span>{{ rx_block.timestamp|timezone:"America/Mexico_City"|timesince }}</span></a></td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-xs-12">
         <h3>PAYLOADS RECIENTES</h3>
-        <table id="crypto-table" class="table table-striped">
-          <tr>
-            <td>Tamaño</td>
-            <td>Hash</td>
-            <td class="text-center">Cuándo</td>
+        <div class="table-responsive">
+          <table id="crypto-table" class="table table-striped">
+            <tr>
+              <td>Tamaño</td>
+              <td>Hash</td>
+              <td class="text-center">Cuándo</td>
+              </tr>
+            {% for rx in payloads %}
+            <tr>
+              <td><a class="a_purple" href="/hash/{{ rx.hash_id }}/"> {{ rx.raw_size }} bytes</a></td>
+              <td class="text-center hidden-xs"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
+              <td class="text-center visible-xs-block signature-mobile"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
+              <td class="text-center"><a class="a_green" href="/hash/{{ rx.hash_id }}/"><span>{{ rx.get_delta_datetime|timezone:"America/Mexico_City"|timesince }}</span></a></td>
             </tr>
-          {% for rx in payloads %}
-          <tr>
-            <td><a class="a_purple" href="/hash/{{ rx.hash_id }}/"> {{ rx.raw_size }} bytes</a></td>
-            <td class="text-center hidden-xs"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
-            <td class="text-center visible-xs-block signature-mobile"><a class="a_grey" href="/hash/{{ rx.hash_id }}/">{{ rx.hash_id }}</a></td>
-            <td class="text-center"><a class="a_green" href="/hash/{{ rx.hash_id }}/"><span>{{ rx.get_delta_datetime|timezone:"America/Mexico_City"|timesince }}</span></a></td>
-          </tr>
-          {% endfor %}
-        </table>
+            {% endfor %}
+          </table>
+        </div>
       </div>
     </div>
   </div>
