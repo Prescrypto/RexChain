@@ -227,7 +227,7 @@ input.form-control{
   }
   .main-title{
     font-size:30px;
-    margin-left: 0; 
+    margin-left: 0;
   }
   .mainblock{
     width: 100%!important;
@@ -255,6 +255,9 @@ input.form-control{
   }
   .mainblock{
     width: 600px;
+  }
+  .navbar-default .navbar-brand  {
+    padding-top: 10px;
   }
 }
 
