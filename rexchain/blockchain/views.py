@@ -13,7 +13,6 @@ from django.conf import settings
 from .models import Payload, Block
 from .utils import get_qr_code, is_rx_in_block
 # Blockcypher
-from blockchain.utils import PoE
 from api.views import PayloadSerializer
 
 
@@ -29,9 +28,10 @@ class ValidateRxView(View):
             # init
             context = {}
             _poe = PoE()
+            dash_tx = attest(rx.block.merkleroot)
             try:
-                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+rx.block.poetxid+"/"
-                context["poe"] = _poe.attest(rx.block.poetxid)
+                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+dash_tx+"/"
+                context["poe"] = dash_tx
                 context["merkle_root"] = rx.block.merkleroot
             except Exception as e:
                 print("Error :%s, type(%s)" % (e, type(e)))
@@ -87,8 +87,7 @@ def qr_code(request, hash_rx=False):
     try:
         rx = Payload.objects.get(hash_id=hash_rx)
         img = get_qr_code(rx.get_priv_key)
-        return HttpResponse(img, content_type="image/jpeg"
-)
+        return HttpResponse(img, content_type="image/jpeg")
     except Exception as e:
         print("Error :%s, type(%s)" % (e, type(e)))
         return HttpResponse("Not Found", content_type="text/plain")
@@ -96,7 +95,7 @@ def qr_code(request, hash_rx=False):
 
 
 def block_detail(request, block_hash=False):
-    ''' Get a hash and return the block '''
+    ''' Get a hash and return the block'''
     if request.GET.get("block_hash", False):
         block_hash = request.GET.get("block_hash")
 
@@ -105,8 +104,15 @@ def block_detail(request, block_hash=False):
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
-            # Create URL
-            context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+block.poetxid+"/"
+            if block.poetxid == "True":
+                context["message_poe"] = "PoE en proceso"
+            elif block.poetxid == "False" or block.poetxid.strip() == "":
+                context["message_poe"] = "Sin PoE por el momento"
+            else:
+                # Create URL
+                context["poe_url"] = "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid)
+                context["message_poe"] = "PoE válida"
+
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:

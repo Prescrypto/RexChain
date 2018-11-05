@@ -17,6 +17,8 @@ from Crypto.PublicKey import RSA
 # PoE
 from blockcypher import embed_data, get_transaction_details
 from django.conf import settings
+import requests
+import json
 
 from collections import OrderedDict
 
@@ -74,10 +76,96 @@ def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
         return f.read()
 
 class PoE(object):
-    ''' Object tools for encrypt and decrypt info '''
-    logger = logging.getLogger('django_info')
-
+    def __init__(self, *args, **kwargs):
+        '''Global Variables'''
+        self.logger = logging.getLogger('django_info')
+        self.client_id = settings.STAMPD_ID
+        self.secret_key = settings.STAMPD_KEY
+        self.blockchain = settings.CHAIN
+        self.api_url_base = 'https://stampd.io/api/v2' 
+    
+    def login_stampd_API(self):
+        '''This method is for logging in to the Stampd API service'''
+        try:
+            login_request = requests.get(
+                self.api_url_base + '/init?client_id=' + self.client_id + '&secret_key=' + self.secret_key
+                )
+            login_json = login_request.json()
+            if not isinstance(login_json, dict):
+                return None
+                
+            if 'code' in login_json and login_json['code'] == 300:
+                return login_json
+            else:
+                self.logger.error("[PoE ERROR] Login FAILED")
+                return None
+        except Exception as e:
+            self.logger.error("[PoE ERROR] Login in STAMPD FAILED: {}, type({})".format(e, type(e)))
+            return None
+    
     def journal(self, merkle_root):
+        '''This method is for stamp a merkle root in Dash Blockchain'''
+        login_json = self.login_stampd_API()
+        if login_json is not None:
+            # Post a merkle root 
+            try:
+                post_request = requests.post(self.api_url_base + '/hash',
+                    data = {
+                        'session_id': login_json['session_id'],
+                        'blockchain' : self.blockchain,
+                        'hash' : merkle_root,
+                    })
+                post_json = post_request.json()
+                if not isinstance(post_json, dict):
+                    return False
+                
+                if post_json['code'] == 301:
+                    self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
+                    return True
+                
+                elif post_json['code'] == 202:
+                    self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
+                    return True
+                
+                elif post_json['code'] == 106:
+                    self.logger.info("[PoE ERROR] Post FAILED: {}".format(post_json['code']))
+                    return False
+                
+                else:
+                    self.logger.error("[PoE ERROR] Post FAILED : {}".format(post_json['code']))
+                    return False    
+            
+            except Exception as e:
+                self.logger.error("[PoE ERROR] Error to make POST: {}, type({})".format(e, type(e)))
+                return False     
+        
+        else:
+            return False
+    
+    def attest(self, merkle_root):
+        '''This method try get a tx_id of Dash Blockchain''' 
+        login_json = self.login_stampd_API()
+        error_found = {"code": "500"}
+        if login_json is not None:
+            try:
+                get_request = requests.get(
+                                    '{}/hash?hash={}&blockchain={}&session_id={}'.format(
+                                                    self.api_url_base, 
+                                                    merkle_root, 
+                                                    self.blockchain, 
+                                                    login_json['session_id']))
+                get_json = get_request.json()
+                if isinstance(get_json, dict):
+                    return get_json
+                else: 
+                    return error_found  
+            except Exception as e:
+                self.logger.error("[PoE ERROR] Error returning transantion details :{}, type({})".format(e, type(e)))
+                return error_found
+        else:
+            return error_found
+
+    def _journal(self, merkle_root):
         try:
             data = embed_data(to_embed=merkle_root, api_key=settings.BLOCKCYPHER_API_TOKEN, coin_symbol=settings.CHAIN)
             if isinstance(data, dict):
@@ -88,8 +176,8 @@ class PoE(object):
                 return None
         except Exception as e:
             self.logger.error("[PoE ERROR] Error returning hash from embed data, Error :{}, type({})".format(e, type(e)))
-
-    def attest(self, txid):
+    
+    def _attest(self, txid):
         try:
             return get_transaction_details(txid, coin_symbol=settings.CHAIN)
         except Exception as e:
