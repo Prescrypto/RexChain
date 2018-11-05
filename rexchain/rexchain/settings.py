@@ -42,6 +42,8 @@ BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 BLOCKCYPHER_API_TOKEN = os.environ['BLOCKCYPHER_API_TOKEN']
 CHAIN = os.environ['CHAIN']
 BASE_POE_URL = os.environ['BASE_POE_URL']
+STAMPD_ID = os.environ['STAMPD_ID']
+STAMPD_KEY = os.environ['STAMPD_KEY']
 
 #Hashcash settings
 HC_BITS_DIFFICULTY = os.environ["HC_BITS_DIFFICULTY"]

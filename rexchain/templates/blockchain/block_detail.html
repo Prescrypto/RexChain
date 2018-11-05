@@ -36,11 +36,10 @@
           <td>Merkle Root:</td>
           <td>{{ block_object.merkleroot }}</td>
         </tr>
-        {% if block_object.poetxid %}
+        {% if poe_url %}
           <tr>
-            <td>Proof of Existence: <a class="a_grey" href="/proof-of-existence/">(What is this?)</a></td>
-            <td>Prueba de Existencia: <a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-            <td><a class="a_grey" href="{{ poe_url }}" target="_blank">{{ block_object.poetxid }}</a></td>
+            <td>Prueba de Existencia (PoE): <a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
+            <td><a class="a_grey" href="{{ poe_url }}" target="_blank"> {{ message_poe }} </a></td>
           </tr>
         {% endif %}
       </table>
@@ -50,7 +49,7 @@
       <div class="table-responsive">
       <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
         <tr>
-          <td colspan="2"><strong>Recetas en el bloque</strong></td>
+          <td colspan="2"><strong>Transacciones en el bloque</strong></td>
         </tr>
         {% for hash in  block_object.data.hashes %}
         <tr>
