@@ -4,41 +4,98 @@ from __future__ import unicode_literals
 # Python libs
 import hashlib
 import json
+import logging
 # Django packages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import View, CreateView, ListView
+from django.utils import timezone
 # Our Models
 from django.conf import settings
-from .models import Payload, Block
+from .models import Payload, Block, Transaction
 from .utils import get_qr_code, is_rx_in_block
 # Blockcypher
 from api.views import PayloadSerializer
 
+logger = logging.getLogger('django_info')
+
 
 class ValidateRxView(View):
+    ''' Validate PoE of one Transaction with a block
+        poe.received Date of stampt
+        poe.poe_url Url of PoE
+        poe.hash Hash of PoE Transaction
+        poe.data_hex Data Hex
+        merkle_root Merkle Root of block
+    '''
+
     template = "blockchain/validate.html"
 
     def get(self, request, *args, **kwargs):
-        hash_rx = kwargs.get("hash_rx")
-        # Temporary solution
-        rx = Payload.objects.get(hash_id=hash_rx)
+        hash_id = kwargs.get("hash_id")
+        payload = transaction = None
 
-        if hash_rx:
-            # init
-            context = {}
-            _poe = PoE()
-            dash_tx = attest(rx.block.merkleroot)
+        try:
+            payload = Payload.objects.get(hash_id=hash_id)
+        except Exception as e:
+            logger.info("[Validate ERROR]:{} type:{}".format(e, type(e)))
+            # Try to get from transaction ID
             try:
-                context["poe_url"] = settings.BASE_POE_URL+"/"+settings.CHAIN+"/tx/"+dash_tx+"/"
-                context["poe"] = dash_tx
-                context["merkle_root"] = rx.block.merkleroot
+                transaction = Transaction.objects.get(txid=hash_id)
             except Exception as e:
-                print("Error :%s, type(%s)" % (e, type(e)))
-                return redirect("/")
-            return render(request, self.template, context)
-        # Should add a message
+                logger.error("[Validate ERROR]Neither hash is from Payload nor Transaction:{} type:{}".format(e, type(e)))
+
+            else:
+                logger.info("Transaction Found IT")
+                return render(request, self.template, { "poe": self.get_poe_data_context(transaction)})
+
+
+        else:
+            logger.info("Payload Found IT")
+            poe = self.get_poe_data_context(payload.transaction)
+            return render(request, self.template, { "poe": poe})
+
+
         return redirect("/")
+
+
+    def get_poe_data_context(self, transaction):
+        ''' Build poe data '''
+        # Transaction TEST for validate TESTING only
+        data_poe = {
+            "received" : "Aug. 25, 2018, 12:57 p.m.",
+            "poe_url": "https://live.blockcypher.com/bcy/tx/51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a/",
+            "hash": "51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a",
+            "data_hex": "46e6ac758721c8f45d2a00de78d81df7861f655e41777f8e56b0556ea4bec0a9",
+            "merkle_root": "46e6ac758721c8f45d2a00de78d81df7861f655e41777f8e56b0556ea4bec0a9",
+        }
+
+        if transaction.block_id:
+            block = transaction.block
+
+            if block.poetxid.strip() in ["True", "False", ""]:
+                pass
+            else:
+                try:
+                    data_poe = {
+                        "received": block.timestamp.strftime('%Y-%m-%d'),
+                        "poe_url": "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid),
+                        "hash": block.poetxid,
+                        "data_hex": block.merkle_root,
+                        "merkle_root": block.merkle_root,
+                    }
+
+                except Exception as e:
+                    logger.info("[Get Poe Data ERROR]:{} type:{}".format(e, type(e)))
+                    return redirect("/")
+
+            logger.info("POE DATA: {}".format(data_poe))
+
+
+        return data_poe
+
+
+
 
 def poe(request):
     ''' Proof of existence explanation '''
