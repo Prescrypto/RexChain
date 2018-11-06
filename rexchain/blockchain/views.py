@@ -46,12 +46,10 @@ class ValidateRxView(View):
                 logger.error("[Validate ERROR]Neither hash is from Payload nor Transaction:{} type:{}".format(e, type(e)))
 
             else:
-                logger.info("Transaction Found IT")
                 return render(request, self.template, { "poe": self.get_poe_data_context(transaction)})
 
 
         else:
-            logger.info("Payload Found IT")
             poe = self.get_poe_data_context(payload.transaction)
             return render(request, self.template, { "poe": poe})
 
@@ -88,9 +86,6 @@ class ValidateRxView(View):
                 except Exception as e:
                     logger.info("[Get Poe Data ERROR]:{} type:{}".format(e, type(e)))
                     return redirect("/")
-
-            logger.info("POE DATA: {}".format(data_poe))
-
 
         return data_poe
 
