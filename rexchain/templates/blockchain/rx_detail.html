@@ -5,7 +5,7 @@
   Rx Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; margin-left:4em;font-weight:700;">Detalle del Payload</h2>
+  <h2 style="color:#000; margin-left:4em;font-weight:700;">Detalle de la Transacción</h2>
 {% endblock subtitle %}
 {% block content %}
   {# RX Detail #}
@@ -14,6 +14,11 @@
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
           <article class="col-xs-12 col-lg-12">
+
+            {% if rx.transaction.block %}
+              <p ><a href="/validate/{{rx.hash_id}}" style="color:#337ab7!important;">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Validar Transacción</a></p>
+            {% endif %}
             <code><pre>
 {{ payload }}
             </pre></code>
