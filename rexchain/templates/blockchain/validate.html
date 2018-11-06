@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-  Validate Rx
+  Validate Transaction
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de Receta contra notario blockchain</h2>
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación del Payload contra notario blockchain</h2>
 {% endblock subtitle %}
 {% block content %}
   {# RX Detail #}
@@ -25,15 +25,15 @@
                 </tr>
                 <tr>
                   <td>Tx Id en la Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-                  <td><a class="a_grey" href="{{ poe_url }}">{{ poe.hash }}</a></td>
+                  <td><a class="a_grey" href="{{ poe.poe_url }}">{{ poe.hash }}</a></td>
                 </tr>
                 <tr>
                   <td>Raíz de Merkle Blockchainizada</td>
-                  <td>{{ poe.outputs.0.data_hex }}</td>
+                  <td>{{ poe.data_hex }}</td>
                 </tr>
                 <tr>
                   <td>Raíz de Merkle de Prescrypto</td>
-                  <td>{{merkle_root}}</td>
+                  <td>{{ poe.merkle_root }}</td>
                 </tr>
               </table>
             </div>
