@@ -6,7 +6,7 @@
 {% block cssblock %}
 <style>
   #heading-hero{
-    padding: 12em 0em;
+    padding: 15em 0em;
     background: #0f0c29;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #0f0c29, #2c2c9e, #24243e);  /* Chrome 10-25, Safari 5.1-6 */
     background-image: linear-gradient(to right, #0f0c29, #2c2c9e, #24243e);
@@ -32,16 +32,20 @@
     padding: 8em 0em;
   }
   .ctabutton{
-    background: #6d68ff;
+    background: #4e49da;
     color: #6d6d6d;
     padding: 1em 2em;
   }
   .ctabutton:hover{
-    background: #8559ec;
+    background: hsla(242, 66%, 57%, 0.7);
 
   }
   .img-cta{
     border-radius: 50%;
+    width: 240px;
+  }
+  .articlecta{
+    padding-bottom: 2.2em;
   }
 </style>
 {% endblock cssblock %}
@@ -59,21 +63,21 @@
 {# SECTION CALL TO ACTIONS #}
 <section class="container section-2">
   {# article CALLTOACTION #}
-  <article class="col-md-4 text-center">
-    <img widht="90px"src="{% static "icons/android-chrome-192x192.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
-    <h3 class="feature-title">Lee nuestro Whitepaper!</h3>
+  <article class="col-md-4 text-center articlecta">
+    <img src="{% static "landing/whitepaper-logo.svg" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
+    <h3 class="feature-title">LEE NUESTRO WHITEPAPER</h3>
     <a id="gotowhitepaper" href="{{ WHITEPAPPER_URL }}" class="btn btn-default ctabutton">IR AHORA!</a>
   </article>
   {# article CALLTOACTION #}
-  <article class="col-md-4 text-center">
-    <img widht="90px"src="{% static "icons/android-chrome-192x192.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
-    <h3 class="feature-title">Conoce Prescrypto!</h3>
+  <article class="col-md-4 text-center articlecta">
+    <img src="{% static "landing/prescrypto-logo.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
+    <h3 class="feature-title">CONOCE PRESCRYPTO</h3>
     <a id="gotoprescrypto" href="https://www.prescrypto.com/?ref=rexchain-battlefield" class="btn btn-default ctabutton">IR AHORA!</a>
   </article>
   {# article CALLTOACTION #}
-  <article class="col-md-4 text-center">
-    <img widht="90px"src="{% static "icons/android-chrome-192x192.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
-    <h3 class="feature-title">Conoce nuestra blockchain!</h3>
+  <article class="col-md-4 text-center articlecta">
+    <img src="{% static "landing/blockchain-logo2.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
+    <h3 class="feature-title">CONOCE NUESTRA BLOCKCHAIN</h3>
     <a id="gotoourblockchain" href="/" class="btn btn-default ctabutton">IR AHORA!</a>
   </article>
 </section>

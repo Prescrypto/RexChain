@@ -55,7 +55,7 @@
 
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <form method="GET" action="/hash" style="padding-top:10px;" class="navbar-form navbar-right" role="search">
+                <form method="GET" action="/hash" style="padding-top:10px;" class="navbar-form navbar-right {% if not_show_subtitle %}hidden{% endif %}" role="search">
                   <div class="form-group">
                     <input type="text" class="form-control" name="hash_rx" placeholder="Tx Hash" required>
                   </div>
