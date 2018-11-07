@@ -8,5 +8,5 @@ def add_production_var(request):
     return {
         "PRODUCTION": settings.PRODUCTION,
         "WALLET_URL": settings.WALLET_URL,
-        "WHITEPAPER_URL" settings.WHITEPAPER_URL,
+        "WHITEPAPER_URL" : settings.WHITEPAPER_URL,
     }
