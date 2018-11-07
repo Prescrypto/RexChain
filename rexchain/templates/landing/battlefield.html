@@ -25,15 +25,41 @@
   .sub2{
     color: rgb(240, 240, 247);
   }
+  .feature-title{
+    color: #6d6d6d;
+  }
+  .section-2{
+    padding: 8em 0em;
+  }
 </style>
 {% endblock cssblock %}
 
 {% block content %}
+{# SECTION HERO  #}
 <section id="heading-hero" class="container-fluid">
-  <article class="col-md-4 col-md-offset-4 text-center">
-    <h1 class="subtitles">Thanks for being part of battlefield event!</h1>
-    <h3  class="sub2">Want to find out more about Rexchain click below</h3>
-    <p class="text-center"><a class="btn btn-success biggerbutton clearfix" href="{{ WHITEPAPPER_URL }}" title="Find out more details">FIND OUT MORE</a></p>
+  <article class="col-md-6 col-md-offset-3 text-center">
+    <h1 class="subtitles">Gracias por ser parte del Evento Battlefield de TechCrunch!</h1>
+    <h3  class="sub2">Quieres saber más de RexChain! Da clic abajo</h3>
+    <p class="text-center"><a class="btn btn-success biggerbutton clearfix" href="{{ WHITEPAPPER_URL }}" title="Find out more details">CONOCER MÁS</a></p>
+  </article>
+</section>
+
+{# SECTION CALL TO ACTIONS #}
+<section class="container-fluid section-2">
+  {# article CALLTOACTION #}
+  <article class="col-md-4 text-center">
+    <img widht="90px"src="{% static "icons/android-chrome-192x192.png" %}" alt="RexChain Logo">
+    <h1 class="feature-title">Hellow World</h1>
+  </article>
+  {# article CALLTOACTION #}
+  <article class="col-md-4 text-center">
+    <img widht="90px"src="{% static "icons/android-chrome-192x192.png" %}" alt="RexChain Logo">
+    <h1 class="feature-title">Hellow World</h1>
+  </article>
+  {# article CALLTOACTION #}
+  <article class="col-md-4 text-center">
+    <img widht="90px"src="{% static "icons/android-chrome-192x192.png" %}" alt="RexChain Logo">
+    <h1 class="feature-title">Hellow World</h1>
   </article>
 </section>
 {% endblock content %}
