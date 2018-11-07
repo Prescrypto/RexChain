@@ -62,10 +62,10 @@
                   <button type="submit" class="btn btn-default" style="border-radius:0;">Search</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                  <li><a title="Contact hola@prescryto.com" href="mailto:hola@prescrypto.com?Subject=RexChain-Contact">Contact</a></li>
+                  <li><a id="gotocontact" title="Contact hola@prescryto.com" href="mailto:hola@prescrypto.com?Subject=RexChain-Contact">Contact</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                  <li><a href="{{ WALLET_URL }}" title="Url for wallet">Go to Wallet</a></li>
+                  <li><a id="gotowallet" href="{{ WALLET_URL }}" title="Url for wallet">Go to Wallet</a></li>
                 </ul>
               </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
@@ -93,8 +93,9 @@
           <div class="row">
             <div id="menu1" class="footer_menu col-xs-6">
               <ul class="list-unstyled">
-                <li class="footeranch"><a href="http://blog.prescrypto.com">Blog</a></li>
-                <li class="footeranch"><a href="mailto:hola@prescrypto.com?Subject=RexChain-Contact">Contacto</a></li>
+                <li class="footeranch"><a id="gotoblog" href="http://blog.prescrypto.com">Blog</a></li>
+                <li class="footeranch"><a id="gotocontactfooter" href="mailto:hola@prescrypto.com?Subject=RexChain-Contact">Contacto</a></li>
+                <li class="footeranch"><a id="gotogithub" href="https://github.com/Prescrypto/RexChain">Github</a></li>
               </ul>
             </div>
             <div class="footer_menu col-xs-6">
@@ -111,8 +112,8 @@
         </div>
         <div class="col-md-2">
           <div class="social">
-            <a href="https://www.facebook.com/prescrypto" title="Follow us on Facebook"><i class="fab fa-facebook-square"></i></a>
-            <a href="https://twitter.com/prescrypto" title="Follow us on Twitter"><i class="fab fa-twitter-square"></i></a>
+            <a id="gotofacebook" href="https://www.facebook.com/prescrypto" title="Follow us on Facebook"><i class="fab fa-facebook-square"></i></a>
+            <a id="gototwitter" href="https://twitter.com/prescrypto" title="Follow us on Twitter"><i class="fab fa-twitter-square"></i></a>
           </div>
         </div>
       </div>
