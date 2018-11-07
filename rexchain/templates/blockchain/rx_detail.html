@@ -16,9 +16,8 @@
           <article class="col-xs-12 col-lg-12">
 
             {% if rx.transaction.block %}
-              <p>
-                <a href="/validate/{{rx.hash_id}}" style="color:#337ab7!important;">
-                <img width="16px" src="{% static "img/validate_icon.png" %}" alt="Validar Transacción"> Validado</a></p>
+              <p ><a href="/validate/{{rx.hash_id}}" style="color:#337ab7!important;">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Validar Transacción</a></p>
             {% endif %}
             <code><pre>
 {{ payload }}
