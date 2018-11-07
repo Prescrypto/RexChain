@@ -104,7 +104,7 @@ def block_detail(request, block_hash=False):
         try:
             block = Block.objects.get(hash_block=block_hash)
             context["block_object"] = block
-            if block.poetxid == "True":
+            if block.poetxid == "True" or block.poetxid.strip() == "Genesis":
                 context["message_poe"] = "PoE en proceso"
             elif block.poetxid == "False" or block.poetxid.strip() == "":
                 context["message_poe"] = "Sin PoE por el momento"
