@@ -4,7 +4,7 @@
   Validate Transaction
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación del Payload contra notario blockchain</h2>
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la Transacción contra notario blockchain</h2>
 {% endblock subtitle %}
 {% block content %}
   {# RX Detail #}
@@ -17,8 +17,12 @@
             <div class="table-responsive">
             <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
               <tr>
-                <td colspan="2"><strong>Evidencia:</strong></td>
+                <td colspan=""><strong>Estatus:</strong></td>
+                <td>
+                  <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validado</p>
+                </td>
               </tr>
+
                 <tr>
                   <td>Timestamp Notarizada:</td>
                   <td class="a_green">{{ poe.received }}</td>

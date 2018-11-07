@@ -22,7 +22,7 @@ logger = logging.getLogger('django_info')
 
 class ValidateRxView(View):
     ''' Validate PoE of one Transaction with a block
-        poe.received Date of stampt
+        poe.received Date of stampd
         poe.poe_url Url of PoE
         poe.hash Hash of PoE Transaction
         poe.data_hex Data Hex
@@ -71,7 +71,7 @@ class ValidateRxView(View):
         if transaction.block_id:
             block = transaction.block
 
-            if block.poetxid.strip() in ["True", "False", ""]:
+            if block.poetxid.strip() in ["True", "False", "", "Genesis"]:
                 pass
             else:
                 try:
@@ -79,13 +79,12 @@ class ValidateRxView(View):
                         "received": block.timestamp.strftime('%Y-%m-%d'),
                         "poe_url": "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid),
                         "hash": block.poetxid,
-                        "data_hex": block.merkle_root,
-                        "merkle_root": block.merkle_root,
+                        "data_hex": block.merkleroot,
+                        "merkle_root": block.merkleroot,
                     }
 
                 except Exception as e:
                     logger.info("[Get Poe Data ERROR]:{} type:{}".format(e, type(e)))
-                    return redirect("/")
 
         return data_poe
 
@@ -160,6 +159,8 @@ def block_detail(request, block_hash=False):
                 context["message_poe"] = "PoE en proceso"
             elif block.poetxid == "False" or block.poetxid.strip() == "":
                 context["message_poe"] = "Sin PoE por el momento"
+            elif block.poetxid == "Genesis":
+                context["message_poe"] = "Block Genesis"
             else:
                 # Create URL
                 context["poe_url"] = "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid)

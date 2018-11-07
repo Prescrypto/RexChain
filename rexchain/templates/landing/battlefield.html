@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}BattleField{% endblock %}
+{% block subtitle %}
+{% endblock subtitle %}
+{% block cssblock %}
+<style>
+  #heading-hero{
+    padding: 15em 0em;
+    background: #0f0c29;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #0f0c29, #2c2c9e, #24243e);  /* Chrome 10-25, Safari 5.1-6 */
+    background-image: linear-gradient(to right, #0f0c29, #2c2c9e, #24243e);
+
+  }
+  .biggerbutton{
+    margin-top: 1em;
+    padding: 1em 2em;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .subtitles{
+
+    font-weight:700;
+  }
+  .sub2{
+    color: rgb(240, 240, 247);
+  }
+  .feature-title{
+    color: #6d6d6d;
+  }
+  .section-2{
+    padding: 8em 0em;
+  }
+  .ctabutton{
+    background: #4e49da;
+    color: #6d6d6d;
+    padding: 1em 2em;
+  }
+  .ctabutton:hover{
+    background: hsla(242, 66%, 57%, 0.7);
+
+  }
+  .img-cta{
+    border-radius: 50%;
+    width: 240px;
+  }
+  .articlecta{
+    padding-bottom: 2.2em;
+  }
+</style>
+{% endblock cssblock %}
+
+{% block content %}
+{# SECTION HERO  #}
+<section id="heading-hero" class="container-fluid">
+  <article class="col-md-6 col-md-offset-3 text-center">
+    <h1 class="subtitles">Thanks for joining the TechCrunch StartUp Battlefield!</h1>
+    <h3  class="sub2">Do you want to know more about RexChain? Click the link below</h3>
+    <p class="text-center"><a id="main_cta_whitepaper" class="btn btn-success biggerbutton clearfix" href="{{ WHITEPAPER_URL }}" title="Find out more details">LEARN MORE</a></p>
+  </article>
+</section>
+
+{# SECTION CALL TO ACTIONS #}
+<section class="container section-2">
+  {# article CALLTOACTION #}
+  <article class="col-md-4 text-center articlecta">
+    <img src="{% static "landing/whitepaper-logo.svg" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
+    <h3 class="feature-title">READ OUR WHITEPAPER</h3>
+    <a id="gotowhitepaper" href="{{ WHITEPAPER_URL }}" class="btn btn-default ctabutton">LEARN MORE!</a>
+  </article>
+  {# article CALLTOACTION #}
+  <article class="col-md-4 text-center articlecta">
+    <img src="{% static "landing/prescrypto-logo.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
+    <h3 class="feature-title">LEARN MORE ABOUT PRESCRYPTO</h3>
+    <a id="gotoprescrypto" href="https://www.prescrypto.com/?ref=rexchain-battlefield" class="btn btn-default ctabutton">LEARN MORE!</a>
+  </article>
+  {# article CALLTOACTION #}
+  <article class="col-md-4 text-center articlecta">
+    <img src="{% static "landing/blockchain-logo2.png" %}" class="img-thumbnail img-cta" alt="RexChain Logo">
+    <h3 class="feature-title">LEARN MORE ABOUT OUR BLOCKCHAIN</h3>
+    <a id="gotoourblockchain" href="/?ref=rexchain-battlefield" class="btn btn-default ctabutton">LEARN MORE!</a>
+  </article>
+</section>
+{% endblock content %}
