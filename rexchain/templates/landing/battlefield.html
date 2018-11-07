@@ -1,31 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}<title>BattleField</title>{% endblock %}
+{% block title %}BattleField{% endblock %}
 {% block subtitle %}
 {% endblock subtitle %}
 {% block cssblock %}
-
 <style>
+  #heading-hero{
+    padding: 10em 0em;
+    background: #0f0c29;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #0f0c29, #302b63, #24243e);  /* Chrome 10-25, Safari 5.1-6 */
+    background-image: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+
+  }
   .biggerbutton{
+    margin-top: 1em;
     padding: 1em 2em;
+    font-weight: 900;
+    letter-spacing: 1px;
   }
   .subtitles{
-    color:#000;
+
     font-weight:700;
   }
   .sub2{
-    color:#000;
+    color: rgb(240, 240, 247);
   }
 </style>
-
 {% endblock cssblock %}
 
 {% block content %}
-<section class="container-fluid">
+<section id="heading-hero" class="container-fluid">
   <article class="col-md-4 col-md-offset-4 text-center">
-    <h2 class="subtitles">Thanks for being part of battlefield event!</h2>
-    <h4  class="sub2">Want to find out more clic below</h4>
-    <p class="text-center"><a class="btn btn-primary biggerbutton clearfix" href="{{ WHITEPAPPER_URL }}" title="Find out more details">FIND OUT MORE</a></p>
+    <h1 class="subtitles">Thanks for being part of battlefield event!</h1>
+    <h3  class="sub2">Want to find out more about Rexchain click below</h3>
+    <p class="text-center"><a class="btn btn-success biggerbutton clearfix" href="{{ WHITEPAPPER_URL }}" title="Find out more details">FIND OUT MORE</a></p>
   </article>
 </section>
 {% endblock content %}
