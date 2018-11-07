@@ -79,13 +79,12 @@ class ValidateRxView(View):
                         "received": block.timestamp.strftime('%Y-%m-%d'),
                         "poe_url": "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid),
                         "hash": block.poetxid,
-                        "data_hex": block.merkle_root,
-                        "merkle_root": block.merkle_root,
+                        "data_hex": block.merkleroot,
+                        "merkle_root": block.merkleroot,
                     }
 
                 except Exception as e:
                     logger.info("[Get Poe Data ERROR]:{} type:{}".format(e, type(e)))
-                    return redirect("/")
 
         return data_poe
 
