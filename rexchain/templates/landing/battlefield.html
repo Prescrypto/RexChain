@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}<title>BattleField</title>{% endblock %}
+{% block subtitle %}
+{% endblock subtitle %}
+{% block cssblock %}
+
+<style>
+  .biggerbutton{
+    padding: 1em 2em;
+  }
+  .subtitles{
+    color:#000;
+    font-weight:700;
+  }
+  .sub2{
+    color:#000;
+  }
+</style>
+
+{% endblock cssblock %}
+
+{% block content %}
+<section class="container-fluid">
+  <article class="col-md-4 col-md-offset-4 text-center">
+    <h2 class="subtitles">Thanks for being part of battlefield event!</h2>
+    <h4  class="sub2">Want to find out more clic below</h4>
+    <p class="text-center"><a class="btn btn-primary biggerbutton clearfix" href="{{ WHITEPAPPER_URL }}" title="Find out more details">FIND OUT MORE</a></p>
+  </article>
+</section>
+{% endblock content %}

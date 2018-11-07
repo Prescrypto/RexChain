@@ -39,6 +39,11 @@ def home(request):
         logger.error("[View home ERROR]: {} Type: {}".format(e, type(e)))
         return HttpResponse(status=500)
 
+
+def landing_page(request):
+    ''' Landing page for special events '''
+    return render(request, "landing/battlefield.html")
+
 def block_detail(request, block_hash):
     return render(request, "blockchain/block_detail.html", {})
 

@@ -17,7 +17,7 @@ from django.contrib.staticfiles.urls import static
 from rest_framework.documentation import include_docs_urls
 
 # Our Models
-from .views import home, humans_txt, robots_txt
+from .views import home, humans_txt, robots_txt, landing_page
 from blockchain.views import (
     tx_detail, block_detail,
     rx_priv_key, qr_code, poe, ValidateRxView
@@ -42,6 +42,8 @@ urlpatterns = [
     url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
     url(r'^humans.txt$', humans_txt, name="humans_txt"),
     url(r'^robots.txt$', robots_txt, name="robots_txt"),
+    url(r'^battlefield$', landing_page, name="landing_page"),
+
 
 ]
 
