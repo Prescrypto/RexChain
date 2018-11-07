@@ -16,7 +16,7 @@ All the current implementations of blockchains are tightly coupled with the larg
 * At the moment data is persisted in an SQL implementation
 * Access to the database is enabled by Asymetric Cryptography
 * Proof-of-work thourght Hashcash (http://www.hashcash.org/hashcash.pdf) for to stop fake data from being created.
-* Transactions: You can transfer data through [Prescrypto Wallet](https://prescrypto.github.io/wallet/deploy/feature_rexchain_wallet/) [See more over [wiki](https://github.com/Prescrypto/RexChain/wiki/Transacciones)].
+* Transactions: You can transfer data through [Prescrypto Wallet](https://prescrypto.github.io/wallet/deploy/feature_rexchain_wallet/) [See more over __Transactions__ concept in our [wiki](https://github.com/Prescrypto/RexChain/wiki/Transacciones)].
 * Distributed version: This is step follow. 
 
 ### Quick start
