@@ -22,7 +22,7 @@ logger = logging.getLogger('django_info')
 
 class ValidateRxView(View):
     ''' Validate PoE of one Transaction with a block
-        poe.received Date of stampt
+        poe.received Date of stampd
         poe.poe_url Url of PoE
         poe.hash Hash of PoE Transaction
         poe.data_hex Data Hex
@@ -71,7 +71,7 @@ class ValidateRxView(View):
         if transaction.block_id:
             block = transaction.block
 
-            if block.poetxid.strip() in ["True", "False", ""]:
+            if block.poetxid.strip() in ["True", "False", "", "Genesis"]:
                 pass
             else:
                 try:
