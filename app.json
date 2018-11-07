@@ -59,6 +59,9 @@
     },
     "STAMPD_KEY": {
       "required": true
+    },
+    "WHITEPAPER_URL": {
+      "required": true
     }
   },
   "formation": {
