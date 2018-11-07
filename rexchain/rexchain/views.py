@@ -42,7 +42,10 @@ def home(request):
 
 def landing_page(request):
     ''' Landing page for special events '''
-    return render(request, "landing/battlefield.html")
+    context = {
+        "not_show_subtitle": True
+    }
+    return render(request, "landing/battlefield.html", context)
 
 def block_detail(request, block_hash):
     return render(request, "blockchain/block_detail.html", {})
