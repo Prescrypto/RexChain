@@ -160,6 +160,8 @@ def block_detail(request, block_hash=False):
                 context["message_poe"] = "PoE en proceso"
             elif block.poetxid == "False" or block.poetxid.strip() == "":
                 context["message_poe"] = "Sin PoE por el momento"
+            elif block.poetxid == "Genesis":
+                context["message_poe"] = "Block Genesis"
             else:
                 # Create URL
                 context["poe_url"] = "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid)
