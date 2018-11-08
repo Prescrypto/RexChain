@@ -38,6 +38,11 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 
+# JIRA SETTINGS
+JIRA_URL = os.environ["JIRA_URL"]
+JIRA_USER = os.environ["JIRA_USER"]
+JIRA_PASSWORD = os.environ["JIRA_PASSWORD"]
+
 # Proof of existence specific (interface with external ledger)
 BLOCKCYPHER_API_TOKEN = os.environ['BLOCKCYPHER_API_TOKEN']
 CHAIN = os.environ['CHAIN']

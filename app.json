@@ -62,6 +62,15 @@
     },
     "WHITEPAPER_URL": {
       "required": true
+    },
+    "JIRA_URL": {
+      "required": true
+    },
+    "JIRA_USER": {
+      "required": true
+    },
+    "JIRA_PASSWORD": {
+      "required": true
     }
   },
   "formation": {
