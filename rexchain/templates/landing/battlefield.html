@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% block title %}BattleField{% endblock %}
 {% block subtitle %}
 {% endblock subtitle %}
@@ -47,10 +48,31 @@
   .articlecta{
     padding-bottom: 2.2em;
   }
+  .alert {
+    margin-bottom: 0px;
+  }
+  .alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
 </style>
 {% endblock cssblock %}
 
 {% block content %}
+{# Alert messaging #}
+  {% language 'es' %}
+  <aside class="landing-alert">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{message.tags}}{% else %}alert-warning{% endif %} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>{{ message }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
+  </aside>
+  {% endlanguage %}
 {# SECTION HERO  #}
 <section id="heading-hero" class="container-fluid">
   <article class="col-md-6 col-md-offset-3 text-center">
