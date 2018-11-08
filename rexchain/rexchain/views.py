@@ -8,11 +8,13 @@ from django.http import HttpResponse
 from django.utils import timezone
 
 from blockchain.models import Payload, Block
+from .forms import AskCtaEmailForm
 
+logger = logging.getLogger('django_info')
 
 def home(request):
     ''' Home view'''
-    logger = logging.getLogger('django_info')
+
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
     LAST_HOURS = 10
@@ -43,9 +45,21 @@ def home(request):
 def landing_page(request):
     ''' Landing page for special events '''
     context = {
-        "not_show_subtitle": True
-    }
-    return render(request, "landing/battlefield.html", context)
+            "not_show_subtitle": True
+        }
+    if request.POST:
+        import code; code.interact(local=locals())
+        form = AskCtaEmailForm(request.POST)
+        if form.is_valid():
+            logger.info("Success ask email CTA: {}".format(form.cleaned_data["email"]))
+            form.send_jira_card()
+            # TODO Send thank you
+            return render(request, "landing/battlefield.html", context)
+        else:
+            logger.info("Wrong email ask email CTA: {}".format(request.POST.get("email", "N/A")))
+            return render(request, "landing/battlefield.html", context)
+    else:
+        return render(request, "landing/battlefield.html", context)
 
 def block_detail(request, block_hash):
     return render(request, "blockchain/block_detail.html", {})
