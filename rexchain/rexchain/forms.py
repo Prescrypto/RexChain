@@ -15,7 +15,7 @@ class AskCtaEmailForm(forms.Form):
         email = self.cleaned_data["email"]
         try:
             create_jira_issue(
-                summary="Battlefield ask mail CTA: {}".format(email),
+                summary="500 Startup Colombia ask mail CTA: {}".format(email),
                 description='This user ask for more info in landingpage: {}'.format(email))
         except Exception as e:
             logger.error("[AskCTAEMAIL JIRA ERROR]: {}".format(e))
