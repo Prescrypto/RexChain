@@ -149,7 +149,7 @@ class PoE(object):
         if login_json is not None:
             try:
                 get_request = requests.get(
-                                    '{}/hash?hash={}&blockchain={}&session_id={}'.format(
+                                    '{}/hash?hash={}&blockchain={}&sess_id={}'.format(
                                                     self.api_url_base,
                                                     merkle_root,
                                                     self.blockchain,
