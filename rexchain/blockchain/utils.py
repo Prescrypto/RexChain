@@ -111,7 +111,7 @@ class PoE(object):
             try:
                 post_request = requests.post(self.api_url_base + '/hash',
                     data = {
-                        'session_id': login_json['session_id'],
+                        'sess_id': login_json['session_id'],
                         'blockchain' : self.blockchain,
                         'hash' : merkle_root,
                     })
