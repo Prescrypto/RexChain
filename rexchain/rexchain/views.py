@@ -53,7 +53,7 @@ def landing_page(request):
         if form.is_valid():
             logger.info("Success ask email CTA: {}".format(form.cleaned_data["email"]))
             form.send_jira_card()
-            messages.success(request, "Success send your email, we will contact you soon!")
+            messages.success(request, "Succes! We’ll contact you soon")
             return render(request, "landing/battlefield.html", context)
         else:
             messages.error(request, "Sorry we found an error with your email, please try it again!")

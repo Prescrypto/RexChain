@@ -13,6 +13,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import static
+from django.views.generic.base import RedirectView
 # restframework
 from rest_framework.documentation import include_docs_urls
 
@@ -42,8 +43,8 @@ urlpatterns = [
     url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
     url(r'^humans.txt$', humans_txt, name="humans_txt"),
     url(r'^robots.txt$', robots_txt, name="robots_txt"),
-    url(r'^battlefield$', landing_page, name="landing_page"),
-
+    url(r'^battlefield$', RedirectView.as_view(pattern_name='landing_page', permanent=False)),
+    url(r'^demoday$', landing_page, name="landing_page"),
 
 ]
 
