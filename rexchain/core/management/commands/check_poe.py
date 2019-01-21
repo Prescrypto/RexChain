@@ -15,7 +15,7 @@ class Command(BaseCommand):
         for block in blocks:
             block_poe = _poe.attest(block.merkleroot)
             if block_poe['code'] == 302:
-                block.poetxid = block_poe['transactionID']
+                block.poetxid = block_poe['txid']
                 block.save()
                 count = count + 1
                 self.stdout.write("Saved Dash txid in block wiht hash: {}".format(block.hash_block))
