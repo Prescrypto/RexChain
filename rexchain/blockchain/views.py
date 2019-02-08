@@ -114,7 +114,6 @@ def tx_detail(request, hash_id=False):
         _payload = PayloadSerializer(rx)
 
         context = {
-            "medications": rx.data["medications"],
             "rx": rx,
             "payload": json.dumps(_payload.data, sort_keys=True, indent=4),
         }
