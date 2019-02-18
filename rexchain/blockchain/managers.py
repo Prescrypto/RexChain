@@ -21,7 +21,7 @@ from core.helpers import safe_set_cache, get_timestamp
 from api.exceptions import FailedVerifiedSignature
 
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
-from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data
+from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
 from .querysets import (
     PayloadQueryset,
     TransactionQueryset,
@@ -165,8 +165,11 @@ class TransactionManager(models.Manager):
 
         # Initalize some data
         try:
-            data["medications"] = ordered_data(data["medications"])
-            _payload = json.dumps(ordered_data(data), separators=(',',':'))
+            #first we order the sub lists and sub jsons
+            data = iterate_and_order_json(data)
+            #then we order the json
+            data_sorted = ordered_data(data)
+            _payload = json.dumps(data_sorted, separators=(',',':'))
 
 
         except Exception as e:

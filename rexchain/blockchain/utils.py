@@ -16,6 +16,7 @@ import merkletools
 from Crypto.PublicKey import RSA
 # PoE
 from blockcypher import embed_data, get_transaction_details
+from core.helpers import create_jira_issue
 from django.conf import settings
 import requests
 import json
@@ -124,13 +125,17 @@ class PoE(object):
                     return True
 
                 elif post_json['code'] == 202:
-                    self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
+                    self.logger.info("[PoE Success] Hash already stamped: {}".format(post_json['code']))
                     return True
 
                 elif post_json['code'] == 106:
                     self.logger.info("[PoE ERROR] Post FAILED: {}".format(post_json['code']))
+                    create_jira_issue(
+                        summary="Tickets of Stampd Finished", 
+                        description="Is necessary to buy more Stampd Tickets for make correctly PoE"
+                    )
                     return False
-
+                    
                 else:
                     self.logger.error("[PoE ERROR] Post FAILED : {}".format(post_json['code']))
                     return False
@@ -247,3 +252,21 @@ def ordered_data(data):
             return data
 
         return _new_dict
+
+def iterate_and_order_json(json_data):
+    '''iterates over a json to order all the sub jsons and lists'''
+    logger = logging.getLogger('django_info')
+    temp_dict = dict()
+
+    if not json_data or not isinstance(json_data, dict):
+        return json_data
+    try:
+        for key, val in json_data.items():
+            temp_dict[key] = ordered_data(val)
+    except Exception as e:
+        logger.error("[iterate_and_order_json ERROR]: {}, type:{}".format(e, type(e)))
+        return json_data
+
+    return temp_dict
+
+
