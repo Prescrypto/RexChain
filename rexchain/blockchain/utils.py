@@ -16,6 +16,7 @@ import merkletools
 from Crypto.PublicKey import RSA
 # PoE
 from blockcypher import embed_data, get_transaction_details
+from core.helpers import create_jira_issue
 from django.conf import settings
 import requests
 import json
@@ -124,13 +125,17 @@ class PoE(object):
                     return True
 
                 elif post_json['code'] == 202:
-                    self.logger.info("[PoE Success] Post Successfully: {}".format(post_json['code']))
+                    self.logger.info("[PoE Success] Hash already stamped: {}".format(post_json['code']))
                     return True
 
                 elif post_json['code'] == 106:
                     self.logger.info("[PoE ERROR] Post FAILED: {}".format(post_json['code']))
+                    create_jira_issue(
+                        summary="Tickets of Stampd Finished", 
+                        description="Is necessary to buy more Stampd Tickets for make correctly PoE"
+                    )
                     return False
-
+                    
                 else:
                     self.logger.error("[PoE ERROR] Post FAILED : {}".format(post_json['code']))
                     return False
