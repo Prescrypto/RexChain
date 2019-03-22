@@ -182,7 +182,7 @@ class TransactionManager(models.Manager):
         _rx_before = None
 
         try:
-        
+
             # Prescript unsavify method
             pub_key = self._crypto.un_savify_key(raw_pub_key)
         except Exception as e:

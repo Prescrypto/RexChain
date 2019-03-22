@@ -43,7 +43,7 @@ class PayloadSerializer(serializers.ModelSerializer):
             'readable',
             'public_key',
         )
-        read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable', 'public_key')
+        read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
 
     def validate(self, data):
         ''' Method to control Extra Keys on Payload!'''
