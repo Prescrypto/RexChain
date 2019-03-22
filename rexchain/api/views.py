@@ -26,7 +26,6 @@ router = routers.DefaultRouter()
 logger = logging.getLogger('django_info')
 
 
-
 class PayloadSerializer(serializers.ModelSerializer):
     """ Payload serializer """
     previous_hash = serializers.CharField(read_only=False, required=False, default="0")
@@ -42,8 +41,9 @@ class PayloadSerializer(serializers.ModelSerializer):
             'is_valid',
             'transaction',
             'readable',
+            'public_key',
         )
-        read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
+        read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable', 'public_key')
 
     def validate(self, data):
         ''' Method to control Extra Keys on Payload!'''
@@ -104,8 +104,10 @@ class BlockSerializer(serializers.ModelSerializer):
             'merkleroot',
             'hashcash',
             'nonce',
+            'public_key',
         )
-        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', 'merkleroot','hashcash','nonce',)
+        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', 'merkleroot',
+                            'hashcash','nonce','public_key',)
 
 
 class BlockViewSet(viewsets.ModelViewSet):
@@ -122,7 +124,7 @@ router.register(r'block', BlockViewSet, 'block-endpoint')
 
 class AddressSerializer(serializers.ModelSerializer):
     """ Address serializer """
-    pub_key = serializers.CharField(read_only=True,allow_null=True, source="get_pub_key" )
+    pub_key = serializers.CharField(read_only=True, allow_null=True, source="get_pub_key")
 
     class Meta:
         model = Address
@@ -132,7 +134,7 @@ class AddressSerializer(serializers.ModelSerializer):
             'is_valid',
             'pub_key',
         )
-        read_only_fields = ('address','pub_key', )
+        read_only_fields = ('address', 'pub_key', )
 
 
 class AddressViewSet(viewsets.ModelViewSet):

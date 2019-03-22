@@ -144,8 +144,6 @@ class TransactionManager(models.Manager):
         logger.info("[IS_TRANSFER_VALID] Success")
         return (True, before_rx)
 
-
-
     def create_tx(self, data, **kwargs):
         ''' Custom method for create Tx with rx item '''
 

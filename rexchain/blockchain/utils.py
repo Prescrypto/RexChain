@@ -29,6 +29,7 @@ def calculate_hash(index, previousHash, timestamp, data):
     hash_obj = hashlib.sha256(str(index) + previousHash + str(timestamp) + data)
     return hash_obj.hexdigest()
 
+
 # Merkle root - gets a list of prescriptions and returns a merkle root
 def get_merkle_root(transantions):
     # Generate merkle tree
@@ -42,6 +43,7 @@ def get_merkle_root(transantions):
     logger.error("Leaf Count: {}".format(mt.get_leaf_count()))
     # get merkle_root and return
     return mt.get_merkle_root();
+
 
 #  Proves a hash is in merkle root of block merkle tree
 def is_rx_in_block(target_rx, block):
@@ -75,6 +77,7 @@ def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
     img.save(file_path)
     with open(file_path, "rb") as f:
         return f.read()
+
 
 class PoE(object):
     def __init__(self, *args, **kwargs):
@@ -229,6 +232,7 @@ def pubkey_base64_to_rsa(base64_key):
 
     return pubkey_string_to_rsa(raw_key), raw_key
 
+
 def ordered_data(data):
     ''' Orderer data '''
     logger = logging.getLogger('django_info')
@@ -252,6 +256,7 @@ def ordered_data(data):
             return data
 
         return _new_dict
+
 
 def iterate_and_order_json(json_data):
     '''iterates over a json to order all the sub jsons and lists'''
