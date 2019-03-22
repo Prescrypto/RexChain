@@ -150,13 +150,10 @@ class TransactionManager(models.Manager):
         ''' Get initial data '''
 
         _payload = ""
-        logger.info("payload {}".format(data))
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
         # Get Public Key from API None per default
-
         raw_pub_key = data.get("public_key", None)
-        logger.info("pbkey {}".format(raw_pub_key))
         if not raw_pub_key:
             logger.error("[get public key ERROR]: Couldn't find public key outside data")
         data = data["data"]
@@ -174,7 +171,6 @@ class TransactionManager(models.Manager):
             data_sorted = ordered_data(data)
             _payload = json.dumps(data_sorted, separators=(',',':'))
 
-
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
 
@@ -182,7 +178,6 @@ class TransactionManager(models.Manager):
         _rx_before = None
 
         try:
-
             # Prescript unsavify method
             pub_key = self._crypto.un_savify_key(raw_pub_key)
         except Exception as e:
@@ -191,7 +186,6 @@ class TransactionManager(models.Manager):
             pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
         hex_raw_pub_key = self._crypto.savify_key(pub_key)
-
         ''' Get previous hash '''
         #_previous_hash = data.get('previous_hash', '0')
         logger.info("previous_hash: {}".format(_previous_hash))
