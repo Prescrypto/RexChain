@@ -53,9 +53,7 @@ class ValidateRxView(View):
             poe = self.get_poe_data_context(payload.transaction)
             return render(request, self.template, { "poe": poe})
 
-
         return redirect("/")
-
 
     def get_poe_data_context(self, transaction):
         ''' Build poe data '''
@@ -89,11 +87,10 @@ class ValidateRxView(View):
         return data_poe
 
 
-
-
 def poe(request):
     ''' Proof of existence explanation '''
     return render(request, "blockchain/poe.html")
+
 
 def tx_detail(request, hash_id=False):
     ''' Get a hash and return the blockchain model '''
@@ -101,7 +98,7 @@ def tx_detail(request, hash_id=False):
         hash_id = request.GET.get("hash_id")
 
     if hash_id:
-        context = {}
+        context = dict()
         try:
             rx = Payload.objects.get(hash_id=hash_id)
         except Exception as e:
@@ -113,12 +110,11 @@ def tx_detail(request, hash_id=False):
 
         _payload = PayloadSerializer(rx)
 
-        context = {
+        context.update({
             "rx": rx,
             "payload": json.dumps(_payload.data, sort_keys=True, indent=4),
-        }
+        })
         return render(request, "blockchain/rx_detail.html", context)
-
 
     return redirect("/")
 
@@ -141,7 +137,6 @@ def qr_code(request, hash_rx=False):
     except Exception as e:
         print("Error :%s, type(%s)" % (e, type(e)))
         return HttpResponse("Not Found", content_type="text/plain")
-
 
 
 def block_detail(request, block_hash=False):

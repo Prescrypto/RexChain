@@ -13,6 +13,7 @@ from .forms import AskCtaEmailForm
 
 logger = logging.getLogger('django_info')
 
+
 def home(request):
     ''' Home view'''
 
@@ -25,7 +26,7 @@ def home(request):
         context = {
 
             # Render
-            "payloads" : Payload.objects.all().order_by('-id')[:LIMIT_SEARCH],
+            "payloads": Payload.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
 
             # Stats
@@ -61,17 +62,21 @@ def landing_page(request):
     else:
         return render(request, "landing/battlefield.html", context)
 
+
 def block_detail(request, block_hash):
     return render(request, "blockchain/block_detail.html", {})
 
+
 def rx_detail(request, rx_hash):
     return render(request, "blockchain/rx_detail.html", {})
+
 
 def humans_txt(request):
     ''' Show humans txt file '''
     response = render(request, 'humans.txt', {})
     response['Content-Type'] = "text/plain"
     return response
+
 
 def robots_txt(request):
     ''' Show humans txt file '''

@@ -144,8 +144,6 @@ class TransactionManager(models.Manager):
         logger.info("[IS_TRANSFER_VALID] Success")
         return (True, before_rx)
 
-
-
     def create_tx(self, data, **kwargs):
         ''' Custom method for create Tx with rx item '''
 
@@ -154,9 +152,11 @@ class TransactionManager(models.Manager):
         _payload = ""
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
+        # Get Public Key from API None per default
+        raw_pub_key = data.get("public_key", None)
+        if not raw_pub_key:
+            logger.error("[get public key ERROR]: Couldn't find public key outside data")
         data = data["data"]
-        # Get Public Key from API
-        raw_pub_key = data.get("public_key")
 
         ''' When timestamp is convert to python datetime needs this patch '''
         # timestamp =  data["timestamp"]
@@ -170,7 +170,6 @@ class TransactionManager(models.Manager):
             #then we order the json
             data_sorted = ordered_data(data)
             _payload = json.dumps(data_sorted, separators=(',',':'))
-
 
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
@@ -187,7 +186,6 @@ class TransactionManager(models.Manager):
             pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
         hex_raw_pub_key = self._crypto.savify_key(pub_key)
-
         ''' Get previous hash '''
         #_previous_hash = data.get('previous_hash', '0')
         logger.info("previous_hash: {}".format(_previous_hash))
