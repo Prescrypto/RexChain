@@ -1,32 +1,23 @@
 # -*- encoding: utf-8 -*-
-# AESCipher
-# from core.utils import AESCipher
-## Hash lib
-import rsa
+# Hash lib
 import hashlib
 import logging
-from datetime import timedelta, datetime
-import qrcode
-# Unicode shite
-import unicodedata
-from django.utils.encoding import python_2_unicode_compatible
-# FOr signing
-import md5
 import merkletools
+import requests
+import qrcode
+
 from Crypto.PublicKey import RSA
 # PoE
 from blockcypher import embed_data, get_transaction_details
 from core.helpers import create_jira_issue
 from django.conf import settings
-import requests
-import json
-
 from collections import OrderedDict
 
 
 def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
-    hash_obj = hashlib.sha256(str(index) + previousHash + str(timestamp) + data)
+    hash_obj = hashlib.sha256(
+        str(index) + previousHash + str(timestamp) + data)
     return hash_obj.hexdigest()
 
 
