@@ -163,7 +163,7 @@ class Payload(Timestampable, IOBlockchainize, models.Model):
     @cached_property
     def get_delta_datetime(self):
         ''' Fix 6 hours timedelta on rx '''
-        return self.timestamp - timedelta(hours=6)
+        return self.timestamp
 
     @cached_property
     def get_before_hash(self):
