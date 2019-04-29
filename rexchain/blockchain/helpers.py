@@ -1,9 +1,7 @@
 # -*- encoding: utf-8 -*-
-
 import rsa
 import os
 import string
-import random
 import hashlib
 import merkletools
 import cPickle
