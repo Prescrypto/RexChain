@@ -20,12 +20,13 @@ class IOBlockchainize(models.Model):
     '''
 
     # Time purpose
-    timestamp = models.DateTimeField("Datetime object",blank=True, default=timezone.now)
+    timestamp = models.DateTimeField("Datetime object", blank=True, default=timezone.now)
 
     # For Validate Transaction
-    readable = models.BooleanField("Check if data is readable(synonym spent)", default=False, blank=True) # Filter against this when
+    # Filter against this when
+    readable = models.BooleanField("Check if data is readable(synonym spent)", default=False, blank=True)
     is_valid = models.BooleanField("Check if signature validation was valid", default=True, blank=True)
-    signature  = models.TextField("Signature with PK and data transaction ", blank=True, default="")
+    signature = models.TextField("Signature with PK and data transaction ", blank=True, default="")
 
     # For tracking Inputs and Outputs
     hash_id = models.TextField("Hash for Blockchainize Object", blank=True, default="")
@@ -63,9 +64,9 @@ class IOBlockchainize(models.Model):
             self.raw_msg +
             self.hash_id
         )
-        return len(size) * 8
+        return len(_size) * 8
 
-    @cached_property
+    @cached_property  # noqa: F811
     def raw_size(self):
         # Get the size of the raw rx
         # TODO make improvements here
