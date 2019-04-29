@@ -4,21 +4,11 @@ from __future__ import unicode_literals
 # REST
 import logging
 
-from rest_framework.viewsets import ViewSetMixin
 from rest_framework import routers, serializers, viewsets
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, BasePermission
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.views import APIView
-from rest_framework import mixins, generics
-from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 # our models
 from blockchain.models import Block, Payload, Transaction, Address
-from blockchain.utils import pubkey_string_to_rsa, pubkey_base64_to_rsa, pubkey_base64_from_uri
-
+from blockchain.utils import pubkey_base64_to_rsa, pubkey_base64_from_uri
 from blockchain.helpers import CryptoTools
-
 from .exceptions import NonValidPubKey
 
 # Define router
