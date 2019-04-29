@@ -1,8 +1,7 @@
 from django.core.management.base import BaseCommand
-from django.core.cache import cache
-
 from blockchain.models import Block
 from blockchain.utils import PoE
+
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -21,4 +20,3 @@ class Command(BaseCommand):
                 self.stdout.write("Saved Dash txid in block wiht hash: {}".format(block.hash_block))
 
         self.stdout.write("Finish update PoE, total blocks updated: {}".format(count))
-
