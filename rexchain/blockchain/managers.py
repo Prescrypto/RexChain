@@ -44,7 +44,7 @@ class BlockManager(models.Manager):
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
-        Block = apps.get_model('blockchain','Block')
+        Block = apps.get_model('blockchain', 'Block')
         genesis_block = Block.objects.create(
             hash_block=genesis_hash_generator(),
             data=GENESIS_INIT_DATA,
@@ -58,11 +58,12 @@ class BlockManager(models.Manager):
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
         data_block = new_block.get_block_data(tx_queryset)
-        new_block.hash_block = calculate_hash(new_block.id, hash_before, str(new_block.timestamp), data_block["sum_hashes"])
+        new_block.hash_block = calculate_hash(new_block.id, hash_before,
+                                              str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
         # Proof of Existennce layer
-        _poe = PoE() # init proof of existence element
+        _poe = PoE()  # init proof of existence element
         txid = _poe.journal(new_block.merkleroot)
         if txid is True:
             new_block.poetxid = "True"
@@ -89,7 +90,7 @@ class TransactionManager(models.Manager):
         '''
             Use PoW hashcash algoritm to attempt to create a block
         '''
-        Block = apps.get_model('blockchain','Block')
+        Block = apps.get_model('blockchain', 'Block')
         _hashcash_tools = Hashcash(debug=settings.DEBUG)
 
         if not cache.get('challenge') and not cache.get('counter') == 0:
@@ -97,10 +98,11 @@ class TransactionManager(models.Manager):
             safe_set_cache('challenge', challenge)
             safe_set_cache('counter', 0)
 
-        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'), cache.get('counter'))
+        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'),
+                                                                           cache.get('counter'))
 
         if is_valid_hashcash:
-            block = Block.objects.create_block(self.has_not_block()) # TODO add on creation hash and merkle
+            block = Block.objects.create_block(self.has_not_block())  # TODO add on creation hash and merkle
             block.hashcash = hashcash_string
             block.nonce = cache.get('counter')
             block.save()
@@ -111,10 +113,9 @@ class TransactionManager(models.Manager):
             counter = cache.get('counter') + 1
             safe_set_cache('counter', counter)
 
-
     def is_transfer_valid(self, data, _previous_hash, pub_key, _signature):
         ''' Method to handle transfer validity!'''
-        Payload = apps.get_model('blockchain','Payload')
+        Payload = apps.get_model('blockchain', 'Payload')
         if not Payload.objects.check_existence(data['previous_hash']):
             logger.info("[IS_TRANSFER_VALID] Send a transfer with a wrong reference previous_hash!")
             return (False, None)
@@ -127,10 +128,10 @@ class TransactionManager(models.Manager):
 
         # TODO ordered data
         try:
-            _msg = json.dumps(data['data'], separators=(',',':'))
-        except:
+            json.dumps(data['data'], separators=(',', ':'))
+        except:  # noqa: E722
             logger.error("[TODO Fix] ADD VALIDATION METHOD ")
-            _msg = ""
+            # _msg = ""
         # TODO add verify files data too
 
         # if not self._crypto.verify(_msg, _signature, self._crypto.un_savify_key(before_rx.public_key)):
@@ -155,17 +156,17 @@ class TransactionManager(models.Manager):
         data = data["data"]
 
         ''' When timestamp is convert to python datetime needs this patch '''
-        # timestamp =  data["timestamp"]
+        # timestamp = data["timestamp"]
         # timestamp.replace(tzinfo=timezone.utc)
         # data["timestamp"] = timestamp.isoformat()
 
         # Initalize some data
         try:
-            #first we order the sub lists and sub jsons
+            # First we order the sub lists and sub jsons
             data = iterate_and_order_json(data)
-            #then we order the json
+            # Then we order the json
             data_sorted = ordered_data(data)
-            _payload = json.dumps(data_sorted, separators=(',',':'))
+            _payload = json.dumps(data_sorted, separators=(',', ':'))
 
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
@@ -183,7 +184,7 @@ class TransactionManager(models.Manager):
 
         hex_raw_pub_key = self._crypto.savify_key(pub_key)
         ''' Get previous hash '''
-        #_previous_hash = data.get('previous_hash', '0')
+        # _previous_hash = data.get('previous_hash', '0')
         logger.info("previous_hash: {}".format(_previous_hash))
 
         ''' Check initial or transfer '''
@@ -198,16 +199,15 @@ class TransactionManager(models.Manager):
             data["previous_hash"] = _previous_hash
             _is_valid_tx, _rx_before = self.is_transfer_valid(data, _previous_hash, pub_key, _signature)
 
-
         ''' FIRST Create the Transaction '''
         tx = self.create_raw_tx(data, _is_valid_tx=_is_valid_tx, _signature=_signature, pub_key=pub_key)
 
         ''' THEN Create the Data Item(Payload) '''
-        Payload = apps.get_model('blockchain','Payload')
+        Payload = apps.get_model('blockchain', 'Payload')
         rx = Payload.objects.create_rx(
             data,
             _signature=_signature,
-            pub_key=hex_raw_pub_key, # This is basically the address
+            pub_key=hex_raw_pub_key,  # This is basically the address
             _is_valid_tx=_is_valid_tx,
             _rx_before=_rx_before,
             transaction=tx,
@@ -222,10 +222,9 @@ class TransactionManager(models.Manager):
         ''' This method just create the transaction instance '''
 
         ''' START TX creation '''
-        Transaction = apps.get_model('blockchain','Transaction')
+        Transaction = apps.get_model('blockchain', 'Transaction')
         tx = Transaction()
         # Get Public Key from API
-        pub_key = kwargs.get("pub_key", None) # Make it usable
         tx.signature = kwargs.get("_signature", None)
         tx.is_valid = kwargs.get("_is_valid_tx", False)
         tx.timestamp = timezone.now()
@@ -267,10 +266,10 @@ class PayloadManager(models.Manager):
         return self.get_queryset().rx_by_month(date_filter)
 
     def get_stats_last_hours(self, hours=10):
-        ''' Return a list of  last rx created by given last hours '''
+        ''' Return a list of last rx created by given last hours '''
         RANGE_HOUR = 1
         _list = []
-        _new_time = _time = timezone.now()
+        _time = timezone.now()
         _list.append([get_timestamp(_time), self.range_by_hour(_time).count()])
         for i in range(0, hours):
             _time = _time - timedelta(hours=RANGE_HOUR)
@@ -282,14 +281,12 @@ class PayloadManager(models.Manager):
         return self.get_queryset().check_existence(previous_hash)
 
     def create_rx(self, data, **kwargs):
-
         rx = self.create_raw_rx(data, **kwargs)
-
         return rx
 
     def create_raw_rx(self, data, **kwargs):
         # This calls the super method saving all clean data first
-        Payload = apps.get_model('blockchain','Payload')
+        Payload = apps.get_model('blockchain', 'Payload')
 
         _rx_before = kwargs.get('_rx_before', None)
 
@@ -323,15 +320,15 @@ class PayloadManager(models.Manager):
             else:
                 logger.info("[CREATE_RX] Tx transfer not valid!")
 
-
         rx.create_raw_msg()
         rx.hash()
         rx.save()
 
         return rx
 
+
 class AddressManager(models.Manager):
-    ''' Add custom Manager  '''
+    ''' Add custom Manager '''
 
     def get_queryset(self):
         return AddressQueryset(self.model, using=self._db)
