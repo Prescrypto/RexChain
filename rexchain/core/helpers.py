@@ -38,10 +38,10 @@ def create_jira_issue(summary, description, comment="", project_key="PROP", task
             'project': {'key': project_key},
             'description': description,
             'issuetype': {'name': task_type},
-            'summary' : summary,
+            'summary': summary,
         }
         if not settings.PRODUCTION:
-            issue_dict["project"] = {'key' : 'DEVPROP'}
+            issue_dict["project"] = {'key': 'DEVPROP'}
             issue_dict["summary"] = '[DEV] ' + summary
 
         new_issue = authed_jira.create_issue(fields=issue_dict)
@@ -50,4 +50,4 @@ def create_jira_issue(summary, description, comment="", project_key="PROP", task
             authed_jira.add_comment(new_issue, comment)
 
     except Exception as e:
-        logger.error( "Error al Crear Issue en JIRA : {}.".format(e))
+        logger.error("Error al Crear Issue en JIRA : {}.".format(e))
