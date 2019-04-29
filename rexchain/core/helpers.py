@@ -2,13 +2,13 @@
 ''' Helper tools for RexChain '''
 import logging
 import time
-from django_rq import job
+
 from django.core.cache import cache
 from django.conf import settings
-
 from jira import JIRA
 
 logger = logging.getLogger('django_info')
+
 
 def safe_set_cache(key, value):
     ''' Just kind '''
