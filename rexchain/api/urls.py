@@ -1,8 +1,7 @@
 # -*- encoding: utf-8 -*-
 from django.conf.urls import url, include
-
-# My views
 from api.views import router
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
