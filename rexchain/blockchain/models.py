@@ -1,15 +1,10 @@
 # -*- encoding: utf-8 -*-
-# Python Libs
-## Hash lib
+# Hash lib
 import hashlib
-import base64
 import logging
 import json
 # Date
-from datetime import timedelta, datetime
-from operator import itemgetter
-# Unicode shite
-import unicodedata
+from datetime import timedelta
 # Django Libs
 from django.db import models
 from django.conf import settings
@@ -29,7 +24,6 @@ from .managers import (
     AddressManager,
 )
 from .utils import get_merkle_root, pubkey_base64_to_rsa
-from .helpers import CryptoTools
 
 logger = logging.getLogger('django_info')
 
@@ -79,7 +73,6 @@ class Block(models.Model):
             logger.error("[BLOCK ERROR] get block data error : %s" % e)
             return ""
 
-
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
         localised_date = self.timestamp
@@ -106,9 +99,7 @@ class Transaction(models.Model):
     previous_hash = models.TextField(blank=True, default="")
     # Details
     details = JSONField(default={}, blank=True)
-
     objects = TransactionManager()
-
 
     # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
     def hash(self):
