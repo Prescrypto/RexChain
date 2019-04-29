@@ -1,14 +1,15 @@
 # -*- encoding: utf-8 -*-
 ''' Util tools for RexChain '''
 import logging
+
 from hashlib import sha256
 from string import ascii_letters
-from math import ceil, floor
+from math import ceil
 from random import choice
 from datetime import datetime, timedelta
-
 from django.utils import timezone
 from django.conf import settings
+
 
 class Hashcash(object):
     """ Main hashcash object """
