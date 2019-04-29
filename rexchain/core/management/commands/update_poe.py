@@ -1,9 +1,8 @@
 from django.core.management.base import BaseCommand
-from django.core.cache import cache
 from django.db.models import Q
-
 from blockchain.models import Block
 from blockchain.utils import PoE
+
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -26,5 +25,3 @@ class Command(BaseCommand):
             self.stdout.write('Updated merkleroot of this block hash: {}, in Dash Blockchain'.format(block.hash_block))
 
         self.stdout.write("Finish update PoE, total blocks updated: {} of {}".format(count, total_blocks))
-
-    
