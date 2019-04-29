@@ -50,7 +50,7 @@ BASE_POE_URL = os.environ['BASE_POE_URL']
 STAMPD_ID = os.environ['STAMPD_ID']
 STAMPD_KEY = os.environ['STAMPD_KEY']
 
-#Hashcash settings
+# Hashcash settings
 HC_BITS_DIFFICULTY = os.environ["HC_BITS_DIFFICULTY"]
 HC_RANDOM_STRING_SIZE = os.environ["HC_RANDOM_STRING_SIZE"]
 HC_WORD_INITIAL = os.environ['HC_WORD_INITIAL']
@@ -63,7 +63,7 @@ WHITEPAPER_URL = os.environ["WHITEPAPER_URL"]
 # Django JET config
 JET_SIDE_MENU_COMPACT = True
 
-APPEND_SLASH=True
+APPEND_SLASH = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -83,7 +83,6 @@ INSTALLED_APPS = [
     'core',
     # CORS
     'corsheaders',
-
 ]
 
 MIDDLEWARE = [
@@ -107,7 +106,7 @@ ROOT_URLCONF = 'rexchain.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,7 +121,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'rexchain.wsgi.application'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -148,10 +146,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 15,
     'DEFAULT_PERMISSION_CLASSES': [
-        #'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
     )
 }
 
@@ -165,7 +163,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_L10N = True
-
 
 USE_TZ = True
 
@@ -185,7 +182,7 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-#Redis Cache
+# Redis Cache
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -193,7 +190,7 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {
-                    # config for pool connections
+                    #  config for pool connections
                     "max_connections": 10
             }
         }
@@ -211,16 +208,17 @@ RQ_QUEUES = {
         'USE_REDIS_CACHE': 'default',
     }
 }
+
 # extra config args for RQ
 RQ = {
-    #RQ_EXCEPTION_HANDLERS = ['']
+    # RQ_EXCEPTION_HANDLERS = ['']
 }
 
 # Console logging for DEBUG=False - Probably should disable if DEBUG = True
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    "formatters": { # add rq_console format
+    "formatters": {  # add rq_console format
         "rq_console": {
             "format": "%(asctime)s %(message)s",
             "datefmt": "%H:%M:%S",
@@ -247,7 +245,7 @@ LOGGING = {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
-        "rq.worker": { # add rq logger
+        "rq.worker": {  # add rq logger
             "handlers": ["console"],
             "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },
