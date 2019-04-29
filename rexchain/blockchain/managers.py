@@ -7,37 +7,33 @@ TXmanager
 '''
 import json
 import logging
-from datetime import timedelta
 
+from datetime import timedelta
 from django.db import models
 from django.apps import apps
 from django.conf import settings
 from django.utils import timezone
 from django.core.cache import cache
-from django.core.serializers.json import DjangoJSONEncoder
-
 from core.utils import Hashcash
 from core.helpers import safe_set_cache, get_timestamp
-from api.exceptions import FailedVerifiedSignature
-
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
-from .utils import calculate_hash, get_merkle_root, PoE, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
+from .utils import calculate_hash, PoE, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
 from .querysets import (
     PayloadQueryset,
     TransactionQueryset,
     AddressQueryset,
 )
-
 from .RSAaddresses import AddressBitcoin
 
 logger = logging.getLogger('django_info')
+
 
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
 
     def create_block(self, tx_queryset):
         # Do initial block or create next block
-        Block = apps.get_model('blockchain','Block')
+        Block = apps.get_model('blockchain', 'Block')
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
@@ -311,7 +307,6 @@ class PayloadManager(models.Manager):
 
         if "location" in data:
             rx.location = data["location"]
-
 
         # Save previous hash
         if _rx_before is None:
