@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import json
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import timezone
