@@ -5,13 +5,11 @@
 import json
 import hashlib
 import logging
-from datetime import timedelta
 
 from django.db import models
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.contrib.postgres.fields import JSONField
-from django.utils.dateformat import DateFormat
 
 logger = logging.getLogger('django_info')
 
@@ -87,6 +85,3 @@ class IOBlockchainize(models.Model):
     def destroy_data(self):
         ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
         self.data = [hashlib.sha256(json.dumps(self.data)).hexdigest()]
-
-
-
