@@ -96,8 +96,8 @@ class BlockSerializer(serializers.ModelSerializer):
             'nonce',
             'public_key',
         )
-        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', 'merkleroot',
-                            'hashcash','nonce','public_key',)
+        read_only_fields = ('id', 'hash_block', 'timestamp', 'previous_hash', 'raw_size', 'data', 'merkleroot',
+                            'hashcash', 'nonce', 'public_key',)
 
 
 class BlockViewSet(viewsets.ModelViewSet):
@@ -140,7 +140,7 @@ class AddressViewSet(viewsets.ModelViewSet):
             try:
                 pub_key_b64 = pubkey_base64_from_uri(raw_public_key)
 
-            except Exception as e:
+            except Exception as e:  # noqa: F841
                 raise NonValidPubKey
             else:
                 _address = Address.objects.get_or_create_rsa_address(pub_key_b64)
