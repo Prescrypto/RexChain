@@ -34,7 +34,6 @@ class ValidateRxView(View):
     def get(self, request, *args, **kwargs):
         hash_id = kwargs.get("hash_id")
         payload = transaction = None
-
         try:
             payload = Payload.objects.get(hash_id=hash_id)
         except Exception as e:
@@ -43,15 +42,13 @@ class ValidateRxView(View):
             try:
                 transaction = Transaction.objects.get(txid=hash_id)
             except Exception as e:
-                logger.error("[Validate ERROR]Neither hash is from Payload nor Transaction:{} type:{}".format(e, type(e)))
-
+                message_error = "[Validate ERROR] Neither hash is from Payload nor Transaction:{} type:{}"
+                logger.error(message_error.format(e, type(e)))
             else:
-                return render(request, self.template, { "poe": self.get_poe_data_context(transaction)})
-
-
+                return render(request, self.template, {"poe": self.get_poe_data_context(transaction)})
         else:
             poe = self.get_poe_data_context(payload.transaction)
-            return render(request, self.template, { "poe": poe})
+            return render(request, self.template, {"poe": poe})
 
         return redirect("/")
 
@@ -59,8 +56,9 @@ class ValidateRxView(View):
         ''' Build poe data '''
         # Transaction TEST for validate TESTING only
         data_poe = {
-            "received" : "Aug. 25, 2018, 12:57 p.m.",
-            "poe_url": "https://live.blockcypher.com/bcy/tx/51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a/",
+            "received": "Aug. 25, 2018, 12:57 p.m.",
+            "poe_url": ("https://live.blockcypher.com/bcy/tx/"
+                        "51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a/"),
             "hash": "51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a",
             "data_hex": "46e6ac758721c8f45d2a00de78d81df7861f655e41777f8e56b0556ea4bec0a9",
             "merkle_root": "46e6ac758721c8f45d2a00de78d81df7861f655e41777f8e56b0556ea4bec0a9",
@@ -124,7 +122,7 @@ def rx_priv_key(request, hash_rx=False):
     try:
         rx = Payload.objects.get(hash_id=hash_rx)
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
-    except Exception as e:
+    except Exception as e:  # noqa: F841
         return HttpResponse("Not Found", content_type="text/plain")
 
 
