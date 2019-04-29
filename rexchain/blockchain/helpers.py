@@ -18,16 +18,19 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 from Crypto.Signature import pkcs1_15
 
-''' Basic functions and vars for genesis generation '''
+
+# Basic functions and vars for genesis generation
 def genesis_hash_generator(size=64, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
+
 GENESIS_INIT_DATA = {
-    "hashes" : [
+    "hashes": [
         hashlib.sha256("chucho").hexdigest(),
         hashlib.sha256("cheve").hexdigest(),
         hashlib.sha256("bere").hexdigest(),
-]}
+    ]}
+
 
 def get_genesis_merkle_root():
     ''' Get first '''
@@ -35,23 +38,23 @@ def get_genesis_merkle_root():
 
     for single_hash in GENESIS_INIT_DATA["hashes"]:
         _mt.add_leaf(single_hash)
-    _mt.make_tree();
+    _mt.make_tree()
     # get merkle_root and return
-    return _mt.get_merkle_root();
+    return _mt.get_merkle_root()
 
 
 class CryptoTools(object):
     ''' Object tools for encrypt and decrypt info '''
 
     def __init__(self, has_legacy_keys=True, *args, **kwargs):
-        #This number is the entropy created by the user in FE, your default value is 161
+        # This number is the entropy created by the user in FE, your default value is 161
         self.ENTROPY_NUMBER = self._number_random()
         self.logger = logging.getLogger('django_info')
         self.has_legacy_keys = has_legacy_keys
 
     def _number_random(self):
         '''Take a number between 180 to 220'''
-        return random.randint(180,220)
+        return random.randint(180, 220)
 
     def bin2hex(self, binStr):
         '''convert str to hex '''
@@ -70,7 +73,7 @@ class CryptoTools(object):
 
     def _get_new_asym_keys(self, keysize=512):
         ''' Return tuple of public and private key '''
-        #LEGACY METHOD
+        # LEGACY METHOD
         return rsa.newkeys(keysize)
 
     def get_pem_priv_format(self, EncryptionPrivateKey):
@@ -124,7 +127,7 @@ class CryptoTools(object):
     def _encrypt_with_public_key(self, message, EncryptionPublicKey):
         ''' Encrypt with PublicKey object '''
         # LEGACY METHOD
-        encryptedtext=rsa.encrypt(message, EncryptionPublicKey)
+        encryptedtext = rsa.encrypt(message, EncryptionPublicKey)
         return encryptedtext
 
     def decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey):
@@ -139,7 +142,7 @@ class CryptoTools(object):
     def _decrypt_with_private_key(self, encryptedtext, EncryptionPrivateKey):
         ''' Decrypt with PrivateKey object '''
         # LEGACY METHOD
-        message =rsa.decrypt(encryptedtext, EncryptionPrivateKey)
+        message = rsa.decrypt(encryptedtext, EncryptionPrivateKey)
         return message
 
     def sign(self, message, PrivateKey):
@@ -167,7 +170,7 @@ class CryptoTools(object):
             try:
                 pkcs1_15.new(PublicKey).verify(message_hash, signature)
                 return True
-            except Exception as e:
+            except Exception as e:  # noqa: F841
                 self.logger.error("[CryptoTool, verify ERROR ] Signature or message are corrupted")
                 return False
 
@@ -177,7 +180,7 @@ class CryptoTools(object):
         signature = base64.b64decode(signature)
         try:
             return rsa.verify(message, signature, PublicKey)
-        except Exception as e:
+        except Exception as e:  # noqa: F841
             self.logger.error("[CryptoTool, verify ERROR ] Signature or message are corrupted")
             return False
 
@@ -192,7 +195,7 @@ class CryptoTools(object):
         '''This method create a pair RSA keys with entropy created by the user in FE'''
         try:
             privatekey = RSA.generate(2048, randfunc=self.entropy)
-        except Exception as e:
+        except Exception as e:  # noqa: F841
             self.logger.error('{}'.format(e))
             self.logger.error("[CryptoTool, create_key_with_entropy ERROR] Entropy not enough")
             privatekey = None
@@ -215,7 +218,5 @@ class CryptoTools(object):
         with open(directory_file+'.key', 'rb') as file:
             privatekey = RSA.import_key(file.read(), passphrase=password)
 
-        public_key = prk.publickey()
+        publickey = privatekey.publickey()
         return (publickey, privatekey)
-
-
