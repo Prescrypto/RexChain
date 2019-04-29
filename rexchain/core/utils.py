@@ -23,7 +23,9 @@ class Hashcash(object):
         self.expiration_time = expiration_time
 
     def create_challenge(
-        self, word_initial, bits=int(settings.HC_BITS_DIFFICULTY), long_from_chain=int(settings.HC_RANDOM_STRING_SIZE)):
+        self, word_initial, bits=int(settings.HC_BITS_DIFFICULTY),
+        long_from_chain=int(settings.HC_RANDOM_STRING_SIZE)
+    ):
         """Create a challenge wiht three parameters.
         Parameters:
             word_initial: It is a type string value, with which it
@@ -36,16 +38,16 @@ class Hashcash(object):
         """
         ver = "Prescrypto1.1"
         date = self.now()
-        #Change of format to date
+        # Change of format to date
         date = "{}.{}.{}.{}.{}.{}".format(
-            str(date.month), str(date.day),
-            str(date.year),str(date.hour),str(date.minute),str(date.second)
+            str(date.month), str(date.day), str(date.year),
+            str(date.hour), str(date.minute), str(date.second),
         )
         challenge = "{}*{}*{}*{}*{}*".format(
             ver, bits, date, word_initial,
             self._random_chain(long_from_chain)
         )
-        #return a string type
+        # Return a string type
         return challenge
 
     def calculate_sha(self, challenge, counter):
@@ -64,7 +66,7 @@ class Hashcash(object):
                 self.logger.info("[SUCCESS] SHA FOUND IT : {}".format(sha))
             valid_sha = True
         hashcash = "{}{}".format(challenge, hex(counter)[2:])
-        #return a list with True or False type and string type
+        # Return a list with True or False type and string type
         return valid_sha, hashcash
 
     def check_hashcash(
@@ -79,19 +81,19 @@ class Hashcash(object):
             bits with which the hashcash was generated.
             time_expiration: If is True, add a time of expiration to hashcash.
         """
-        #convert hashcash to a list
+        # Convert hashcash to a list
         hashcash_list = hashcash.split('*')
-        #this block verifies if hashcash is correctly made
+        # This block verifies if hashcash is correctly made
         if len(hashcash_list) != 6:
             self.logger.error('Hashcash malformed')
             return False
-        #Verifies that word_initial matches
+        # Verifies that word_initial matches
         if word_initial is not None and word_initial != self._get_hashcash_word_initial(hashcash):
             return False
-        #Verify that bits matches
+        # Verify that bits matches
         if type(bits) is int and bits != int(self._get_hashcash_bits(hashcash)):
             return False
-        #verify time of verification
+        # Verify time of verification
         if time_expiration:
             today = self.now()
             today_clear = "{}/{}/{} {}:{}:{}".format(
@@ -118,7 +120,7 @@ class Hashcash(object):
             random chain.
         """
         alphabet = ascii_letters + "+-/"
-        #return a string type
+        # Return a string type
         return ''.join([choice(alphabet) for _ in [None]*long_from_chain])
 
     def _format_date(self, DATE):
@@ -137,7 +139,7 @@ class Hashcash(object):
             format_date = "{}/{}/{} {}:{}:{}".format(
                 month, day, year, hours, minutes, seconds
             )
-            #return a string type
+            # Return a string type
             return format_date
 
     def _add_date(self, DATE, TIME):
@@ -171,50 +173,50 @@ class Hashcash(object):
         date1 = datetime.strptime(date1, self.date_format)
         date2 = datetime.strptime(date2, self.date_format)
         if date1 < date2:
-            #return a datetime type
+            # Return a datetime type
             return date2
         else:
-            #return a datetime type
+            # Return a datetime type
             return date1
 
     def _get_hashcash_version(self, hashcash):
         """Take the version in hashcash"""
         hashcash_list = hashcash.split('*')
-        #return a string type
+        # Return a string type
         return hashcash_list[0]
 
     def _get_hashcash_bits(self, hashcash):
         """Take the bits in hashcash"""
         hashcash_list = hashcash.split('*')
-        #return a int type
+        # Return a int type
         return int(hashcash_list[1])
 
     def _get_hashcash_date(self, hashcash):
         """Take the date in hashcash"""
         hashcash_list = hashcash.split('*')
-        #return a string type with format "HH.MM.SS"
+        # Return a string type with format "HH.MM.SS"
         return hashcash_list[2]
 
     def _get_hashcash_word_initial(self, hashcash):
         """Take the word initial in hashcash"""
         hashcash_list = hashcash.split('*')
-        #return a string type
+        # Return a string type
         return hashcash_list[3]
 
     def _get_hashcash_arrary_chain(self, hashcash):
         """Take the array chain in hashcash"""
         hashcash_list = hashcash.split('*')
-        #return a string type
+        # Return a string type
         return hashcash_list[4]
 
     def _get_hashcash_counter(self, hashcash):
         """Take the hexadecimal of counter in hashcash"""
         hashcash_list = hashcash.split('*')
-        #return a string type
+        # Return a string type
         return hashcash_list[5]
 
     def _get_calculation_sha(self, hashcash):
         """ Take a hashcash and calculate sha256 a hashcash"""
         sha = sha256(hashcash).hexdigest()
-        #return a string type
+        # Return a string type
         return sha
