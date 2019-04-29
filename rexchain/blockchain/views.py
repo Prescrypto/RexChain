@@ -2,18 +2,17 @@
 from __future__ import unicode_literals
 
 # Python libs
-import hashlib
 import json
 import logging
+
 # Django packages
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, render_to_response
-from django.views.generic import View, CreateView, ListView
-from django.utils import timezone
+from django.shortcuts import render, redirect
+from django.views.generic import View
 # Our Models
 from django.conf import settings
 from .models import Payload, Block, Transaction
-from .utils import get_qr_code, is_rx_in_block
+from .utils import get_qr_code
 # Blockcypher
 from api.views import PayloadSerializer
 
