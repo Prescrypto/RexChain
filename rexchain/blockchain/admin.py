@@ -6,7 +6,7 @@ from .models import Block, Payload
 
 
 class PayloadAdmin(admin.ModelAdmin):
-    ''' Custom Payload Admin  '''
+    ''' Custom Payload Admin '''
     def has_add_permission(self, request, obj=None):
         return True
 
@@ -18,7 +18,7 @@ class PayloadAdmin(admin.ModelAdmin):
 
     search_fields = ['id']
     list_per_page = 25
-    fields = ('id','public_key','timestamp',)
+    fields = ('id', 'public_key', 'timestamp', )
     exclude = ('public_key', )
     readonly_fields = ("public_key", "private_key", "data", "signature")
 
