@@ -129,8 +129,8 @@ class TransactionManager(models.Manager):
         # TODO ordered data
         try:
             json.dumps(data['data'], separators=(',', ':'))
-        except:  # noqa: E722
-            logger.error("[TODO Fix] ADD VALIDATION METHOD ")
+        except Exception as e:
+            logger.error("[ERROR in reading data] {}, Type {}".format(e, type(e)))
             # _msg = ""
         # TODO add verify files data too
 
