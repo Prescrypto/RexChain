@@ -41,8 +41,8 @@ class ValidateRxView(View):
             try:
                 transaction = Transaction.objects.get(txid=hash_id)
             except Exception as e:
-                message_error = "[Validate ERROR] Neither hash is from Payload nor Transaction:{} type:{}"
-                logger.error(message_error.format(e, type(e)))
+                _message_error = "[Validate ERROR] Neither hash is from Payload nor Transaction:{} type:{}"
+                logger.error(_message_error.format(e, type(e)))
             else:
                 return render(request, self.template, {"poe": self.get_poe_data_context(transaction)})
         else:
