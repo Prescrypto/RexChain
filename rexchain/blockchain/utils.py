@@ -107,12 +107,13 @@ class PoE(object):
         if login_json is not None:
             # Post a merkle root
             try:
-                post_request = requests.post(self.api_url_base + '/hash',
-                                             data={
-                                                 'sess_id': login_json['session_id'],
-                                                 'blockchain': self.blockchain,
-                                                 'hash': merkle_root,
-                                             })
+                post_request = requests.post(
+                    self.api_url_base + '/hash',
+                    data={
+                        'sess_id': login_json['session_id'],
+                        'blockchain': self.blockchain,
+                        'hash': merkle_root,
+                    })
                 post_json = post_request.json()
                 if not isinstance(post_json, dict):
                     return False
@@ -184,10 +185,8 @@ class PoE(object):
                 self.logger.error("Type of data:".format(type(data)))
                 return None
         except Exception as e:
-            self.logger.error(
-                "[PoE ERROR] Error returning hash from embed data, Error :{}, type({})".format(e,
-                                                                                               type(e))
-            )
+            _message_error = "[PoE ERROR] Error returning hash from embed data, Error :{}, Type: {}"
+            self.logger.error(_message_error.format(e, type(e)))
 
     def _attest(self, txid):
         try:
