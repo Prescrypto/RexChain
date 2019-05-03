@@ -11,7 +11,6 @@ import qrcode
 import unicodedata
 from django.utils.encoding import python_2_unicode_compatible
 # FOr signing
-import md5
 import merkletools
 from Crypto.PublicKey import RSA
 # PoE
