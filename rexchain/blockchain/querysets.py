@@ -2,6 +2,7 @@
 from django.db import models
 from django.core.cache import cache
 
+
 class PayloadQueryset(models.QuerySet):
     ''' Add custom querysets'''
 

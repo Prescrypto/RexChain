@@ -14,14 +14,11 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import static
 from django.views.generic.base import RedirectView
-# restframework
-from rest_framework.documentation import include_docs_urls
-
 # Our Models
 from .views import home, humans_txt, robots_txt, landing_page
 from blockchain.views import (
     tx_detail, block_detail,
-    rx_priv_key, qr_code, poe, ValidateRxView
+    poe, ValidateRxView
 )
 
 urlpatterns = [

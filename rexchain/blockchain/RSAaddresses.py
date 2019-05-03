@@ -28,7 +28,6 @@ class AddressBitcoin(object):
             b58_string = '1' + b58_string
         return b58_string
 
-
     def create_address_bitcoin(self, publickey_b64):
         '''This method create a valid bitcoin address given a base64 RSA publick key'''
 
@@ -69,4 +68,3 @@ class AddressBitcoin(object):
         address_hex = (network_bitcoin_public_key + checksum).decode('utf-8')
         final_valid_address = self.base58(address_hex)
         return final_valid_address
-
