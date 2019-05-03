@@ -45,7 +45,7 @@ curl http://localhost:8080/api/v1/block
 ```
 ##### Create block
 ```
-# Public Key is an binari exadecimal representation  of publick_key made by rsa python library
+# Public Key is an binari exadecimal representation of publick_key made by rsa python library
 curl -X POST \
   http://127.0.0.1:8000/api/v1/rx-endpoint/ \
   -H 'Content-Type: application/json' \
@@ -58,7 +58,7 @@ curl -X POST \
   "medications": [
     {
       "instructions": "Artelac RDules",
-      "presentation": "DUSTALOX (KETOROLACO TROMETAMINA  5 mg / ml 1 SOL 5 ml)"
+      "presentation": "DUSTALOX (KETOROLACO TROMETAMINA 5 mg / ml 1 SOL 5 ml)"
     }
   ],
   "patient_age": 29,
@@ -68,3 +68,13 @@ curl -X POST \
 }'
 
 ```
+
+## Lint the code
+
+Use this to check for adherence to PEP 8 standards
+
+To use the linter on your code, execute the following command on your console, the results will be shown directly on the console:
+
+`$ flake8`
+
+More [documentation about it](http://flake8.pycqa.org/en/latest/)

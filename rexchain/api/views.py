@@ -4,21 +4,11 @@ from __future__ import unicode_literals
 # REST
 import logging
 
-from rest_framework.viewsets import ViewSetMixin
 from rest_framework import routers, serializers, viewsets
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, BasePermission
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.views import APIView
-from rest_framework import mixins, generics
-from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 # our models
 from blockchain.models import Block, Payload, Transaction, Address
-from blockchain.utils import pubkey_string_to_rsa, pubkey_base64_to_rsa, pubkey_base64_from_uri
-
+from blockchain.utils import pubkey_base64_to_rsa, pubkey_base64_from_uri
 from blockchain.helpers import CryptoTools
-
 from .exceptions import NonValidPubKey
 
 # Define router
@@ -106,8 +96,8 @@ class BlockSerializer(serializers.ModelSerializer):
             'nonce',
             'public_key',
         )
-        read_only_fields = ('id', 'hash_block','timestamp','previous_hash', 'raw_size', 'data', 'merkleroot',
-                            'hashcash','nonce','public_key',)
+        read_only_fields = ('id', 'hash_block', 'timestamp', 'previous_hash', 'raw_size', 'data', 'merkleroot',
+                            'hashcash', 'nonce', 'public_key',)
 
 
 class BlockViewSet(viewsets.ModelViewSet):
@@ -150,7 +140,7 @@ class AddressViewSet(viewsets.ModelViewSet):
             try:
                 pub_key_b64 = pubkey_base64_from_uri(raw_public_key)
 
-            except Exception as e:
+            except Exception as e:  # noqa: F841
                 raise NonValidPubKey
             else:
                 _address = Address.objects.get_or_create_rsa_address(pub_key_b64)
