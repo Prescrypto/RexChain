@@ -25,7 +25,7 @@ from collections import OrderedDict
 
 def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
-    hash_obj = hashlib.sha256(str(index) + previousHash + str(timestamp) + data)
+    hash_obj = hashlib.sha256(str(index).encode() + previousHash.encode() + str(timestamp).encode() + data.encode())
     return hash_obj.hexdigest()
 
 
