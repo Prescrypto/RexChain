@@ -17,7 +17,7 @@ django-cors-headers==2.0.2
 pycryptodome==3.6.5
 rsa==3.4.2
 merkletools==1.0.2
-pysha3==1.0b1
+pysha3==1.0.2  #1.0b1
 
 # Others
 django-jet==1.0.7
@@ -39,3 +39,7 @@ django-rq==1.0.0
 
 # Jira
 jira==2.0.0
+
+# linter
+flake8
+bandit
