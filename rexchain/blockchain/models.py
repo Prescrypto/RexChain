@@ -1,15 +1,10 @@
 # -*- encoding: utf-8 -*-
-# Python Libs
-## Hash lib
+# Hash lib
 import hashlib
-import base64
 import logging
 import json
 # Date
-from datetime import timedelta, datetime
-from operator import itemgetter
-# Unicode shite
-import unicodedata
+from datetime import timedelta
 # Django Libs
 from django.db import models
 from django.conf import settings
@@ -29,7 +24,6 @@ from .managers import (
     AddressManager,
 )
 from .utils import get_merkle_root, pubkey_base64_to_rsa
-from .helpers import CryptoTools
 
 logger = logging.getLogger('django_info')
 
@@ -79,7 +73,6 @@ class Block(models.Model):
             logger.error("[BLOCK ERROR] get block data error : %s" % e)
             return ""
 
-
     def get_formatted_date(self, format_time='d/m/Y'):
         # Correct date and format
         localised_date = self.timestamp
@@ -95,9 +88,8 @@ class Block(models.Model):
 class Transaction(models.Model):
     ''' Tx Model '''
     # Cryptographically enabled fields
-
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
-    raw_msg = models.TextField(blank=True, default="") # Anything can be stored here
+    raw_msg = models.TextField(blank=True, default="")  # Anything can be stored here
     # block information
     block = models.ForeignKey('blockchain.Block', related_name='transactions', null=True, blank=True)
     signature = models.TextField(blank=True, default="")
@@ -106,9 +98,7 @@ class Transaction(models.Model):
     previous_hash = models.TextField(blank=True, default="")
     # Details
     details = JSONField(default={}, blank=True)
-
     objects = TransactionManager()
-
 
     # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
     def hash(self):
@@ -137,15 +127,12 @@ class Transaction(models.Model):
 @python_2_unicode_compatible
 class Payload(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Payload Model '''
-
     # Owner track
-    public_key = models.TextField("An Hex representation of Public Key Object", blank=True, default=True, db_index=True)
-
+    public_key = models.TextField("An Hex representation of Public Key Object", blank=True,
+                                  default=True, db_index=True)
     # For TxTransfer
     transaction = models.ForeignKey('blockchain.Transaction', related_name='payloads', null=True, blank=True)
-
     objects = PayloadManager()
-
 
     def __str__(self):
         return self.hash_id
@@ -173,9 +160,10 @@ class Payload(Timestampable, IOBlockchainize, models.Model):
 
 class Address(Timestampable, models.Model):
     ''' Table of addresses '''
-
     public_key_b64 = models.TextField("Public Key", default="", help_text='Format: Base 64', unique=True)
-    address =  models.CharField("Address to get transactions", max_length=255, default="", help_text='Format: Base 58 and valid bitcoin address', db_index=True)
+    address = models.CharField("Address to get transactions", max_length=255,
+                               default="", help_text='Format: Base 58 and valid bitcoin address',
+                               db_index=True)
     is_valid = models.BooleanField("Check if address is valid", blank=True, default=True)
 
     objects = AddressManager()

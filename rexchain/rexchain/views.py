@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import json
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import timezone
@@ -19,7 +18,7 @@ def home(request):
 
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
-    LAST_HOURS = 10
+    # LAST_HOURS = 10
     _now = timezone.now()
     try:
         # Creating context for home view!
@@ -30,7 +29,7 @@ def home(request):
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
 
             # Stats
-            "payloads_total" : Payload.objects.all().count(),
+            "payloads_total": Payload.objects.all().count(),
             "total_medics": Payload.objects.total_medics(),
             "rx_by_today": Payload.objects.rx_by_today(_now).count(),
 
