@@ -202,7 +202,7 @@ def pubkey_string_to_rsa(string_key):
     '''Take a public key created with jsencrypt and convert it into
     a rsa data of python'''
 
-    with open('pubkey.pem','wb') as file:
+    with open('pubkey.pem', 'wb') as file:
         file.write(string_key.encode())
 
     with open('pubkey.pem', 'rb') as file:

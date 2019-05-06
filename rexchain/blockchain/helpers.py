@@ -23,11 +23,12 @@ def genesis_hash_generator(size=64, chars=string.ascii_uppercase + string.digits
 
 
 GENESIS_INIT_DATA = {
-    "hashes" : [
+    "hashes": [
         hashlib.sha256(b"chucho").hexdigest(),
         hashlib.sha256(b"cheve").hexdigest(),
-        hashlib.sha256(b"bere").hexdigest(),
-]}
+        hashlib.sha256(b"bere").hexdigest()
+    ]}
+
 
 def get_genesis_merkle_root():
     ''' Get first '''
