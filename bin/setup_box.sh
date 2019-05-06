@@ -22,4 +22,7 @@ sudo -i -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE mydb TO vagrant;"
 echo "=> Installing requirements..."
 sudo python3.6 -m pip install -r /vagrant/requirements.txt
 
+echo "=> Check flake8 for python lint..."
+sudo python3.6 -m pip install -U flake8
+
 echo "=> End config box..."
