@@ -98,7 +98,7 @@ def tx_detail(request, hash_id=False):
         context = dict()
         try:
             rx = Payload.objects.get(hash_id=hash_id)
-        except Exception as e:
+        except:  # noqa : F841
             try:
                 rx = Payload.objects.get(transaction__txid=hash_id)
             except Exception as e:

@@ -17,7 +17,8 @@ from collections import OrderedDict
 def calculate_hash(index, previousHash, timestamp, data):
     # Calculate hash
     hash_obj = hashlib.sha256(
-        str(index) + previousHash + str(timestamp) + data)
+                    str(index).encode() + previousHash.encode() + str(timestamp).encode() + data.encode())
+
     return hash_obj.hexdigest()
 
 
@@ -200,8 +201,9 @@ class PoE(object):
 def pubkey_string_to_rsa(string_key):
     '''Take a public key created with jsencrypt and convert it into
     a rsa data of python'''
+
     with open('pubkey.pem', 'wb') as file:
-        file.write(string_key)
+        file.write(string_key.encode())
 
     with open('pubkey.pem', 'rb') as file:
         pub_key = file.read()
@@ -240,10 +242,13 @@ def pubkey_base64_to_rsa(base64_key):
 
 
 def ordered_data(data):
-    ''' Orderer data '''
+    ''' This method order a variable if is a dictionary if not return the same variable '''
     logger = logging.getLogger('django_info')
 
     if data is None:
+        return data
+
+    if isinstance(data, str):
         return data
 
     if isinstance(data, list):
@@ -251,7 +256,6 @@ def ordered_data(data):
         for item in data:
             _new_list.append(OrderedDict(
                 sorted(item.items(), key=lambda x: x[0])))
-
         return _new_list
 
     else:

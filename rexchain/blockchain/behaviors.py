@@ -49,14 +49,14 @@ class IOBlockchainize(models.Model):
         ''' Create raw html and encode '''
         msg = (
             self.public_key +
-            json.dumps(self.data) +
-            timezone.now().isoformat() +
-            self.previous_hash +
-            str(self.is_valid) +
-            str(self.readable) +
-            self.signature
+            json.dumps(self.data).encode() +
+            timezone.now().isoformat().encode() +
+            self.previous_hash.encode() +
+            str(self.is_valid).encode() +
+            str(self.readable).encode() +
+            self.signature.encode()
         )
-        self.raw_msg = msg.encode('utf-8')
+        self.raw_msg = str(msg).encode('utf-8')
 
     def raw_size(self):
         ''' get size of model '''
@@ -85,4 +85,4 @@ class IOBlockchainize(models.Model):
 
     def destroy_data(self):
         ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
-        self.data = [hashlib.sha256(json.dumps(self.data)).hexdigest()]
+        self.data = [hashlib.sha256(str(json.dumps(self.data).encode()).encode('utf-8')).hexdigest()]
