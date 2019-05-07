@@ -150,11 +150,11 @@ class TransactionManager(models.Manager):
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
         # Get Public Key from API None per default
-        data = data["data"]
         raw_pub_key = data.get("public_key", None)
         if not raw_pub_key:
             logger.error("[get public key ERROR]: Couldn't find public key outside data")
 
+        data = data["data"]
         ''' When timestamp is convert to python datetime needs this patch '''
         # timestamp = data["timestamp"]
         # timestamp.replace(tzinfo=timezone.utc)
