@@ -39,7 +39,3 @@ django-rq==1.0.0
 
 # Jira
 jira==2.0.0
-
-# linter
-flake8
-bandit
