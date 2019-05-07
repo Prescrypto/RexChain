@@ -242,10 +242,13 @@ def pubkey_base64_to_rsa(base64_key):
 
 
 def ordered_data(data):
-    ''' Orderer data '''
+    ''' This method order a variable if is a dictionary if not return the same variable '''
     logger = logging.getLogger('django_info')
 
     if data is None:
+        return data
+
+    if isinstance(data, str):
         return data
 
     if isinstance(data, list):
@@ -253,7 +256,6 @@ def ordered_data(data):
         for item in data:
             _new_list.append(OrderedDict(
                 sorted(item.items(), key=lambda x: x[0])))
-
         return _new_list
 
     else:
