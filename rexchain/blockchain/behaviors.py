@@ -85,4 +85,4 @@ class IOBlockchainize(models.Model):
 
     def destroy_data(self):
         ''' Destroy data if transfer ownership (Adjust Logic if model change) '''
-        self.data = [hashlib.sha256(json.dumps(self.data)).hexdigest()]
+        self.data = [hashlib.sha256(str(json.dumps(self.data).encode()).encode('utf-8')).hexdigest()]
