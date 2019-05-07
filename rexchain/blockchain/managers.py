@@ -128,7 +128,7 @@ class TransactionManager(models.Manager):
 
         # TODO ordered data
         try:
-            json.dumps(data['data'], separators=(',', ':'))
+            json.dumps(data, separators=(',', ':'))
         except Exception as e:
             logger.error("[ERROR in reading data] {}, Type {}".format(e, type(e)))
             # _msg = ""
