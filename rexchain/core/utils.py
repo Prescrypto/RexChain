@@ -61,7 +61,7 @@ class Hashcash(object):
         amount_zeros = int(ceil(bits/4.))
         zeros = '0'*amount_zeros
         valid_sha = False
-        sha = sha256(challenge + hex(counter)[2:]).hexdigest()
+        sha = sha256(challenge.encode() + hex(counter)[2:].encode()).hexdigest()
         if sha[:amount_zeros] == zeros:
             if self.debug:
                 self.logger.info("[SUCCESS] SHA FOUND IT : {}".format(sha))

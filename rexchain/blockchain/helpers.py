@@ -4,11 +4,11 @@ import os
 import string
 import hashlib
 import merkletools
-import cPickle
 import binascii
 import base64
 import logging
 import random
+import _pickle as cPickle
 
 # New cryptographic library
 from Crypto.PublicKey import RSA
@@ -24,9 +24,9 @@ def genesis_hash_generator(size=64, chars=string.ascii_uppercase + string.digits
 
 GENESIS_INIT_DATA = {
     "hashes": [
-        hashlib.sha256("chucho").hexdigest(),
-        hashlib.sha256("cheve").hexdigest(),
-        hashlib.sha256("bere").hexdigest(),
+        hashlib.sha256(b"chucho").hexdigest(),
+        hashlib.sha256(b"cheve").hexdigest(),
+        hashlib.sha256(b"bere").hexdigest()
     ]}
 
 
@@ -160,6 +160,7 @@ class CryptoTools(object):
 
     def verify(self, message, signature, PublicKey):
         '''Verify if a signed message is valid'''
+        message = message.encode()
         if self.has_legacy_keys:
             return self._verify(message, signature, PublicKey)
         else:

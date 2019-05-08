@@ -128,7 +128,7 @@ class TransactionManager(models.Manager):
 
         # TODO ordered data
         try:
-            json.dumps(data['data'], separators=(',', ':'))
+            json.dumps(data, separators=(',', ':'))
         except Exception as e:
             logger.error("[ERROR in reading data] {}, Type {}".format(e, type(e)))
             # _msg = ""
@@ -153,8 +153,8 @@ class TransactionManager(models.Manager):
         raw_pub_key = data.get("public_key", None)
         if not raw_pub_key:
             logger.error("[get public key ERROR]: Couldn't find public key outside data")
-        data = data["data"]
 
+        data = data["data"]
         ''' When timestamp is convert to python datetime needs this patch '''
         # timestamp = data["timestamp"]
         # timestamp.replace(tzinfo=timezone.utc)

@@ -27,14 +27,14 @@ get server running and start creating stuff
 vagrant ssh
 
 $ cd /vagrant/rexchain
-$ python manage.py migrate
-$ python manage.py loaddata ./fixtures/initial_data.json
-$ python manage.py runserver [::]:8000
+$ python3.6 manage.py migrate
+$ python3.6 manage.py loaddata ./fixtures/initial_data.json
+$ python3.6 manage.py runserver [::]:8000
 
 Wake Up Redis Worker
 Open a new window console enter to ssh of vagrant and run these commands
 $ cd /vagrant/rexchain
-$ python manage.py rqworker high default low
+$ python3.6 manage.py rqworker high default low
 ```
 
 
