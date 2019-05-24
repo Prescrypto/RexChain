@@ -102,14 +102,14 @@ def tx_detail(request, hash_id=False):
             try:
                 rx = Payload.objects.get(transaction__txid=hash_id)
             except Exception as e:
-                print("Error :%s, type(%s)" % (e, type(e)))
-                return redirect("/block/?block_hash=%s" % hash_id)
+                logger.error("Error :{}, type({})".format(e, type(e)))
+                return redirect("/block/?block_hash=%s".format(hash_id))
 
         _payload = PayloadSerializer(rx)
 
         context.update({
             "rx": rx,
-            "payload": json.dumps(_payload.data, sort_keys=True, indent=4),
+            "payload": json.dumps(_payload.data, sort_keys=True, indent=4, ensure_ascii=False),
         })
         return render(request, "blockchain/rx_detail.html", context)
 
@@ -132,7 +132,7 @@ def qr_code(request, hash_rx=False):
         img = get_qr_code(rx.get_priv_key)
         return HttpResponse(img, content_type="image/jpeg")
     except Exception as e:
-        print("Error :%s, type(%s)" % (e, type(e)))
+        logger.error("Error :{}, type({})".format(e, type(e)))
         return HttpResponse("Not Found", content_type="text/plain")
 
 
@@ -160,6 +160,6 @@ def block_detail(request, block_hash=False):
             return render(request, "blockchain/block_detail.html", context)
 
         except Exception as e:
-            print("Error found: %s, type: %s" % (e, type(e)))
+            logger.error("Error found: {}, type: {}".format(e, type(e)))
 
     return redirect("/")

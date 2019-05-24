@@ -128,7 +128,7 @@ class TransactionManager(models.Manager):
 
         # TODO ordered data
         try:
-            json.dumps(data, separators=(',', ':'))
+            json.dumps(data, separators=(',', ':'), ensure_ascii=False)
         except Exception as e:
             logger.error("[ERROR in reading data] {}, Type {}".format(e, type(e)))
             # _msg = ""
@@ -166,7 +166,7 @@ class TransactionManager(models.Manager):
             data = iterate_and_order_json(data)
             # Then we order the json
             data_sorted = ordered_data(data)
-            _payload = json.dumps(data_sorted, separators=(',', ':'))
+            _payload = json.dumps(data_sorted, separators=(',', ':'), ensure_ascii=False)
 
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
