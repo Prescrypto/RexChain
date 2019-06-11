@@ -53,7 +53,8 @@ class CryptoTools(object):
 
     def _number_random(self):
         '''Take a number between 180 to 220'''
-        return random.randint(180, 220)
+        sys_random = SystemRandom()
+        return sys_random.randint(180, 220)
 
     def bin2hex(self, binStr):
         '''convert str to hex '''
