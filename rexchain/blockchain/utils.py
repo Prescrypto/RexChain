@@ -6,7 +6,7 @@ import merkletools
 import requests
 import qrcode
 
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import RSA  # nosec B413
 # PoE
 from blockcypher import embed_data, get_transaction_details
 from core.helpers import create_jira_issue

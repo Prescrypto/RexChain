@@ -10,11 +10,13 @@ import logging
 import _pickle as cPickle
 from random import SystemRandom
 
+''' TODO: Verify if we follow Bandit recommendation, i.e. change
+    from Crypto library to pyca/cryptographic library'''
 # New cryptographic library
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-from Crypto.Hash import SHA256
-from Crypto.Signature import pkcs1_15
+from Crypto.PublicKey import RSA  # nosec B413
+from Crypto.Cipher import PKCS1_OAEP  # nosec B413
+from Crypto.Hash import SHA256  # nosec B413
+from Crypto.Signature import pkcs1_15  # nosec B413
 
 
 # Basic functions and vars for genesis generation
