@@ -122,7 +122,8 @@ class Hashcash(object):
         """
         alphabet = ascii_letters + "+-/"
         # Return a string type
-        return ''.join([choice(alphabet) for _ in [None]*long_from_chain])
+        sys_random = SystemRandom()
+        return ''.join([sys_random.choice(alphabet) for _ in [None]*long_from_chain])
 
     def _format_date(self, DATE):
         """Receive a string and give it a time format.
