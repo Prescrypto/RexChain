@@ -5,7 +5,7 @@ import logging
 from hashlib import sha256
 from string import ascii_letters
 from math import ceil
-from random import choice
+from random import SystemRandom
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.conf import settings

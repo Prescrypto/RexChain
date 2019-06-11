@@ -7,8 +7,8 @@ import merkletools
 import binascii
 import base64
 import logging
-import random
 import _pickle as cPickle
+from random import SystemRandom
 
 # New cryptographic library
 from Crypto.PublicKey import RSA
