@@ -4,9 +4,8 @@ import hashlib
 import logging
 import merkletools
 import requests
-import qrcode
 
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import RSA  # nosec B413
 # PoE
 from blockcypher import embed_data, get_transaction_details
 from core.helpers import create_jira_issue
@@ -53,22 +52,6 @@ def is_rx_in_block(target_rx, block):
     proof = mtn.get_proof(n)
     logger.error("Proof: {}".format(proof))
     return mtn.validate_proof(proof, target_rx.transaction.txid, block.merkleroot)
-
-
-def get_qr_code(data, file_path="/tmp/qrcode.jpg"):
-    ''' Create a QR Code Image and return it '''
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
-    img = qr.make_image()
-    img.save(file_path)
-    with open(file_path, "rb") as f:
-        return f.read()
 
 
 class PoE(object):

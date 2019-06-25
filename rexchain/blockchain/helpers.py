@@ -7,19 +7,22 @@ import merkletools
 import binascii
 import base64
 import logging
-import random
 import _pickle as cPickle
+from random import SystemRandom
 
+''' TODO: Verify if we follow Bandit recommendation, i.e. change
+    from Crypto library to pyca/cryptographic library'''
 # New cryptographic library
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-from Crypto.Hash import SHA256
-from Crypto.Signature import pkcs1_15
+from Crypto.PublicKey import RSA  # nosec B413
+from Crypto.Cipher import PKCS1_OAEP  # nosec B413
+from Crypto.Hash import SHA256  # nosec B413
+from Crypto.Signature import pkcs1_15  # nosec B413
 
 
 # Basic functions and vars for genesis generation
 def genesis_hash_generator(size=64, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+    sys_random = SystemRandom()
+    return ''.join(sys_random.choice(chars) for _ in range(size))
 
 
 GENESIS_INIT_DATA = {
@@ -52,7 +55,8 @@ class CryptoTools(object):
 
     def _number_random(self):
         '''Take a number between 180 to 220'''
-        return random.randint(180, 220)
+        sys_random = SystemRandom()
+        return sys_random.randint(180, 220)
 
     def bin2hex(self, binStr):
         '''convert str to hex '''
@@ -194,9 +198,8 @@ class CryptoTools(object):
         '''This method create a pair RSA keys with entropy created by the user in FE'''
         try:
             privatekey = RSA.generate(2048, randfunc=self.entropy)
-        except Exception as e:  # noqa: F841
-            self.logger.error('{}'.format(e))
-            self.logger.error("[CryptoTool, create_key_with_entropy ERROR] Entropy not enough")
+        except Exception:
+            self.logger.error("[Create_key_with_entropy ERROR] Entropy not enough")
             privatekey = None
 
         if privatekey is None:

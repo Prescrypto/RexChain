@@ -12,7 +12,6 @@ from django.views.generic import View
 # Our Models
 from django.conf import settings
 from .models import Payload, Block, Transaction
-from .utils import get_qr_code
 # Blockcypher
 from api.views import PayloadSerializer
 
@@ -122,17 +121,6 @@ def rx_priv_key(request, hash_rx=False):
         rx = Payload.objects.get(hash_id=hash_rx)
         return HttpResponse(rx.get_priv_key, content_type="text/plain")
     except Exception as e:  # noqa: F841
-        return HttpResponse("Not Found", content_type="text/plain")
-
-
-def qr_code(request, hash_rx=False):
-    # Temporary way to show qrcode just for test, remove later
-    try:
-        rx = Payload.objects.get(hash_id=hash_rx)
-        img = get_qr_code(rx.get_priv_key)
-        return HttpResponse(img, content_type="image/jpeg")
-    except Exception as e:
-        logger.error("Error :{}, type({})".format(e, type(e)))
         return HttpResponse("Not Found", content_type="text/plain")
 
 
