@@ -5,7 +5,7 @@ import logging
 from hashlib import sha256
 from string import ascii_letters
 from math import ceil
-from random import choice
+from random import SystemRandom
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.conf import settings
@@ -122,7 +122,8 @@ class Hashcash(object):
         """
         alphabet = ascii_letters + "+-/"
         # Return a string type
-        return ''.join([choice(alphabet) for _ in [None]*long_from_chain])
+        sys_random = SystemRandom()
+        return ''.join([sys_random.choice(alphabet) for _ in [None]*long_from_chain])
 
     def _format_date(self, DATE):
         """Receive a string and give it a time format.

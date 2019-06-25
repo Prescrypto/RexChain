@@ -4,5 +4,7 @@ python:
 install: "pip install -r requirements.txt"
 before_script:
   - pip install flake8
+  - pip install bandit
 script:
   - flake8
+  - bandit -r ./
