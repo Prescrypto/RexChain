@@ -198,9 +198,8 @@ class CryptoTools(object):
         '''This method create a pair RSA keys with entropy created by the user in FE'''
         try:
             privatekey = RSA.generate(2048, randfunc=self.entropy)
-        except Exception as e:  # noqa: F841
-            self.logger.error('{}'.format(e))
-            self.logger.error("[CryptoTool, create_key_with_entropy ERROR] Entropy not enough")
+        except Exception:
+            self.logger.error("[Create_key_with_entropy ERROR] Entropy not enough")
             privatekey = None
 
         if privatekey is None:

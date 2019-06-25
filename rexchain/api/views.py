@@ -66,8 +66,8 @@ class PayloadViewSet(viewsets.ModelViewSet):
             try:
                 # pub_key = _crypto.get_pub_key_from_pem(raw_public_key)
                 hex_raw_pub_key = _crypto.savify_key(pub_key)
-            except Exception as e:
-                logger.error("[Public Key Error]:{}, type:{}".format(e, type(e)))
+            except Exception:
+                logger.error("[Public Key Error] Non valid Public Key")
                 raise NonValidPubKey
 
             return Payload.objects.filter(public_key=hex_raw_pub_key).order_by('-id')
@@ -140,7 +140,7 @@ class AddressViewSet(viewsets.ModelViewSet):
             try:
                 pub_key_b64 = pubkey_base64_from_uri(raw_public_key)
 
-            except Exception as e:  # noqa: F841
+            except Exception:
                 raise NonValidPubKey
             else:
                 _address = Address.objects.get_or_create_rsa_address(pub_key_b64)

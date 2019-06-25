@@ -169,7 +169,7 @@ class TransactionManager(models.Manager):
             _payload = json.dumps(data_sorted, separators=(',', ':'), ensure_ascii=False)
 
         except Exception as e:
-            logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
+            logger.error("[create_tx ERROR]: {}, type:{}".format(e, type(e)))
 
         _is_valid_tx = False
         _rx_before = None
@@ -177,8 +177,8 @@ class TransactionManager(models.Manager):
         try:
             # Prescript unsavify method
             pub_key = self._crypto.un_savify_key(raw_pub_key)
-        except Exception as e:
-            logger.error("[Key is b64 WARNING]: {}, type:{}".format(e, type(e)))
+        except Exception:
+            logger.error("[create_tx WARNING]: The key is base64")
             # Attempt to create public key with base64 with js payload
             pub_key, raw_pub_key = pubkey_base64_to_rsa(raw_pub_key)
 
@@ -191,7 +191,7 @@ class TransactionManager(models.Manager):
         if _previous_hash == '0':
             # It's a initial transaction
             if self._crypto.verify(_payload, _signature, pub_key):
-                logger.info("[CREATE_TX] Tx valid!")
+                logger.info("[create_tx] Tx valid!")
                 _is_valid_tx = True
 
         else:
