@@ -126,14 +126,11 @@ class TransactionManager(models.Manager):
             logger.info("[IS_TRANSFER_VALID]The before_rx is not readable")
             return (False, before_rx)
 
-        # TODO ordered data
+        # TODO add verify method completed on transfer also check wallet compatibility!
         try:
-            json.dumps(data, separators=(',', ':'))
             json.dumps(data, separators=(',', ':'), ensure_ascii=False)
         except Exception as e:
             logger.error("[ERROR in reading data] {}, Type {}".format(e, type(e)))
-            # _msg = ""
-        # TODO add verify files data too
 
         # if not self._crypto.verify(_msg, _signature, self._crypto.un_savify_key(before_rx.public_key)):
         #     logger.info("[IS_TRANSFER_VALID]Signature is not valid!")
