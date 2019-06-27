@@ -10,6 +10,13 @@ from jira import JIRA
 logger = logging.getLogger('django_info')
 
 
+def logger_debug(message):
+    if settings.DEBUG:
+        logger.info(message)
+    else:
+        pass
+
+
 def safe_set_cache(key, value):
     ''' Just kind '''
     try:

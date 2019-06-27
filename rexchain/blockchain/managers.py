@@ -15,7 +15,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.cache import cache
 from core.utils import Hashcash
-from core.helpers import safe_set_cache, get_timestamp
+from core.helpers import safe_set_cache, get_timestamp, logger_debug
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
 from .utils import calculate_hash, PoE, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
 from .querysets import (
@@ -126,13 +126,11 @@ class TransactionManager(models.Manager):
             logger.info("[IS_TRANSFER_VALID]The before_rx is not readable")
             return (False, before_rx)
 
-        # TODO ordered data
+        # TODO add verify method completed on transfer also check wallet compatibility!
         try:
             json.dumps(data, separators=(',', ':'), ensure_ascii=False)
         except Exception as e:
             logger.error("[ERROR in reading data] {}, Type {}".format(e, type(e)))
-            # _msg = ""
-        # TODO add verify files data too
 
         # if not self._crypto.verify(_msg, _signature, self._crypto.un_savify_key(before_rx.public_key)):
         #     logger.info("[IS_TRANSFER_VALID]Signature is not valid!")
@@ -190,6 +188,7 @@ class TransactionManager(models.Manager):
         ''' Check initial or transfer '''
         if _previous_hash == '0':
             # It's a initial transaction
+            logger_debug(_payload)
             if self._crypto.verify(_payload, _signature, pub_key):
                 logger.info("[create_tx] Tx valid!")
                 _is_valid_tx = True
