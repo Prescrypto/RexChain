@@ -180,7 +180,7 @@ class CryptoTools(object):
         try:
             return rsa.verify(message, signature, PublicKey)
         except Exception as e:  # noqa: F841
-            self.logger.error("[CryptoTool, verify ERROR ] Legacy Metod, Signature or message are corrupted")
+            self.logger.error("[CryptoTool, verify ERROR ] Legacy Method, Signature or message are corrupted")
             return False
 
     def entropy(self, number):
