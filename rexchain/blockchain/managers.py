@@ -166,7 +166,7 @@ class TransactionManager(models.Manager):
             data = iterate_and_order_json(data)
             # Then we order the json
             data_sorted = ordered_data(data)
-            _payload = json.dumps(data_sorted, separators=(',', ':'), ensure_ascii=False)
+            _payload = json.dumps(data_sorted, separators=(',', ':'))
 
         except Exception as e:
             logger.error("[create_tx1 ERROR]: {}, type:{}".format(e, type(e)))
