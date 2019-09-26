@@ -32,8 +32,8 @@ class AddressBitcoin(object):
         '''This method create a valid bitcoin address given a base64 RSA publick key'''
 
         # This functions are based in https://github.com/Destiner/blocksmith
-
-        key_hex = codecs.encode(publickey_b64, 'hex')
+        # Adding .encode() to pub key in order to support python3
+        key_hex = codecs.encode(publickey_b64.encode(), 'hex')
         # Get X from the key (first half)
         key_string = key_hex.decode('utf-8')
         half_len = len(key_hex) // 2
