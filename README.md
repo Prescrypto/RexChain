@@ -17,7 +17,7 @@ All the current implementations of blockchains are tightly coupled with the larg
 * Access to the database is enabled by Asymetric Cryptography
 * Proof-of-work thourght Hashcash (http://www.hashcash.org/hashcash.pdf) for to stop fake data from being created.
 * Transactions: You can transfer data through [Prescrypto Wallet](https://prescrypto.github.io/wallet/deploy/feature_rexchain_wallet/) [See more over __Transactions__ concept in our [wiki](https://github.com/Prescrypto/RexChain/wiki/Transacciones)].
-* Distributed version: This is step follow. 
+* Distributed version: This is step follow.
 
 ### Quick start
 (set up node and mine 1 block)
@@ -45,7 +45,7 @@ curl http://localhost:8080/api/v1/block
 ```
 ##### Create block
 ```
-# Public Key is an binari exadecimal representation of publick_key made by rsa python library
+# The field "public_key" is an binary hexadecimal representation of a Public Key object made by rsa python library
 curl -X POST \
   http://127.0.0.1:8000/api/v1/rx-endpoint/ \
   -H 'Content-Type: application/json' \
