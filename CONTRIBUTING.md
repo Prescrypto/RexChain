@@ -46,8 +46,8 @@ git remote add Prescrypto https://github.com/Prescrypto/RexChain
 git fetch prescrypto
 
 __Create a virtualenv:__  
-python3 -m venv env
-. env/bin/activate
- or "env\Scripts\activate" on Windows
+python3 -m venv env  
+. env/bin/activate  
+ or "env\Scripts\activate" on Windows  
 
 ### ...The complete guidelines would be able soon :) 
