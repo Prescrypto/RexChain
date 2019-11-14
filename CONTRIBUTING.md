@@ -25,6 +25,11 @@ Please use Flake8 to check your code style. You may also wish to use Black's Edi
 Include tests if your patch is supposed to solve a bug, and explain clearly under which circumstances the bug happens. Make sure the test fails without your patch.
 Include a string like "Fixes #543" in your commit message (where 543 is the issue you fixed). See Closing issues using keywords.
 
+### Submiting new features  
+Please open a new issue about the feature you want to propose prior to submitting a PR so it can be discussed.
+#### TODO list:
+* Implement search endpoints specific payload data fields (ie: medic, patient, etc.)
+
 ### First time setup
 __Download and install the latest version of git.__
 
@@ -60,6 +65,4 @@ __#Wake Up Redis Worker__
 __#Open a new window console enter to ssh of vagrant and run these commands__  
 $ cd /vagrant/rexchain  
 $ python3.6 manage.py rqworker high default low  
-
-
-### ...The complete guidelines would be able soon :) 
+  
