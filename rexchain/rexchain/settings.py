@@ -181,6 +181,9 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Fixtures DIR for testings
+FIXTURE_DIRS = [os.path.join(BASE_DIR, 'fixtures')]
+
 # Redis Cache
 CACHES = {
     "default": {
