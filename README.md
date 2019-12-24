@@ -4,6 +4,11 @@
 [![Build Status](https://travis-ci.org/Prescrypto/RexChain.svg?branch=master)](https://travis-ci.org/Prescrypto/RexChain)
 
 
+![Coverage Report](./rexchain/coverage.svg)
+<img src="./rexchain/coverage.svg">
+
+
+
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This leaves little room to implement different solutions. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible, completely designed around electronic medical prescriptions.
 
@@ -108,7 +113,17 @@ Python Coverage monitors your program, noting which parts of the code have been 
 
 To run the coverage follow the next scripts
 
+```bash
+$ coverage run manage.py test api.tests
+$ coverage report -m
 ```
-coverage run manage.py test api.tests
-coverage report -m
+
+## Before commit -  Add coverage badge
+
+You must run the following commands in order to add the coverage badge:
+
+```bash
+$ coverage-badge -o coverage.svg
 ```
+
+Note: Run coverage command and coverage report is required!
