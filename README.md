@@ -1,6 +1,9 @@
 
 # RexChain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain and ported into Python, but no original code remains.
 
+[![Build Status](https://travis-ci.org/Prescrypto/RexChain.svg?branch=master)](https://travis-ci.org/Prescrypto/RexChain)
+
+
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This leaves little room to implement different solutions. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible, completely designed around electronic medical prescriptions.
 
