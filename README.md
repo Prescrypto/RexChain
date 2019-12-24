@@ -85,7 +85,7 @@ To use the linter on your code, execute the following command on your console, t
 
 More [documentation about it](http://flake8.pycqa.org/en/latest/)
 
-## TODO Test for API
+## Test for API
 
 `cd /vagrant/rexchain/`
 
@@ -105,7 +105,7 @@ The console can ask the following:
 
 Enter `yes` for test continue.
 
-## TODO Run Coverage
+## Run Coverage
 
 Python Coverage monitors your program, noting which parts of the code have been executed, then analyzes the source to identify code that could have been executed but was not.
 
