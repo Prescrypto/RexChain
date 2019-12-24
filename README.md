@@ -4,9 +4,7 @@
 [![Build Status](https://travis-ci.org/Prescrypto/RexChain.svg?branch=master)](https://travis-ci.org/Prescrypto/RexChain)
 
 
-![Coverage Report](./rexchain/coverage.svg)
-<img src="./rexchain/coverage.svg">
-
+![Rexchain Coverage Report](./rexchain/coverage.svg)
 
 
 ### Motivation
