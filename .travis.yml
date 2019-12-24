@@ -1,7 +1,13 @@
 language: python
+dist: xenial
 python:
   - "3.6"
+addons:
+  postgresql: "9.6"
 install: "pip install -r requirements.txt"
+services:
+  - postgresql
+  - redis-server
 before_script:
   - pip install flake8
   - pip install bandit
@@ -9,5 +15,5 @@ before_script:
 script:
   - flake8
   - bandit -r ./
-  - coverage run prescript/manage.py test
+  - coverage run rexchain/manage.py test
   - coverage report -m
