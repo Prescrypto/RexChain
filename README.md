@@ -81,3 +81,34 @@ To use the linter on your code, execute the following command on your console, t
 `$ flake8`
 
 More [documentation about it](http://flake8.pycqa.org/en/latest/)
+
+## TODO Test for API
+
+`cd /vagrant/rexchain/`
+
+`python3.6 manage.py test api.tests`
+
+The test ends successfully when the console shows:
+
+`Ran 1 test`
+
+`OK`
+
+__Remark__
+
+The console can ask the following:
+
+`Type 'yes' if you would like to try deleting the test database 'test_mydb', or 'no' to cancel:`
+
+Enter `yes` for test continue.
+
+## TODO Run Coverage
+
+Python Coverage monitors your program, noting which parts of the code have been executed, then analyzes the source to identify code that could have been executed but was not.
+
+To run the coverage follow the next scripts
+
+```
+coverage run manage.py test api.tests
+coverage report -m
+```
