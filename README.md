@@ -1,6 +1,12 @@
 
 # RexChain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain and ported into Python, but no original code remains.
 
+[![Build Status](https://travis-ci.org/Prescrypto/RexChain.svg?branch=master)](https://travis-ci.org/Prescrypto/RexChain)
+
+
+![Rexchain Coverage Report](./rexchain/coverage.svg)
+
+
 ### Motivation
 All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This leaves little room to implement different solutions. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible, completely designed around electronic medical prescriptions.
 
@@ -78,3 +84,44 @@ To use the linter on your code, execute the following command on your console, t
 `$ flake8`
 
 More [documentation about it](http://flake8.pycqa.org/en/latest/)
+
+## Test for API
+
+`cd /vagrant/rexchain/`
+
+`python3.6 manage.py test api.tests`
+
+The test ends successfully when the console shows:
+
+`Ran 1 test`
+
+`OK`
+
+__Remark__
+
+The console can ask the following:
+
+`Type 'yes' if you would like to try deleting the test database 'test_mydb', or 'no' to cancel:`
+
+Enter `yes` for test continue.
+
+## Run Coverage
+
+Python Coverage monitors your program, noting which parts of the code have been executed, then analyzes the source to identify code that could have been executed but was not.
+
+To run the coverage follow the next scripts
+
+```bash
+$ coverage run manage.py test api.tests
+$ coverage report -m
+```
+
+## Before commit -  Add coverage badge
+
+You must run the following commands in order to add the coverage badge:
+
+```bash
+$ coverage-badge -o coverage.svg
+```
+
+Note: Run coverage command and coverage report is required!
