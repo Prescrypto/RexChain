@@ -22,4 +22,8 @@ sudo apt-get install python-pip
 echo "*******************************************"
 echo "Installing from requirements.txt"
 echo "*******************************************"
-sudo pip install -r /vagrant/requirements.txt
+sudo python3.6 -m pip install -r /vagrant/requirements.txt
+
+echo "=> Check coverage install..."
+sudo python3.6 -m pip install -U coverage
+sudo python3.6 -m pip install -U coverage-badge
