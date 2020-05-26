@@ -102,7 +102,7 @@ def tx_detail(request, hash_id=False):
                 rx = Payload.objects.get(transaction__txid=hash_id)
             except Exception as e:
                 logger.error("Error :{}, type({})".format(e, type(e)))
-                return redirect("/block/?block_hash=%s".format(hash_id))
+                return redirect("/block/?block_hash={}".format(hash_id))
 
         _payload = PayloadSerializer(rx)
 
