@@ -166,7 +166,7 @@ class PoE(object):
                 self.logger.info('[PoE data]:{}'.format(data))
                 return data.get("hash", "")
             else:
-                self.logger.error("Type of data:".format(type(data)))
+                self.logger.error("Type of data:{}".format(type(data)))
                 return None
         except Exception as e:
             _message_error = "[PoE ERROR] Error returning hash from embed data, Error :{}, Type: {}"
