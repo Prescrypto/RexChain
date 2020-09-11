@@ -85,6 +85,8 @@ To use the linter on your code, execute the following command on your console, t
 
 More [documentation about it](http://flake8.pycqa.org/en/latest/)
 
+## If you are interested in collaborate with us please follow the [contribution guidelines](https://github.com/Prescrypto/RexChain/blob/feature/contributor_guidelines/CONTRIBUTING.md).
+
 ## Test for API
 
 `cd /vagrant/rexchain/`
