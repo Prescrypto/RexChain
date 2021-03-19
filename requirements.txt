@@ -10,7 +10,7 @@ psycopg2-binary==2.7.5
 # DRF
 django-filter==1.1.0
 Markdown==2.6.11
-djangorestframework==3.7.7
+djangorestframework==3.11.2
 django-cors-headers==2.0.2
 
 # crypto
