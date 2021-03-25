@@ -37,6 +37,11 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 BLOCK_SIZE = int(os.environ["BLOCK_SIZE"])
 
+# NOM151 Reachcore env vars
+REACHCORE_ENTITY = os.environ["REACHCORE_ENTITY"]
+REACHCORE_USER = os.environ["REACHCORE_USER"]
+REACHCORE_PASS = os.environ["REACHCORE_PASS"]
+
 # JIRA SETTINGS
 JIRA_URL = os.environ["JIRA_URL"]
 JIRA_USER = os.environ["JIRA_USER"]
