@@ -1,5 +1,7 @@
 import base64
 import requests
+import subprocess
+import shlex
 
 from tempfile import TemporaryDirectory as TempD
 
@@ -29,7 +31,8 @@ body_xml = """
 class ReachCore:
     """
         Class to handle rich core methods and connections
-        reference = "Merkle hash"
+        referencia = "merkle_root" as a valid str sha256 hash
+        solicitud = doc_file as a valid base64 str
     """
 
     ENTITY = settings.REACHCORE_ENTITY
@@ -44,23 +47,28 @@ class ReachCore:
 
         if settings.PRODUCTION:
             self.BASE = "https://nom151.advantage-security.com/wsnom151/webservice.asmx?WSDL"
+            self.POLICY = "2.16.484.101.10.316.2.1.1.2.1"
         else:
             self.BASE = "https://pilot-psc.reachcore.com/wsnom151/webservice.asmx?WSDL"
+            self.POLICY = "1.16.484.101.10.316.1.2"
 
     def generate_proof(self, merkle_hash):
         """
             ReachCore endpoint [GeneraConstancia]
-            merkle_hash : str type and a valid sha256
+            merkle_hash : Must be a valid sha256 str, as the merkle root is
         """
         # Generates a temp directory where manipulate docs
 
         with TempD() as temp_dir:
             doc_path = temp_dir + "/doc_body.tsq"
             request_file = None
-
-            # Create request file and converting to base64 string
-            pass
-
+            # Prepare the command for the request file
+            command = "openssl ts -query -digest {merkle_hash} -sha256 -no_nonce -tspolicy {self.POLICY} -out {doc_path}"
+            args = shlex.split(command)
+            process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # Execute and wait the command result
+            stdout, stderr = process.communicate()
+            logger.info("Generated request file, stdout:{stdout}, stderr: {stderr}")
             # Read the file
             with open(doc_path, 'rb') as f:
                 request_file = base64.b64encode(f.read())
@@ -69,17 +77,19 @@ class ReachCore:
             # Create body content
             body = body_xml.format(user=self.USER, passwd=self.PASS, entity=self.ENTITY,
                                    reference=merkle_hash, doc_base64=request_file)
+            # For debug only
+            # logger.info(body)
 
             try:
                 # Send requests and get the content
-                r = requests.post(self.BASE, data=body, headers=self.HEADERS)
+                r = requests.post(self.BASE, data=body, headers=self.HEADERS, timeout=self.TIMEOUT)
 
                 if r.code_status == 200:
                     # save the file and save in the block the reference
-                    pass
+                    return r.text
                 else:
                     # Execute a default behauvior or try to do it in other time
-                    pass
+                    return None
 
             except Exception as e:
                 logger.error(F"[Generate Proof Error]: {e}, type: {type(e)}, merkle_hash: {merkle_hash}")
