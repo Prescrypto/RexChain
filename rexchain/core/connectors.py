@@ -1,6 +1,6 @@
 import base64
 import requests
-import subprocess
+import subprocess  # nosec B404
 import shlex
 
 from tempfile import TemporaryDirectory as TempD
@@ -10,8 +10,8 @@ from django.conf import settings
 from .helpers import logger
 
 
-body_xml = """
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xw="www.XMLWebServiceSoapHeaderAuth.net">
+body_xml = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" \
+xmlns:xw="www.XMLWebServiceSoapHeaderAuth.net">
     <soap:Header>
         <xw:AuthSoapHd>
             <xw:Usuario>{user}</xw:Usuario>
@@ -63,12 +63,18 @@ class ReachCore:
             doc_path = temp_dir + "/doc_body.tsq"
             request_file = None
             # Prepare the command for the request file
-            command = "openssl ts -query -digest {merkle_hash} -sha256 -no_nonce -tspolicy {self.POLICY} -out {doc_path}"
+            command = (F"openssl ts -query -digest {merkle_hash} -sha256 -no_nonce "
+                       F"-tspolicy {self.POLICY} -out {doc_path}")
             args = shlex.split(command)
-            process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # Execute and wait the command result
-            stdout, stderr = process.communicate()
-            logger.info("Generated request file, stdout:{stdout}, stderr: {stderr}")
+            try:
+                # Pass security params as check=True and shell=False - More details in Bandit B603
+                process = subprocess.run(args, check=True, shell=False)  # nosec B603
+            except Exception as e:
+                logger.info(F"[Error:{e} Generating File Request], stdout={process.stdout}")
+            else:
+                logger.info("Success Generated Request File")
+                return None
+
             # Read the file
             with open(doc_path, 'rb') as f:
                 request_file = base64.b64encode(f.read())
