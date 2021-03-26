@@ -42,6 +42,16 @@
             <td><a class="a_grey" href="{{ poe_url }}" target="_blank"> {{ message_poe }} </a></td>
           </tr>
         {% endif %}
+        {% if block_object.data.xml_response %}
+          <tr>
+            <td>Constancia - Nom151</td>
+            <td>{{ block_object.data.xml_response.Constancia }}</td>
+          </tr>
+          <tr>
+            <td>Folio de constancia - Nom151</td>
+            <td>{{ block_object.data.xml_response.Folio }}</td>
+          </tr>
+        {% endif %}
       </table>
     </div>
     </article>
