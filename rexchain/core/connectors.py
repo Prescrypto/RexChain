@@ -2,6 +2,7 @@ import base64
 import requests
 import subprocess  # nosec B404
 import shlex
+import xmltodict
 
 from tempfile import TemporaryDirectory as TempD
 
@@ -53,6 +54,7 @@ class ReachCore:
             self.POLICY = "1.16.484.101.10.316.1.2"
 
     def generate_proof(self, merkle_hash):
+        # TODO change merkle_hash as merkle_root
         """
             ReachCore endpoint [GeneraConstancia]
             merkle_hash : Must be a valid sha256 str, as the merkle root is
@@ -71,9 +73,10 @@ class ReachCore:
                 process = subprocess.run(args, check=True, shell=False)  # nosec B603
             except Exception as e:
                 logger.info(F"[Error:{e} Generating File Request], stdout={process.stdout}")
+                return None
             else:
                 logger.info("Success Generated Request File")
-                return None
+                
 
             # Read the file
             with open(doc_path, 'rb') as f:
@@ -89,11 +92,18 @@ class ReachCore:
             try:
                 # Send requests and get the content
                 r = requests.post(self.BASE, data=body, headers=self.HEADERS, timeout=self.TIMEOUT)
+                logger.info(F"Response: {r.status_code}")
+                logger.info(F"{r.content}")
 
-                if r.code_status == 200:
-                    # save the file and save in the block the reference
-                    return r.text
+                if r.status_code == 200:
+                    # Save the file and save in the block the reference
+                    parsed_result = xmltodict.parse(r.text)
+                    soap = parsed_result["soap:Envelope"]["soap:Body"]
+                    metadata = soap["GeneraConstanciaResponse"]["GeneraConstanciaResult"]
+                    metadata["xml_raw"] = r.text
+                    return metadata
                 else:
+                    # TODO Try to generate next block 
                     # Execute a default behauvior or try to do it in other time
                     return None
 

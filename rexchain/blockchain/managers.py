@@ -68,6 +68,7 @@ class BlockManager(models.Manager):
         connector = PoE()
         xml_response = connector.generate_proof(new_block.merkleroot)
         new_block.data["xml_response"] = xml_response
+        # TODO save new table data fields 
         # Save
         new_block.save()
 
