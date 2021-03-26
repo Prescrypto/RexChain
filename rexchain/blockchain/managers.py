@@ -16,14 +16,16 @@ from django.utils import timezone
 from django.core.cache import cache
 from core.utils import Hashcash
 from core.helpers import safe_set_cache, get_timestamp, logger_debug
+from core.connectors import ReachCore as PoE
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
-from .utils import calculate_hash, PoE, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
+from .utils import calculate_hash, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
 from .querysets import (
     PayloadQueryset,
     TransactionQueryset,
     AddressQueryset,
 )
 from .RSAaddresses import AddressBitcoin
+
 
 logger = logging.getLogger('django_info')
 
@@ -63,12 +65,9 @@ class BlockManager(models.Manager):
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
         # Proof of Existennce layer
-        _poe = PoE()  # init proof of existence element
-        txid = _poe.journal(new_block.merkleroot)
-        if txid is True:
-            new_block.poetxid = "True"
-        else:
-            new_block.poetxid = "False"
+        connector = PoE()
+        xml_response = connector.generate_proof(new_block.merkleroot)
+        new_block.data["xml_response"] = xml_response
         # Save
         new_block.save()
 
