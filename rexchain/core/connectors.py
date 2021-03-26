@@ -68,14 +68,13 @@ class ReachCore:
                        F"-tspolicy {self.POLICY} -out {doc_path}")
             args = shlex.split(command)
             try:
-                # Pass security params as check=True and shell=False - More details in Bandit B603
+                # Pass security params as check=True and shell = False - More details in Bandit B603
                 process = subprocess.run(args, check=True, shell=False)  # nosec B603
             except Exception as e:
                 logger.info(F"[Error:{e} Generating File Request], stdout={process.stdout}")
                 return None
             else:
                 logger.info("Success Generated Request File")
-                
 
             # Read the file
             with open(doc_path, 'rb') as f:
@@ -102,7 +101,7 @@ class ReachCore:
                     metadata["xml_raw"] = r.text
                     return metadata
                 else:
-                    # TODO Try to generate next block 
+                    # TODO Try to generate next block
                     # Execute a default behauvior or try to do it in other time
                     return None
 
