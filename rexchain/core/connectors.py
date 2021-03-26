@@ -32,7 +32,7 @@ xmlns:xw="www.XMLWebServiceSoapHeaderAuth.net">
 class ReachCore:
     """
         Class to handle rich core methods and connections
-        referencia = "merkle_root" as a valid str sha256 hash
+        referencia = "merkleroot" as a valid str sha256 hash
         solicitud = doc_file as a valid base64 str
     """
 
@@ -53,11 +53,10 @@ class ReachCore:
             self.BASE = "https://pilot-psc.reachcore.com/wsnom151/webservice.asmx?WSDL"
             self.POLICY = "1.16.484.101.10.316.1.2"
 
-    def generate_proof(self, merkle_hash):
-        # TODO change merkle_hash as merkle_root
+    def generate_proof(self, merkleroot):
         """
             ReachCore endpoint [GeneraConstancia]
-            merkle_hash : Must be a valid sha256 str, as the merkle root is
+            merkleroot : Must be a valid sha256 str, as the merkle root is
         """
         # Generates a temp directory where manipulate docs
 
@@ -65,7 +64,7 @@ class ReachCore:
             doc_path = temp_dir + "/doc_body.tsq"
             request_file = None
             # Prepare the command for the request file
-            command = (F"openssl ts -query -digest {merkle_hash} -sha256 -no_nonce "
+            command = (F"openssl ts -query -digest {merkleroot} -sha256 -no_nonce "
                        F"-tspolicy {self.POLICY} -out {doc_path}")
             args = shlex.split(command)
             try:
@@ -85,7 +84,7 @@ class ReachCore:
 
             # Create body content
             body = body_xml.format(user=self.USER, passwd=self.PASS, entity=self.ENTITY,
-                                   reference=merkle_hash, doc_base64=request_file)
+                                   reference=merkleroot, doc_base64=request_file)
             # For debug only
             # logger.info(body)
 
@@ -96,7 +95,7 @@ class ReachCore:
                 logger.info(F"{r.content}")
 
                 if r.status_code == 200:
-                    # Save the file and save in the block the reference
+                    # Parse the file and generate readable json metadata
                     parsed_result = xmltodict.parse(r.text)
                     soap = parsed_result["soap:Envelope"]["soap:Body"]
                     metadata = soap["GeneraConstanciaResponse"]["GeneraConstanciaResult"]
@@ -108,4 +107,4 @@ class ReachCore:
                     return None
 
             except Exception as e:
-                logger.error(F"[Generate Proof Error]: {e}, type: {type(e)}, merkle_hash: {merkle_hash}")
+                logger.error(F"[Generate Proof Error]: {e}, type: {type(e)}, merkleroot: {merkleroot}")
