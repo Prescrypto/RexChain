@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import ConservationCertificate
+
+
+class ConservationCertificateAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(ConservationCertificate, ConservationCertificateAdmin)
