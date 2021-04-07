@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'api',
     'blockchain',
     'core',
+    'nom151',
     # CORS
     'corsheaders',
 ]
