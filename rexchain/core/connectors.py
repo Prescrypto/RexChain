@@ -10,8 +10,8 @@ from django.conf import settings
 
 from .helpers import logger
 
-
-body_xml = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" \
+# GeneraConstancia Payload
+REQUEST_CERTIFICATE = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" \
 xmlns:xw="www.XMLWebServiceSoapHeaderAuth.net">
     <soap:Header>
         <xw:AuthSoapHd>
@@ -26,6 +26,24 @@ xmlns:xw="www.XMLWebServiceSoapHeaderAuth.net">
             <xw:solicitud>{doc_base64}</xw:solicitud>
         </xw:GeneraConstancia>
     </soap:Body>
+</soap:Envelope>"""
+
+# ValidaConstancia Payload
+REQUEST_VALIDATE = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" \
+xmlns:xw="www.XMLWebServiceSoapHeaderAuth.net">
+   <soap:Header>
+        <xw:AuthSoapHd>
+            <xw:Usuario>{user}</xw:Usuario>
+            <xw:Clave>{passwd}</xw:Clave>
+            <xw:Entidad>{entity}</xw:Entidad>
+        </xw:AuthSoapHd>
+   </soap:Header>
+   <soap:Body>
+      <xw:ValidaConstancia>
+         <xw:referencia>{reference}</xw:referencia>
+         <xw:constancia>{certificate}</xw:constancia>
+      </xw:ValidaConstancia>
+   </soap:Body>
 </soap:Envelope>"""
 
 
@@ -82,8 +100,8 @@ class ReachCore:
                 request_file = request_file.decode()
 
             # Create body content
-            body = body_xml.format(user=self.USER, passwd=self.PASS, entity=self.ENTITY,
-                                   reference=merkleroot, doc_base64=request_file)
+            body = REQUEST_CERTIFICATE.format(user=self.USER, passwd=self.PASS, entity=self.ENTITY,
+                                              reference=merkleroot, doc_base64=request_file)
             # For debug only
             # logger.info(body)
 
@@ -96,8 +114,8 @@ class ReachCore:
                 if r.status_code == 200:
                     # Parse the file and generate readable json metadata
                     parsed_result = xmltodict.parse(r.text)
-                    soap = parsed_result["soap:Envelope"]["soap:Body"]
-                    metadata = soap["GeneraConstanciaResponse"]["GeneraConstanciaResult"]
+                    body = parsed_result["soap:Envelope"]["soap:Body"]
+                    metadata = body["GeneraConstanciaResponse"]["GeneraConstanciaResult"]
                     metadata["xml_raw"] = r.text
                     return metadata
                 else:
@@ -107,3 +125,25 @@ class ReachCore:
 
             except Exception as e:
                 logger.error(F"[Generate Proof Error]: {e}, type: {type(e)}, merkleroot: {merkleroot}")
+
+    def validate(self, certificate, merkleroot):
+        """ Validate certificate using Reachcore validate endpoints """
+        try:
+            body = REQUEST_VALIDATE.format(user=self.USER, passwd=self.PASS, entity=self.ENTITY,
+                                           reference=merkleroot, certificate=certificate)
+            r = requests.post(self.BASE, data=body, headers=self.HEADERS, timeout=self.TIMEOUT)
+            logger.info(F"Response: {r.status_code}")
+            logger.info(F"{r.content}")
+            if r.status_code == 200:
+                parsed_result = xmltodict.parse(r.text)
+                body = parsed_result["soap:Envelope"]["soap:Body"]
+                metadata = body["ValidaConstanciaResponse"]["ValidaConstanciaResult"]
+                metadata["xml_raw"] = r.text
+                return metadata
+
+            else:
+                # We might ask to user to try again
+                return None
+
+        except Exception as e:
+            logger.error(F"[Validate Certificate Fails]: {e}, type: {type(e)}, merkleroot: {merkleroot}")
