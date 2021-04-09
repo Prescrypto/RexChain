@@ -1,4 +1,5 @@
 """ Nom151 Views """
+import json
 from django.shortcuts import render, redirect
 
 from core.helpers import logger
@@ -23,6 +24,7 @@ def validate_certificate(request, merkleroot):
         # TODO Handle if empty validate was found
         context = {
             "b": conservation_certificate.block,
-            "validate": validate
+            "validate": validate,
+            "validate_raw": json.dumps(validate, indent=4, ensure_ascii=False)
         }
         return render(request, template, context)

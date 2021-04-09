@@ -44,11 +44,11 @@
         {% endif %}
         {% if block_object.data.xml_response %}
           <tr>
-            <td>Constancia - Nom151</td>
+            <td>Constancia Nom151 - <a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Validar Constancia</a></td>
             <td>{{ block_object.data.xml_response.Constancia }}</td>
           </tr>
           <tr>
-            <td>Folio de constancia - Nom151</td>
+            <td>Folio de constancia Nom151</td>
             <td>{{ block_object.data.xml_response.Folio }}</td>
           </tr>
         {% endif %}

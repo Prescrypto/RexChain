@@ -21,7 +21,6 @@
                 <td>
                   {# TODO add logic when fails #}
                   <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validada</p>
-                  }
                 </td>
               </tr>
 
@@ -41,11 +40,11 @@
                 </tr>
                 <tr>
                   <td>Raíz de Merkle de Prescrypto</td>
-                  <td>{{ b.merkle_root }}</td>
+                  <td>{{ b.merkleroot }}</td>
                 </tr>
                 <tr>
                 	<td>Metadata de validación</td>
-                  <td><code><pre>{{ validate }}</pre></code></td>
+                  <td><code><pre>{{ validate_raw }}</pre></code></td>
                 </tr>
               </table>
             </div>
