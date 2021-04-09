@@ -6,18 +6,26 @@
 {% block subtitle %}
   <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la Transacción contra notario Blockchain</h2>
 {% endblock subtitle %}
+
+{% block cssblock %}
+  <style type="text/css">
+    #first_column{
+      width:200px;
+    }
+  </style>
+{% endblock cssblock %}
 {% block content %}
   {# RX Detail #}
   <section class="container-fluid bg-midnight">
     <div class="row padding-2em">
-      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+      <div class="col-xs-12">
         <div class="row">
-          <article class="col-xs-12 col-lg-6">
+          <article class="col-xs-12">
             {# Rx info #}
             <div class="table-responsive">
             <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
               <tr>
-                <td colspan=""><strong>Estatus:</strong></td>
+                <td id="first_column"><strong>Estatus:</strong></td>
                 <td>
                   {# TODO add logic when fails #}
                   <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validada</p>
