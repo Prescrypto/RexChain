@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Validación de la transación
+{% endblock title %}
+{% block subtitle %}
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la Transacción contra notario Blockchain</h2>
+{% endblock subtitle %}
+{% block content %}
+  {# RX Detail #}
+  <section class="container-fluid bg-midnight">
+    <div class="row padding-2em">
+      <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+        <div class="row">
+          <article class="col-xs-12 col-lg-6">
+            {# Rx info #}
+            <div class="table-responsive">
+            <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
+              <tr>
+                <td colspan=""><strong>Estatus:</strong></td>
+                <td>
+                  {# TODO add logic when fails #}
+                  <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validada</p>
+                  }
+                </td>
+              </tr>
+
+                <tr>
+                  <td>Timestamp Notarizada:</td>
+                  <td class="a_green">{{ validate.Fecha }}</td>
+                </tr>
+                {% if tx %}
+                <tr>
+                  <td>Tx Id en la Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
+                  <td><a class="a_grey" href="#" target="_blank">{{ tx.txid }}</a></td>
+                </tr>
+                {% endif %}
+                <tr>
+                  <td>CertificadoPsc</td>
+                  <td>{{ validate.CertificadoPsc }}</td>
+                </tr>
+                <tr>
+                  <td>Raíz de Merkle de Prescrypto</td>
+                  <td>{{ b.merkle_root }}</td>
+                </tr>
+                <tr>
+                	<td>Metadata de validación</td>
+                  <td><code><pre>{{ validate }}</pre></code></td>
+                </tr>
+              </table>
+            </div>
+          </article>
+        </div>
+    </div>
+  </section>
+  </section>
+{% endblock content %}
+
+{% block jsblock %}
+
+{% endblock jsblock %}
