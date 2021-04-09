@@ -17,7 +17,8 @@ class ConservationCertificate(Timestampable, models.Model):
     raw_document = models.TextField("Raw Certificate",
                                     blank=True, help_text='Base64 document')
     reference = models.CharField("Merkle Root used as reference",
-                                 max_length=255, help_text='This ir our reference')
+                                 max_length=255, unique=True, help_text='This ir our reference')
+    block = models.OneToOneField("blockchain.Block", on_delete=models.PROTECT, null=True, blank=True)
 
     # Metadata
     data = JSONField(default={}, blank=True)
@@ -26,5 +27,6 @@ class ConservationCertificate(Timestampable, models.Model):
         """ Return custom string for the object
         raw_document first 6 digits then merkle_root first 6 digits too
         """
-        SLICE = 6
-        return F"{self.raw_document[:SLICE]} - {self.reference[:6]}"
+        SPLIT_SIZE = 6
+        return (F"Document hash: {self.raw_document[:SPLIT_SIZE]} "
+                F"- Merkle root: {self.reference[:SPLIT_SIZE]}")
