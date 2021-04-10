@@ -31,7 +31,7 @@ class ValidateRxView(View):
 
     def get(self, request, *args, **kwargs):
         hash_id = kwargs.get("hash_id")
-        payload = transaction = None
+        payload = tx = None
         template = "blockchain/validate.html"
         try:
             payload = Payload.objects.get(hash_id=hash_id)
