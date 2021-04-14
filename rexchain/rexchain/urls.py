@@ -21,6 +21,8 @@ from blockchain.views import (
     poe, ValidateRxView
 )
 
+from nom151.views import validate_certificate
+
 urlpatterns = [
     url(r'^django-rq/', include('django_rq.urls')),
     url(r'^jet/', include('jet.urls', 'jet')),
@@ -42,6 +44,7 @@ urlpatterns = [
     url(r'^robots.txt$', robots_txt, name="robots_txt"),
     url(r'^battlefield$', RedirectView.as_view(pattern_name='landing_page', permanent=False)),
     url(r'^demoday$', landing_page, name="landing_page"),
+    url(r'^validate_certificate/(?P<merkleroot>\w+)/$', validate_certificate, name="validate_certificate"),
 
 ]
 

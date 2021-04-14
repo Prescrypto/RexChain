@@ -31,56 +31,21 @@ class ValidateRxView(View):
 
     def get(self, request, *args, **kwargs):
         hash_id = kwargs.get("hash_id")
-        payload = transaction = None
+        payload = tx = None
+        template = "blockchain/validate.html"
         try:
             payload = Payload.objects.get(hash_id=hash_id)
+            tx = payload.transaction
         except Exception as e:
             logger.info("[Validate ERROR]:{} type:{}".format(e, type(e)))
             # Try to get from transaction ID
             try:
-                transaction = Transaction.objects.get(txid=hash_id)
+                tx = Transaction.objects.get(txid=hash_id)
             except Exception as e:
                 _message_error = "[Validate ERROR] Neither hash is from Payload nor Transaction:{} type:{}"
                 logger.error(_message_error.format(e, type(e)))
-            else:
-                return render(request, self.template, {"poe": self.get_poe_data_context(transaction)})
-        else:
-            poe = self.get_poe_data_context(payload.transaction)
-            return render(request, self.template, {"poe": poe})
-
-        return redirect("/")
-
-    def get_poe_data_context(self, transaction):
-        ''' Build poe data '''
-        # Transaction TEST for validate TESTING only
-        data_poe = {
-            "received": "Aug. 25, 2018, 12:57 p.m.",
-            "poe_url": ("https://live.blockcypher.com/bcy/tx/"
-                        "51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a/"),
-            "hash": "51998b337855f999718f3be0658af19f1615dd71dd8885a24e6c08bf201c257a",
-            "data_hex": "46e6ac758721c8f45d2a00de78d81df7861f655e41777f8e56b0556ea4bec0a9",
-            "merkle_root": "46e6ac758721c8f45d2a00de78d81df7861f655e41777f8e56b0556ea4bec0a9",
-        }
-
-        if transaction.block_id:
-            block = transaction.block
-
-            if block.poetxid.strip() in ["True", "False", "", "Genesis"]:
-                pass
-            else:
-                try:
-                    data_poe = {
-                        "received": block.timestamp.strftime('%Y-%m-%d'),
-                        "poe_url": "{}/dash/tx/{}/".format(settings.BASE_POE_URL, block.poetxid),
-                        "hash": block.poetxid,
-                        "data_hex": block.merkleroot,
-                        "merkle_root": block.merkleroot,
-                    }
-
-                except Exception as e:
-                    logger.info("[Get Poe Data ERROR]:{} type:{}".format(e, type(e)))
-
-        return data_poe
+                return redirect("/")
+        return render(request, template, {"tx": tx})
 
 
 def poe(request):
