@@ -42,6 +42,16 @@
             <td><a class="a_grey" href="{{ poe_url }}" target="_blank"> {{ message_poe }} </a></td>
           </tr>
         {% endif %}
+        {% if block_object.data.xml_response %}
+          <tr>
+            <td>Constancia Nom151 - <a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Validar Constancia</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Constancia }}</a></td>
+          </tr>
+          <tr>
+            <td>Folio de constancia Nom151</td>
+            <td>{{ block_object.data.xml_response.Folio }}</td>
+          </tr>
+        {% endif %}
       </table>
     </div>
     </article>

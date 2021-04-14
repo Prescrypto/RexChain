@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tz %}
 {% block title %}
   Validate Transaction
 {% endblock title %}
@@ -25,19 +26,15 @@
 
                 <tr>
                   <td>Timestamp Notarizada:</td>
-                  <td class="a_green">{{ poe.received }}</td>
+                  <td class="a_green">{{ tx.block.timestamp|timezone:"America/Mexico_City" }}</td>
                 </tr>
                 <tr>
-                  <td>Tx Id en la Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-                  <td><a class="a_grey" href="{{ poe.poe_url }}" target="_blank">{{ poe.hash }}</a></td>
-                </tr>
-                <tr>
-                  <td>Raíz de Merkle Blockchainizada</td>
-                  <td>{{ poe.data_hex }}</td>
+                   <td>Constancia Nom151 - <a href="{% url 'validate_certificate' tx.block.merkleroot %}" class="a_grey">Validar Constancia</a></td>
+                   <td><a href="{% url 'validate_certificate' tx.block.merkleroot %}" class="a_grey">{{ tx.block.data.xml_response.Constancia }}</a></td>
                 </tr>
                 <tr>
                   <td>Raíz de Merkle de Prescrypto</td>
-                  <td>{{ poe.merkle_root }}</td>
+                  <td>{{ tx.block.merkleroot }}</td>
                 </tr>
               </table>
             </div>
