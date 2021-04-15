@@ -1,5 +1,5 @@
 
-# RexChain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation – Originally forked from NaiveChain and ported into Python, but no original code remains.
+# RexChain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation.
 
 [![Build Status](https://travis-ci.org/Prescrypto/RexChain.svg?branch=master)](https://travis-ci.org/Prescrypto/RexChain)
 
@@ -8,7 +8,7 @@
 
 
 ### Motivation
-All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This leaves little room to implement different solutions. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible, completely designed around electronic medical prescriptions.
+All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This leaves room to implement domain specific solutions. Especially source-code-wisely. This project is an attempt to provide a lightweight concise and simple implementation of a blockchain as possible, completely designed around electronic medical prescriptions and structured medical data.
 
 
 ### What is blockchain
@@ -21,9 +21,9 @@ All the current implementations of blockchains are tightly coupled with the larg
 * At the moment it is a centralised chain of blocks, the block's merkle root can be anchored with Proof of Existence to any particular distributed Blockchain (in a similar way to Factom's white paper) (https://github.com/FactomProject/FactomDocs/blob/master/whitepaper.md)
 * At the moment data is persisted in an SQL implementation
 * Access to the database is enabled by Asymetric Cryptography
-* Proof-of-work thourght Hashcash (http://www.hashcash.org/hashcash.pdf) for to stop fake data from being created.
+* Proof-of-work thourght Hashcash (http://www.hashcash.org/hashcash.pdf)
 * Transactions: You can transfer data through [Prescrypto Wallet](https://prescrypto.github.io/wallet/deploy/feature_rexchain_wallet/) [See more over __Transactions__ concept in our [wiki](https://github.com/Prescrypto/RexChain/wiki/Transacciones)].
-* Distributed version: This is step follow.
+* Distributed version: This step will follow.
 
 ### Quick start
 (set up node and mine 1 block)
@@ -99,7 +99,7 @@ The test ends successfully when the console shows:
 
 `OK`
 
-__Remark__
+__Note__
 
 The console can ask the following:
 
@@ -126,4 +126,4 @@ You must run the following commands in order to add the coverage badge:
 $ coverage-badge -o coverage.svg
 ```
 
-Note: Run coverage command and coverage report is required!
+Note: Run coverage command and coverage report!
