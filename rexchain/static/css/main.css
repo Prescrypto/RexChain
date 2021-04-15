@@ -51,7 +51,15 @@ a.teko:hover{
   font-family: "Source Sans Pro";
   font-weight: 700;
   font-size: 40px;
-  margin-left:4em;
+  /*margin-left:5%;*/ 
+}
+.sub-title{
+  color:#000;
+  font-family: "Source Sans Pro";
+  font-weight: 300;
+  font-size: 25px;
+  font-style: italic;
+  /*margin-left:5%;*/ 
 }
 .genobank{
 	color: #ffffff
