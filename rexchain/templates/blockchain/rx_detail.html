@@ -2,7 +2,7 @@
 {% load static %}
 {% load tz %}
 {% block title %}
-  Rx Detail
+  Detalle de Transacción
 {% endblock title %}
 {% block subtitle %}
   <h2 style="color:#000; margin-left:4em;font-weight:700;">Detalle de la Transacción</h2>
@@ -14,13 +14,13 @@
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
           <article class="col-xs-12 col-lg-12">
-
+            <h3>Mensaje de Datos Crudo</h3>
+            <code><pre>
+              {{ payload }}
+            </pre></code>
             {% if rx.transaction.block %}
               <form style="text-align: center;" method="GET" action="/validate/{{rx.hash_id}}"><button type="submit" class="btn btn-info" style="border-radius:0;">Validar Certificado de Conservación NOM-151-SCFI-2016</button></form>
             {% endif %}
-            <code><pre>
-{{ payload }}
-            </pre></code>
           </article>
         </div>
     </div>
