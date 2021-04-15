@@ -4,7 +4,7 @@
   Block Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; text-align: center;">Block detail</h2>
+  <h2 style="color:#000; font-weight:700; text-align: center;">Detalle de Bloque de Recetas y Transacciones</h2>
 {% endblock subtitle %}
 {% block content %}
 
@@ -44,12 +44,12 @@
         {% endif %}
         {% if block_object.data.xml_response %}
           <tr>
-            <td>Constancia Nom151 - <a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Validar Constancia</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Certificado de Conservación NOM-151-SCFI-2016</a></td>
             <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Constancia }}</a></td>
           </tr>
           <tr>
-            <td>Folio de constancia Nom151</td>
-            <td>{{ block_object.data.xml_response.Folio }}</td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Folio de Certificado de Conservación</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Folio }}</a></td>
           </tr>
         {% endif %}
       </table>
