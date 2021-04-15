@@ -29,11 +29,11 @@
           <td><a class="a_grey" href="/block/{{ block_object.previous_hash }}">{{ block_object.previous_hash }}</a></td>
         </tr>
         <tr>
-          <td>Notarized Timestamp:</td>
+          <td>Sello de Tiempo Real:</td>
           <td class="a_green">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
         </tr>
         <tr>
-          <td>Merkle Root:</td>
+          <td>Raíz de Merkle:</td>
           <td>{{ block_object.merkleroot }}</td>
         </tr>
         {% if poe_url %}
@@ -63,7 +63,7 @@
         </tr>
         {% for hash in  block_object.data.hashes %}
         <tr>
-          <td>Hash</td>
+          <td>RxId</td>
           <td><a class="a_grey" href="/hash/{{ hash }}">{{ hash }}</a></td>
         </tr>
         {% endfor %}
