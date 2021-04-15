@@ -76,7 +76,10 @@
     <section class="container-fluid {% if not_show_subtitle %}hidden{% endif %}">
       <div class="row hero bg-grey">
         <div class="col-xs-12 col-lg-8 col-lg-offset-1">
-          {% block subtitle %}<h2 class="main-title"> Bienvenido al<br>navegador de RexChain</h2>{% endblock subtitle %}
+          {% block subtitle %}
+            <h2 class="main-title"> Bienvenido al<br>navegador de RexChain</h2>
+            <h3 class="sub-title">Cadena de bloques que cumple NOM-151-SCFI-2016</h3>
+          {% endblock subtitle %}
         </div>
       </div>
     </section>
@@ -110,6 +113,8 @@
         <div class="footer_txt col-md-4">
           <p><strong>¿Qué es RexChain?</strong></p>
           <p><small>Es una base de datos semi-anónima y habilitada por criptografía para compartir data clínica estructurada de manera segura.</small></p>
+          <p><strong>¿Qué es NOM-151-SCFI-2016?</strong></p>
+          <p><small>Es una normativa a la cual se deben sujetar las plataformas de receta y firma digital, puedes leer las especificaciones <a target="blank" href="https://www.dof.gob.mx/normasOficiales/6499/seeco11_C/seeco11_C.html">aquí.</a></small></p>
         </div>
         <div class="col-md-2">
           <div class="social">
