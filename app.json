@@ -71,6 +71,15 @@
     },
     "JIRA_PASSWORD": {
       "required": true
+    },
+    "REACHCORE_ENTITY": {
+      "required": true
+    },
+    "REACHCORE_USER": {
+      "required": true
+    },
+    "REACHCORE_PASS": {
+      "required": true
     }
   },
   "formation": {

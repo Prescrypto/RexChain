@@ -1,5 +1,5 @@
 # django
-Django==1.11.11
+Django==1.11.29
 
 # Heroku
 gunicorn==19.7.1
@@ -10,25 +10,26 @@ psycopg2-binary==2.7.5
 # DRF
 django-filter==1.1.0
 Markdown==2.6.11
-djangorestframework==3.7.7
+djangorestframework==3.11.2
 django-cors-headers==2.0.2
 
 # crypto
 pycryptodome==3.6.5
-rsa==3.4.2
-merkletools==1.0.2
-pysha3==1.0.2  #1.0b1
+rsa==4.1
+merkletools>=1.0.2
+pysha3>=1.0.2  #1.0b1
 
 # Others
 django-jet==1.0.7
+xmltodict==0.12.0
 
 #QRCode
-Pillow==4.2.1
+Pillow==8.1.2
 qrcode==5.3
 
 # Proof of Existence (ETH)
 bitcoin==1.1.39
-blockcypher==1.0.73
+blockcypher>=1.0.73
 python-dateutil==2.2
 
 # Redis
