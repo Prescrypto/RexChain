@@ -16,8 +16,7 @@
           <article class="col-xs-12 col-lg-12">
 
             {% if rx.transaction.block %}
-              <p ><a href="/validate/{{rx.hash_id}}" style="color:#337ab7!important;">
-                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Validar Transacción</a></p>
+              <form style="text-align: center;" method="GET" action="/validate/{{rx.hash_id}}"><button type="submit" class="btn btn-info" style="border-radius:0;">Validar Certificado de Conservación NOM-151-SCFI-2016</button></form>
             {% endif %}
             <code><pre>
 {{ payload }}
