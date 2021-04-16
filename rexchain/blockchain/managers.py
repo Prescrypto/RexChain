@@ -38,7 +38,6 @@ class BlockManager(models.Manager):
         if last_block is None:
             genesis = self.get_genesis_block()
             return self.generate_next_block(genesis.hash_block, tx_queryset)
-
         else:
             return self.generate_next_block(last_block.hash_block, tx_queryset)
 
@@ -54,7 +53,13 @@ class BlockManager(models.Manager):
         return genesis_block
 
     def generate_next_block(self, hash_before, tx_queryset):
-        # Generete a new block
+        """ Generete a new block """
+
+        # Verify that hash_before and tx_queryset variables are not empty
+        # to do not make an malform Block
+        if not hash_before or tx_queryset.count() == 0:
+            return None
+
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
         data_block = new_block.get_block_data(tx_queryset)

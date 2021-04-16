@@ -57,7 +57,6 @@ class Hashcash(object):
             challenge: It is a type string, create for function create_challenge.
             counter: It is a type int, is the counter of tryes that we will do to find valid sha
         """
-        # TODO
         if not challenge or not counter:
             return False, None
 
