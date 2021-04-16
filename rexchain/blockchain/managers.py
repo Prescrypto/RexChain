@@ -67,16 +67,9 @@ class BlockManager(models.Manager):
                                               str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
-        # Proof of Existennce layer
-        _poe = PoE()  # init proof of existence element
-        txid = _poe.journal(new_block.merkleroot)
-        if txid is True:
-            new_block.poetxid = "True"
-        else:
-            new_block.poetxid = "False"
+        new_block.poetxid = "False"
         # Save
         new_block.save()
-
         return new_block
 
 
