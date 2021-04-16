@@ -34,16 +34,15 @@ logger = logging.getLogger('django_info')
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
 
-    def create_block(self, tx_queryset):
+    def create_block(self, tx_queryset, hashcash, counter):
         # Do initial block or create next block
         Block = apps.get_model('blockchain', 'Block')
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
-            return self.generate_next_block(genesis.hash_block, tx_queryset)
-
+            return self.generate_next_block(genesis.hash_block, tx_queryset, hashcash, counter)
         else:
-            return self.generate_next_block(last_block.hash_block, tx_queryset)
+            return self.generate_next_block(last_block.hash_block, tx_queryset, hashcash, counter)
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
@@ -56,8 +55,8 @@ class BlockManager(models.Manager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, hash_before, tx_queryset):
-        # Generete a new block
+    def generate_next_block(self, hash_before, tx_queryset, hashcash, nonce):
+        """ Generete a new block """
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
         data_block = new_block.get_block_data(tx_queryset)
@@ -65,6 +64,10 @@ class BlockManager(models.Manager):
                                               str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
+        # Add hashcash
+        new_block.hashcash = hashcash
+        # Add nonce
+        new_block.nonce = nonce
         # Proof of Existennce layer
         connector = PoE()
         xml_response = connector.generate_proof(new_block.merkleroot)
@@ -95,31 +98,21 @@ class TransactionManager(models.Manager):
     def has_not_block(self):
         return self.get_queryset().has_not_block()
 
-    def create_block_attempt(self):
+    def create_block_attempt(self, counter, challenge):
         '''
             Use PoW hashcash algoritm to attempt to create a block
         '''
         Block = apps.get_model('blockchain', 'Block')
         _hashcash_tools = Hashcash(debug=settings.DEBUG)
 
-        if not cache.get('challenge') and not cache.get('counter') == 0:
+        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(challenge, counter)
+        if is_valid_hashcash:
+            Block.objects.create_block(self.has_not_block(), hashcash_string, counter)
             challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
             safe_set_cache('challenge', challenge)
             safe_set_cache('counter', 0)
-
-        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'),
-                                                                           cache.get('counter'))
-
-        if is_valid_hashcash:
-            block = Block.objects.create_block(self.has_not_block())  # TODO add on creation hash and merkle
-            block.hashcash = hashcash_string
-            block.nonce = cache.get('counter')
-            block.save()
-            safe_set_cache('challenge', None)
-            safe_set_cache('counter', None)
-
         else:
-            counter = cache.get('counter') + 1
+            counter = counter + 1
             safe_set_cache('counter', counter)
 
     def is_transfer_valid(self, data, _previous_hash, pub_key, _signature):
@@ -151,8 +144,16 @@ class TransactionManager(models.Manager):
     def create_tx(self, data, **kwargs):
         ''' Custom method for create Tx with rx item '''
 
-        ''' Get initial data '''
+        # Logic to obtains the counter and challenge variables from Redis
+        _hashcash_tools = Hashcash(debug=settings.DEBUG)
+        counter = cache.get('counter')
+        challenge = cache.get('challenge')
+        if not counter and not challenge:
+            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
+            safe_set_cache('challenge', challenge)
+            safe_set_cache('counter', 0)
 
+        ''' Get initial data '''
         _payload = ""
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
@@ -201,7 +202,6 @@ class TransactionManager(models.Manager):
             if self._crypto.verify(_payload, _signature, pub_key):
                 logger.info("[create_tx] Tx valid!")
                 _is_valid_tx = True
-
         else:
             # Its a transfer, so check validite transaction
             data["previous_hash"] = _previous_hash
@@ -220,9 +220,9 @@ class TransactionManager(models.Manager):
             _rx_before=_rx_before,
             transaction=tx,
         )
-        ''' LAST do create block attempt '''
-        self.create_block_attempt()
 
+        ''' LAST do create block attempt '''
+        self.create_block_attempt(counter, challenge)
         # Return the rx for transaction object
         return rx
 
