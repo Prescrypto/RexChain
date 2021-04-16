@@ -34,15 +34,15 @@ logger = logging.getLogger('django_info')
 class BlockManager(models.Manager):
     ''' Model Manager for Blocks '''
 
-    def create_block(self, tx_queryset):
+    def create_block(self, tx_queryset, hashcash, counter):
         # Do initial block or create next block
         Block = apps.get_model('blockchain', 'Block')
         last_block = Block.objects.last()
         if last_block is None:
             genesis = self.get_genesis_block()
-            return self.generate_next_block(genesis.hash_block, tx_queryset)
+            return self.generate_next_block(genesis.hash_block, tx_queryset, hashcash, counter)
         else:
-            return self.generate_next_block(last_block.hash_block, tx_queryset)
+            return self.generate_next_block(last_block.hash_block, tx_queryset, hashcash, counter)
 
     def get_genesis_block(self):
         # Get the genesis arbitrary block of the blockchain only once in life
