@@ -84,31 +84,28 @@ class TransactionManager(models.Manager):
     def has_not_block(self):
         return self.get_queryset().has_not_block()
 
-    def create_block_attempt(self):
+    def create_block_attempt(self, counter, challenge):
         '''
             Use PoW hashcash algoritm to attempt to create a block
         '''
         Block = apps.get_model('blockchain', 'Block')
         _hashcash_tools = Hashcash(debug=settings.DEBUG)
 
-        if not cache.get('challenge') and not cache.get('counter') == 0:
-            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
-            safe_set_cache('challenge', challenge)
-            safe_set_cache('counter', 0)
-
-        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(cache.get('challenge'),
-                                                                           cache.get('counter'))
-
+        is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(challenge, counter)
         if is_valid_hashcash:
             block = Block.objects.create_block(self.has_not_block())  # TODO add on creation hash and merkle
-            block.hashcash = hashcash_string
-            block.nonce = cache.get('counter')
-            block.save()
-            safe_set_cache('challenge', None)
-            safe_set_cache('counter', None)
-
+            if block:
+                block.hashcash = hashcash_string
+                block.nonce = counter
+                block.save()
+                challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
+                safe_set_cache('challenge', challenge)
+                safe_set_cache('counter', 0)
+            else:
+                counter = counter + 1
+                safe_set_cache('counter', counter)
         else:
-            counter = cache.get('counter') + 1
+            counter = counter + 1
             safe_set_cache('counter', counter)
 
     def is_transfer_valid(self, data, _previous_hash, pub_key, _signature):
