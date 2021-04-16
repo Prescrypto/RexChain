@@ -140,8 +140,16 @@ class TransactionManager(models.Manager):
     def create_tx(self, data, **kwargs):
         ''' Custom method for create Tx with rx item '''
 
-        ''' Get initial data '''
+        # Logic to obtains the counter and challenge variables from Redis
+        _hashcash_tools = Hashcash(debug=settings.DEBUG)
+        counter = cache.get('counter')
+        challenge = cache.get('challenge')
+        if not counter and not challenge:
+            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
+            safe_set_cache('challenge', challenge)
+            safe_set_cache('counter', 0)
 
+        ''' Get initial data '''
         _payload = ""
         _signature = data.pop("signature", None)
         _previous_hash = data.pop("previous_hash", "0")
@@ -190,7 +198,6 @@ class TransactionManager(models.Manager):
             if self._crypto.verify(_payload, _signature, pub_key):
                 logger.info("[create_tx] Tx valid!")
                 _is_valid_tx = True
-
         else:
             # Its a transfer, so check validite transaction
             data["previous_hash"] = _previous_hash
@@ -209,9 +216,9 @@ class TransactionManager(models.Manager):
             _rx_before=_rx_before,
             transaction=tx,
         )
-        ''' LAST do create block attempt '''
-        self.create_block_attempt()
 
+        ''' LAST do create block attempt '''
+        self.create_block_attempt(counter, challenge)
         # Return the rx for transaction object
         return rx
 
