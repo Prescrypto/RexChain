@@ -55,14 +55,8 @@ class BlockManager(models.Manager):
         genesis_block.save()
         return genesis_block
 
-    def generate_next_block(self, hash_before, tx_queryset):
+    def generate_next_block(self, hash_before, tx_queryset, hashcash, nonce):
         """ Generete a new block """
-
-        # Verify that hash_before and tx_queryset variables are not empty
-        # to do not make an malform Block
-        if not hash_before or tx_queryset.count() == 0:
-            return None
-
         new_block = self.create(previous_hash=hash_before)
         new_block.save()
         data_block = new_block.get_block_data(tx_queryset)
@@ -70,6 +64,10 @@ class BlockManager(models.Manager):
                                               str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
+        # Add hashcash
+        new_block.hashcash = hashcash
+        # Add nonce
+        new_block.nonce = nonce
         # Proof of Existennce layer
         connector = PoE()
         xml_response = connector.generate_proof(new_block.merkleroot)
