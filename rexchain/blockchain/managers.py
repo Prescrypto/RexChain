@@ -107,17 +107,10 @@ class TransactionManager(models.Manager):
 
         is_valid_hashcash, hashcash_string = _hashcash_tools.calculate_sha(challenge, counter)
         if is_valid_hashcash:
-            block = Block.objects.create_block(self.has_not_block())  # TODO add on creation hash and merkle
-            if block:
-                block.hashcash = hashcash_string
-                block.nonce = counter
-                block.save()
-                challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
-                safe_set_cache('challenge', challenge)
-                safe_set_cache('counter', 0)
-            else:
-                counter = counter + 1
-                safe_set_cache('counter', counter)
+            Block.objects.create_block(self.has_not_block(), hashcash_string, counter)
+            challenge = _hashcash_tools.create_challenge(word_initial=settings.HC_WORD_INITIAL)
+            safe_set_cache('challenge', challenge)
+            safe_set_cache('counter', 0)
         else:
             counter = counter + 1
             safe_set_cache('counter', counter)
