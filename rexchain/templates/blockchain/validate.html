@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tz %}
 {% block title %}
-  Validate Transaction
+  Validación de Transacción
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la Transacción contra notario blockchain</h2>
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de Transacción contra Certificado de Conservación NOM-151-SCFI-2016</h2>
 {% endblock subtitle %}
 {% block content %}
   {# RX Detail #}
@@ -12,7 +13,7 @@
     <div class="row padding-2em">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
-          <article class="col-xs-12 col-lg-6">
+          <article class="col-xs-12">
             {# Rx info #}
             <div class="table-responsive">
             <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
@@ -24,20 +25,16 @@
               </tr>
 
                 <tr>
-                  <td>Timestamp Notarizada:</td>
-                  <td class="a_green">{{ poe.received }}</td>
+                  <td>Sello de Tiempo Real:</td>
+                  <td class="a_green">{{ tx.block.timestamp|timezone:"America/Mexico_City" }}</td>
                 </tr>
                 <tr>
-                  <td>Tx Id en la Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-                  <td><a class="a_grey" href="{{ poe.poe_url }}" target="_blank">{{ poe.hash }}</a></td>
+                   <td><a href="{% url 'validate_certificate' tx.block.merkleroot %}" class="a_grey">Constancia de Conservación NOM-151-SCFI-2016</a></td>
+                   <td><a href="{% url 'validate_certificate' tx.block.merkleroot %}" class="a_grey">{{ tx.block.data.xml_response.Constancia }}</a></td>
                 </tr>
                 <tr>
-                  <td>Raíz de Merkle Blockchainizada</td>
-                  <td>{{ poe.data_hex }}</td>
-                </tr>
-                <tr>
-                  <td>Raíz de Merkle de Prescrypto</td>
-                  <td>{{ poe.merkle_root }}</td>
+                  <td>Raíz de Merkle</td>
+                  <td>{{ tx.block.merkleroot }}</td>
                 </tr>
               </table>
             </div>

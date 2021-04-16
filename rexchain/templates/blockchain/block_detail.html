@@ -4,7 +4,7 @@
   Block Detail
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; text-align: center;">Block detail</h2>
+  <h2 style="color:#000; font-weight:700; text-align: center;">Detalle de Bloque de Recetas y Transacciones</h2>
 {% endblock subtitle %}
 {% block content %}
 
@@ -29,17 +29,27 @@
           <td><a class="a_grey" href="/block/{{ block_object.previous_hash }}">{{ block_object.previous_hash }}</a></td>
         </tr>
         <tr>
-          <td>Notarized Timestamp:</td>
+          <td>Sello de Tiempo Real:</td>
           <td class="a_green">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
         </tr>
         <tr>
-          <td>Merkle Root:</td>
+          <td>Raíz de Merkle:</td>
           <td>{{ block_object.merkleroot }}</td>
         </tr>
         {% if poe_url %}
           <tr>
             <td>Prueba de Existencia (PoE): <a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
             <td><a class="a_grey" href="{{ poe_url }}" target="_blank"> {{ message_poe }} </a></td>
+          </tr>
+        {% endif %}
+        {% if block_object.data.xml_response %}
+          <tr>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Certificado de Conservación NOM-151-SCFI-2016</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Constancia }}</a></td>
+          </tr>
+          <tr>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Folio de Certificado de Conservación</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Folio }}</a></td>
           </tr>
         {% endif %}
       </table>

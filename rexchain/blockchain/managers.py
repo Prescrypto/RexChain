@@ -16,14 +16,17 @@ from django.utils import timezone
 from django.core.cache import cache
 from core.utils import Hashcash
 from core.helpers import safe_set_cache, get_timestamp, logger_debug
+from core.connectors import ReachCore as PoE
+from nom151.models import ConservationCertificate
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
-from .utils import calculate_hash, PoE, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
+from .utils import calculate_hash, pubkey_base64_to_rsa, ordered_data, iterate_and_order_json
 from .querysets import (
     PayloadQueryset,
     TransactionQueryset,
     AddressQueryset,
 )
 from .RSAaddresses import AddressBitcoin
+
 
 logger = logging.getLogger('django_info')
 
@@ -67,9 +70,22 @@ class BlockManager(models.Manager):
                                               str(new_block.timestamp), data_block["sum_hashes"])
         # Add Merkle Root
         new_block.merkleroot = data_block["merkleroot"]
-        new_block.poetxid = "False"
+        # Proof of Existennce layer
+        connector = PoE()
+        xml_response = connector.generate_proof(new_block.merkleroot)
+        new_block.data["xml_response"] = xml_response
         # Save
         new_block.save()
+        # Save response on a  new table too
+
+        certificate = ConservationCertificate(
+            folio=xml_response["Folio"],
+            raw_document=xml_response["Constancia"],
+            reference=new_block.merkleroot
+        )
+        certificate.block = new_block
+        certificate.data["xml_response"] = xml_response
+        certificate.save()
         return new_block
 
 

@@ -51,9 +51,9 @@ git remote add Prescrypto https://github.com/Prescrypto/RexChain
 git fetch prescrypto
 
 __Create a vagrant machine:__  
-__#inside the directory run the vagrantfile__  
+__# inside the directory run the vagrantfile__  
 $ vagrant up  
-__#get server running and start creating stuff__  
+__# get server running and start creating stuff__  
 $ vagrant ssh  
 
 $ cd /vagrant/rexchain  
@@ -61,8 +61,8 @@ $ python3.6 manage.py migrate
 $ python3.6 manage.py loaddata ./fixtures/initial_data.json  
 $ python3.6 manage.py runserver [::]:8000  
 
-__#Wake Up Redis Worker__  
-__#Open a new window console enter to ssh of vagrant and run these commands__  
+__# Wake Up Redis Worker__  
+__# Open a new window console enter to ssh of vagrant and run these commands__  
 $ cd /vagrant/rexchain  
 $ python3.6 manage.py rqworker high default low  
   
