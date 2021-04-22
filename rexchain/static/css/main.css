@@ -7,12 +7,13 @@ body{
 p, a{
   font-family: "Source Sans Pro";
   text-align: justify;
+  color: #fff;
 }
 .bg-blank{
   background: #fff;
 }
 h3{
-  color: #000;
+  color: #fff;
   font-size: 20px;
   font-weight: 700;
 }
@@ -31,10 +32,16 @@ footer.container-fluid{
   text-align: right;
 }
 .bg-portrait{
-    background: ##F0F0F7;
+    background: #F0F0F7;
+}
+.bg-portrait-dark{
+    background: #000;
 }
 .bg-grey{
     background: #F0F0F7;
+}
+.bg-dark{
+    background: #000000;
 }
 .teko{
 	font-family: "Source Sans";
@@ -47,7 +54,7 @@ a.teko:hover{
   text-decoration: none;
 }
 .main-title{
-  color:#000;
+  color:#fff;
   font-family: "Source Sans Pro";
   font-weight: 700;
   font-size: 40px;
@@ -60,9 +67,6 @@ a.teko:hover{
   font-size: 25px;
   font-style: italic;
   /*margin-left:5%;*/ 
-}
-.genobank{
-	color: #ffffff
 }
 .title-font a{
 	color: white!important;
@@ -144,9 +148,26 @@ a.greybutton:hover{
   width:30%;
   margin:7px;
 }
+.darkblock{
+  color: #fff;
+  background-color: #060606;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 20px;
+  width:30%;
+  margin:7px;
+}
 .mainblock{
-  color: #4D4F5C;
+  color: #fff;
   background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 20px;
+  width:1020px;
+  margin-top: 14px;
+  margin-bottom: 20px;
+}
+.mainblock-dark{
+  color: #fff;
+  background-color: #060606;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 20px;
   width:1020px;
