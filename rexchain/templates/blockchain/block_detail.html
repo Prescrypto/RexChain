@@ -18,7 +18,7 @@
         </tr>
         <tr>
           <td>Tamaño</td>
-          <td class="a_purple">{{ block_object.raw_size }} bytes</td>
+          <td>{{ block_object.raw_size }} bytes</td>
         </tr>
         <tr>
           <td>Hash</td>
@@ -30,11 +30,11 @@
         </tr>
         <tr>
           <td>Sello de Tiempo Real</td>
-          <td class="a_green">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
+          <td class="a_grey">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
         </tr>
         <tr>
           <td>Raíz de Merkle</td>
-          <td>{{ block_object.merkleroot }}</td>
+          <td class="a_purple">{{ block_object.merkleroot }}</td>
         </tr>
         {% if poe_url %}
           <tr>

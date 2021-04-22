@@ -4,7 +4,7 @@
   Validación de la constancia
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la constancia</h2>
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la Constancia de Conservación NOM-151-SCFI-2016</h2>
 {% endblock subtitle %}
 
 {% block cssblock %}
@@ -27,14 +27,13 @@
               <tr>
                 <td id="first_column"><strong>Estatus</strong></td>
                 <td>
-                  {# TODO add logic when fails #}
-                  <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validada</p>
+                  <p class="a_green">Certificado valido</p>
                 </td>
               </tr>
 
                 <tr>
                   <td>Sello de Tiempo Real</td>
-                  <td class="a_green">{{ validate.Fecha }}</td>
+                  <td class="a_grey">{{ validate.Fecha }}</td>
                 </tr>
                 {% if tx %}
                 <tr>
@@ -48,7 +47,7 @@
                 </tr>
                 <tr>
                   <td>Raíz de Merkle</td>
-                  <td>{{ b.merkleroot }}</td>
+                  <td class="a_purple">{{ b.merkleroot }}</td>
                 </tr>
                 <tr>
                 	<td>Respuesta de validación ante PSC</td>
