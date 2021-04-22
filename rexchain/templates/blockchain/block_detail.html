@@ -33,18 +33,12 @@
           <td class="a_grey">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
         </tr>
         <tr>
-          <td>Raíz de Merkle</td>
+          <td>Raíz de Merkle <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
           <td class="a_purple">{{ block_object.merkleroot }}</td>
         </tr>
-        {% if poe_url %}
-          <tr>
-            <td>Prueba de Existencia (PoE): <a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-            <td><a class="a_grey" href="{{ poe_url }}" target="_blank"> {{ message_poe }} </a></td>
-          </tr>
-        {% endif %}
         {% if block_object.data.xml_response %}
           <tr>
-            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Certificado de Conservación NOM-151-SCFI-2016</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Certificado de Conservación NOM-151-SCFI-2016</a> <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
             <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Constancia }}</a></td>
           </tr>
           <tr>

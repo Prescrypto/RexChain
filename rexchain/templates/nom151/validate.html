@@ -35,22 +35,16 @@
                   <td>Sello de Tiempo Real</td>
                   <td class="a_grey">{{ validate.Fecha }}</td>
                 </tr>
-                {% if tx %}
                 <tr>
-                  <td>Tx Id en la Blockchain<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-                  <td><a class="a_grey" href="#" target="_blank">{{ tx.txid }}</a></td>
-                </tr>
-                {% endif %}
-                <tr>
-                  <td>Certificado emisor PSC</td>
+                  <td>Certificado emisor PSC <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
                   <td>{{ validate.CertificadoPsc }}</td>
                 </tr>
                 <tr>
-                  <td>Raíz de Merkle</td>
+                  <td>Raíz de Merkle <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
                   <td class="a_purple">{{ b.merkleroot }}</td>
                 </tr>
                 <tr>
-                	<td>Respuesta de validación ante PSC</td>
+                	<td>Respuesta de validación ante PSC <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
                   <td><code><pre>{{ validate_raw }}</pre></code></td>
                 </tr>
               </table>

@@ -18,7 +18,7 @@ from django.views.generic.base import RedirectView
 from .views import home, humans_txt, robots_txt, landing_page
 from blockchain.views import (
     tx_detail, block_detail,
-    poe, ValidateRxView
+    glossary, ValidateRxView
 )
 
 from nom151.views import validate_certificate
@@ -39,7 +39,7 @@ urlpatterns = [
     # Attest PoE
     url(r'^validate/(?P<hash_id>\w+)/$', ValidateRxView.as_view(), name="validate"),
     # Static content
-    url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
+    url(r'^glosario/$', glossary, name="glosario"),
     url(r'^humans.txt$', humans_txt, name="humans_txt"),
     url(r'^robots.txt$', robots_txt, name="robots_txt"),
     url(r'^battlefield$', RedirectView.as_view(pattern_name='landing_page', permanent=False)),
