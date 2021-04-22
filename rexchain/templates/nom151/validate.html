@@ -25,7 +25,7 @@
             <div class="table-responsive">
             <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
               <tr>
-                <td id="first_column"><strong>Estatus:</strong></td>
+                <td id="first_column"><strong>Estatus</strong></td>
                 <td>
                   {# TODO add logic when fails #}
                   <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validada</p>
@@ -38,7 +38,7 @@
                 </tr>
                 {% if tx %}
                 <tr>
-                  <td>Tx Id en la Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
+                  <td>Tx Id en la Blockchain<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
                   <td><a class="a_grey" href="#" target="_blank">{{ tx.txid }}</a></td>
                 </tr>
                 {% endif %}
