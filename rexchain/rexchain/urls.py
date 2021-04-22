@@ -13,9 +13,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import static
-from django.views.generic.base import RedirectView
 # Our Models
-from .views import home, humans_txt, robots_txt, landing_page
+from .views import home, humans_txt, robots_txt
 from blockchain.views import (
     tx_detail, block_detail,
     glossary, ValidateRxView
