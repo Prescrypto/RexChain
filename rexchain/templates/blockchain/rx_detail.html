@@ -11,6 +11,46 @@
   {# RX Detail #}
   <section class="container-fluid bg-midnight">
     <div class="row padding-2em">
+      <article class="col-xs-12 col-lg-8 col-lg-offset-2 padding-2em">
+        <div class="table-responsive">
+          <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
+            <tr>
+              <td colspan="2"><strong>Detalles de transacción</strong></td>
+            </tr>
+            <tr>
+              <td>Estatus:</td>
+              {% if rx.transaction.block %}
+                <td class="a_green">Valida</td>
+              {% else %}
+                <td class="a_yellow">Aún no validada</td>
+              {% endif %}
+            </tr>
+            <tr>
+              <td>Hash:</td>
+              <td>{{rx.hash_id}}</td>
+            </tr>
+            <tr>
+              <td><strong>Certificado NOM-151-SCFI-2016:</strong></td>
+              {% if rx.transaction.block %}
+                <td><a class="a_green" href="/validate/{{rx.hash_id}}">{{ rx.transaction.block.data.xml_response.Constancia }}</a></td>
+              {% else %}
+                <td class="a_yellow">Aún no disponible, revisa en unos minutos</td>
+              {% endif %}
+            </tr>
+            <tr>
+              <td>Sello de Tiempo Real:</td>
+              <td class="a_grey">{{ rx.timestamp|timezone:"America/Mexico_City" }}</td>
+            </tr>
+          </table>
+        </div>
+      </article>
+    </div>
+  </section>
+  {% if rx.transaction.block %}
+    <form style="text-align: center;" method="GET" action="/validate/{{rx.hash_id}}"><button type="submit" class="btn btn-success" style="border-radius:0;">Validar Certificado de Conservación NOM-151-SCFI-2016</button></form>
+  {% endif %}
+  <section class="container-fluid bg-midnight">
+    <div class="row padding-2em">
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
           <article class="col-xs-12 col-lg-12">
@@ -18,9 +58,6 @@
             <code><pre>
               {{ payload }}
             </pre></code>
-            {% if rx.transaction.block %}
-              <form style="text-align: center;" method="GET" action="/validate/{{rx.hash_id}}"><button type="submit" class="btn btn-info" style="border-radius:0;">Validar Certificado de Conservación NOM-151-SCFI-2016</button></form>
-            {% endif %}
           </article>
         </div>
     </div>

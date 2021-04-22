@@ -76,6 +76,8 @@
     <section class="container-fluid {% if not_show_subtitle %}hidden{% endif %}">
       <div class="row hero bg-grey">
         <div class="col-xs-12 col-lg-8 col-lg-offset-1">
+          {% block subtitle %}
+          {% endblock subtitle %}
         </div>
       </div>
     </section>
