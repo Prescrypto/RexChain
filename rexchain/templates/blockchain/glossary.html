@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load tz %}
+{% block title %}
+  Glosario de Términos
+{% endblock title %}
+{% block subtitle %}
+  <h2 class="col-xs-8 col-lg-6 col-lg-offset-3 col-xs-offset-2" style="color:#000; font-weight:700;">Glosario de Términos</h2>
+{% endblock subtitle %}
+{% block content %}
+
+<section class="container-fluid bg-midnight">
+  <div class="row padding-2em">
+    <article class="col-xs-8 col-lg-6 col-lg-offset-3 col-xs-offset-2 padding-2em">
+      <h3>Certificado de Conservación NOM-151-SCFI-2016</h3>
+      <p style="color:#626262;">De acuerdo con la NOM-151-SCFI-2016, una constancia de conservación de mensajes de datos es una constancia que permite verificar la fecha y hora real del registro de un mensaje de datos (ie: una receta médica electrónica) y validar su integridad, es decir que no haya sido modificado. Sólo se puede emitir por un Prestador de Servicios de Certifiación (PSC).</p>
+
+      <h3>Mensaje de Datos Crudo</h3>
+      <p style="color:#626262;">El mensaje de datos crudo, es el mensaje de datos que comprende la data almacenada en la cadena de bloques. En RexChain, un mensaje de datos crudo puede tener data sensible de modo encriptado para salvaguardar la anonimidad de la data.</p>
+
+      <h3>Raíz de Merkle</h3>
+      <p style="color:#626262;">Cada transacción en RexChain tiene un hash asociado, puede representar una receta médica o un documento. La raíz de Merkle es el hash de todos los hashes de todas las transacciones en el bloque y está incluida en el encabezado del bloque. Con este esquema, es posible verificar de forma segura que la red ha aceptado una transacción y un bloque se ha generado exitosamente.</p>
+
+      <h3>PSC</h3>
+      <p style="color:#626262;">Se refiere al Proveedor de Servicios de Certificación, un tercero que provee los servicios de Constancia de Conservación de acuerdo a las exigencias de la NOM-151-SCFI-2016.</p>
+
+      <h3>Certificado emisor PSC</h3>
+      <p style="color:#626262;">Es la llave público de la firma electrónica del PSC, que se refiere al Proveedor de Servicios de Certificación, un tercero que provee los servicios de Constancia de Conservación de acuerdo a las exigencias de la NOM-151-SCFI-2016.</p>
+
+      <h3>Prueba de Existencia</h3>
+      <p style="color:#626262;">El protocolo de Prueba de Existencia inserta una firma criptográfica de datos, típicamente un "hash" usando un algoritmo estandar como SHA256, en la blockchain como evidencia de que los datos están siendo almacenados, es un proceso semejante y equivalente a la obtención de una constancia de conservación. Una vez que se tiene la confirmación de que los datos se almacenaron correctamente, el documento estará permanentemente certificado y probado de su existencia con una estampa de tiempo. Esto permite probar publicamente que se tiene cierta información sin necesariamente revelar el contenido del documento. Todo dentro de una certificación descentralizada basada en la blockchain, sin requerir a una autoridad central.
+      <a style="color:#000!important;" href="https://maraoz.com/">Manuel Araoz</a>, desarrollador del proyecto "poex" menciona: "Las principales ventajas son la anonimicidad, privacidad y obtener una prueba descentralizada que no puede ser borrada o modificada por nadie (terceros o gobierno)".
+      Finalmente, si alguien desea probar la existencia de un documento en el tiempo, solo es necesario calcular el hash SHA256 del documento y encontrar la transacción en la red de blockchain. La existencia de la transacción es prueba de que el documento ha existido desde la estampa del tiempo del documento.<br>
+      </p>
+
+    </article>
+  </div>
+</section>
+
+{% endblock content %}

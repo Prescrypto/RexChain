@@ -48,9 +48,9 @@ class ValidateRxView(View):
         return render(request, template, {"tx": tx})
 
 
-def poe(request):
+def glossary(request):
     ''' Proof of existence explanation '''
-    return render(request, "blockchain/poe.html")
+    return render(request, "blockchain/glossary.html")
 
 
 def tx_detail(request, hash_id=False):

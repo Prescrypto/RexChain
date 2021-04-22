@@ -17,34 +17,28 @@
           <td colspan="2"><strong>Detalles</strong></td>
         </tr>
         <tr>
-          <td>Tamaño:</td>
-          <td class="a_purple">{{ block_object.raw_size }} bytes</td>
+          <td>Tamaño</td>
+          <td>{{ block_object.raw_size }} bytes</td>
         </tr>
         <tr>
-          <td>Hash:</td>
+          <td>Hash</td>
           <td>{{ block_object.hash_block }}</td>
         </tr>
         <tr>
-          <td><strong>Hash anterior:</strong></td>
+          <td><strong>Hash anterior</strong></td>
           <td><a class="a_grey" href="/block/{{ block_object.previous_hash }}">{{ block_object.previous_hash }}</a></td>
         </tr>
         <tr>
-          <td>Sello de Tiempo Real:</td>
-          <td class="a_green">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
+          <td>Sello de Tiempo Real</td>
+          <td class="a_grey">{{ block_object.timestamp|timezone:"America/Mexico_City" }}</td>
         </tr>
         <tr>
-          <td>Raíz de Merkle:</td>
-          <td>{{ block_object.merkleroot }}</td>
+          <td>Raíz de Merkle <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
+          <td class="a_purple">{{ block_object.merkleroot }}</td>
         </tr>
-        {% if poe_url %}
-          <tr>
-            <td>Prueba de Existencia (PoE): <a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-            <td><a class="a_grey" href="{{ poe_url }}" target="_blank"> {{ message_poe }} </a></td>
-          </tr>
-        {% endif %}
         {% if block_object.data.xml_response %}
           <tr>
-            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Certificado de Conservación NOM-151-SCFI-2016</a></td>
+            <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">Certificado de Conservación NOM-151-SCFI-2016</a> <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
             <td><a href="{% url 'validate_certificate' block_object.merkleroot %}" class="a_grey">{{ block_object.data.xml_response.Constancia }}</a></td>
           </tr>
           <tr>

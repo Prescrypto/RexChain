@@ -13,12 +13,11 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import static
-from django.views.generic.base import RedirectView
 # Our Models
-from .views import home, humans_txt, robots_txt, landing_page
+from .views import home, humans_txt, robots_txt
 from blockchain.views import (
     tx_detail, block_detail,
-    poe, ValidateRxView
+    glossary, ValidateRxView
 )
 
 from nom151.views import validate_certificate
@@ -36,16 +35,13 @@ urlpatterns = [
     url(r'^hash/(?P<hash_id>\w+)/$', tx_detail, name="tx_detail"),
     url(r'^block/$', block_detail, name="block_search"),
     url(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
-    # Attest PoE
+    # Attest to certificado NOM151
     url(r'^validate/(?P<hash_id>\w+)/$', ValidateRxView.as_view(), name="validate"),
+    url(r'^validate_certificate/(?P<merkleroot>\w+)/$', validate_certificate, name="validate_certificate"),
     # Static content
-    url(r'^proof-of-existence/$', poe, name="proof-of-existence"),
+    url(r'^glosario/$', glossary, name="glosario"),
     url(r'^humans.txt$', humans_txt, name="humans_txt"),
     url(r'^robots.txt$', robots_txt, name="robots_txt"),
-    url(r'^battlefield$', RedirectView.as_view(pattern_name='landing_page', permanent=False)),
-    url(r'^demoday$', landing_page, name="landing_page"),
-    url(r'^validate_certificate/(?P<merkleroot>\w+)/$', validate_certificate, name="validate_certificate"),
-
 ]
 
 # Show images stored local in dev
