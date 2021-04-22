@@ -18,7 +18,7 @@
               <td colspan="2"><strong>Detalles de transacción</strong></td>
             </tr>
             <tr>
-              <td>Estatus:</td>
+              <td>Estatus</td>
               {% if rx.transaction.block %}
                 <td class="a_green">Valida</td>
               {% else %}
@@ -26,11 +26,11 @@
               {% endif %}
             </tr>
             <tr>
-              <td>Hash:</td>
+              <td>Hash</td>
               <td>{{rx.hash_id}}</td>
             </tr>
             <tr>
-              <td><strong>Certificado NOM-151-SCFI-2016:</strong></td>
+              <td><strong>Certificado de Conservación NOM-151-SCFI-2016</strong> <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
               {% if rx.transaction.block %}
                 <td><a class="a_green" href="/validate/{{rx.hash_id}}">{{ rx.transaction.block.data.xml_response.Constancia }}</a></td>
               {% else %}
@@ -38,7 +38,7 @@
               {% endif %}
             </tr>
             <tr>
-              <td>Sello de Tiempo Real:</td>
+              <td>Sello de Tiempo Real</td>
               <td class="a_grey">{{ rx.timestamp|timezone:"America/Mexico_City" }}</td>
             </tr>
           </table>
@@ -54,7 +54,7 @@
       <div class="col-xs-12 col-lg-8 col-lg-offset-2">
         <div class="row">
           <article class="col-xs-12 col-lg-12">
-            <h3>Mensaje de Datos Crudo</h3>
+            <h3>Mensaje de Datos Crudo  <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></h3>
             <code><pre>
               {{ payload }}
             </pre></code>

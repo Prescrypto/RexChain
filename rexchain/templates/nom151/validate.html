@@ -4,7 +4,7 @@
   Validación de la constancia
 {% endblock title %}
 {% block subtitle %}
-  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la constancia</h2>
+  <h2 style="color:#000; font-weight:700; margin-left:4em;">Validación de la Constancia de Conservación NOM-151-SCFI-2016</h2>
 {% endblock subtitle %}
 
 {% block cssblock %}
@@ -25,33 +25,26 @@
             <div class="table-responsive">
             <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
               <tr>
-                <td id="first_column"><strong>Estatus:</strong></td>
+                <td id="first_column"><strong>Estatus</strong></td>
                 <td>
-                  {# TODO add logic when fails #}
-                  <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validada</p>
+                  <p class="a_green">Certificado valido</p>
                 </td>
               </tr>
 
                 <tr>
                   <td>Sello de Tiempo Real</td>
-                  <td class="a_green">{{ validate.Fecha }}</td>
+                  <td class="a_grey">{{ validate.Fecha }}</td>
                 </tr>
-                {% if tx %}
                 <tr>
-                  <td>Tx Id en la Blockchain:<a class="a_grey" href="/proof-of-existence/">(¿Qué es esto?)</a></td>
-                  <td><a class="a_grey" href="#" target="_blank">{{ tx.txid }}</a></td>
-                </tr>
-                {% endif %}
-                <tr>
-                  <td>Certificado emisor PSC</td>
+                  <td>Certificado emisor PSC <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
                   <td>{{ validate.CertificadoPsc }}</td>
                 </tr>
                 <tr>
-                  <td>Raíz de Merkle</td>
-                  <td>{{ b.merkleroot }}</td>
+                  <td>Raíz de Merkle <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
+                  <td class="a_purple">{{ b.merkleroot }}</td>
                 </tr>
                 <tr>
-                	<td>Respuesta de validación ante PSC</td>
+                	<td>Respuesta de validación ante PSC <a class="a_grey" href="/glosario/">(¿Qué es esto?)</a></td>
                   <td><code><pre>{{ validate_raw }}</pre></code></td>
                 </tr>
               </table>

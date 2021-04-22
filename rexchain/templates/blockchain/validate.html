@@ -18,15 +18,15 @@
             <div class="table-responsive">
             <table style="color:#626262;" id="crypto-table" class="shadowed_details table table-striped">
               <tr>
-                <td colspan=""><strong>Estatus:</strong></td>
+                <td colspan=""><strong>Estatus</strong></td>
                 <td>
-                  <p><img width="32px" src="{% static "img/validate_icon.png" %}" alt="Transacción Valida"> Validado</p>
+                  <p class="a_green">Transacción y certificado consistentes</p>
                 </td>
               </tr>
 
                 <tr>
                   <td>Sello de Tiempo Real</td>
-                  <td class="a_green">{{ tx.block.timestamp|timezone:"America/Mexico_City" }}</td>
+                  <td class="a_grey">{{ tx.block.timestamp|timezone:"America/Mexico_City" }}</td>
                 </tr>
                 <tr>
                    <td><a href="{% url 'validate_certificate' tx.block.merkleroot %}" class="a_grey">Constancia de Conservación NOM-151-SCFI-2016</a></td>
@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                   <td>Raíz de Merkle</td>
-                  <td>{{ tx.block.merkleroot }}</td>
+                  <td class="a_purple">{{ tx.block.merkleroot }}</td>
                 </tr>
               </table>
             </div>
