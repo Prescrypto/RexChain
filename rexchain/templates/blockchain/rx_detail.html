@@ -46,7 +46,7 @@
       </article>
     </div>
   </section>
-  {% if rx.transaction.block %}
+  {% if rx.transaction.block.data.xml_response %}
     <form style="text-align: center;" method="GET" action="/validate/{{rx.hash_id}}"><button type="submit" class="btn btn-success" style="border-radius:0;">Validar Certificado de Conservación NOM-151-SCFI-2016</button></form>
   {% endif %}
   <section class="container-fluid bg-midnight">
