@@ -15,7 +15,7 @@ django-cors-headers==2.0.2
 
 # crypto
 pycryptodome==3.6.5
-rsa==4.1
+rsa==4.7
 merkletools>=1.0.2
 pysha3>=1.0.2  #1.0b1
 
