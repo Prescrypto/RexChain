@@ -17,7 +17,7 @@ VAGRANTFILE_API_VERSION = '2'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = 'debian/stretch64'
+  config.vm.box = "generic/debian11"
   config.vm.box_check_update = true
   config.vm.define "RexChain"
 
@@ -29,6 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # NFS ---- NFS improves speed of VM if supported by your OS
+  config.vm.provision :shell, inline: 'apt-get update; apt-get -y install nfs-common portmap', run: "always"
   # It does not work with encrypted volumes
   # Linux Need a plugin for Virtualbox to shared files `vagrant plugin install vagrant-vbguest`
   if OS.linux?
@@ -36,8 +37,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.synced_folder '.', '/vagrant', type: 'virtualbox'
   elsif OS.mac?
     puts "Vagrant launched from mac."
-    config.vm.network 'private_network', ip: '192.168.50.4'
-    config.vm.synced_folder '.', '/vagrant', type: 'nfs'
+    config.vm.network 'private_network', ip: '192.168.56.10'
+    config.vm.synced_folder '.', '/vagrant',
+      type: "nfs",
+      nfs_version: 3,
+      nfs_udp: false
   end
 
   # Provider-specific configuration so you can fine-tune various
@@ -48,7 +52,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Provision application
   config.vm.provision "shell", privileged: false, run: "always", path: "config/vagrantvars"
-  config.vm.provision "shell", privileged: false, run: "always", path: "bin/install_python3.sh"
   config.vm.provision "shell", privileged: false, run: "always", path: "bin/install_redis.sh"
   config.vm.provision "shell", privileged: false, run: "always", path: "bin/setup_box.sh"
 
