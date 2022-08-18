@@ -8,7 +8,7 @@ from datetime import timedelta
 # Django Libs
 from django.db import models
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
@@ -27,14 +27,13 @@ from .utils import get_merkle_root, pubkey_base64_to_rsa
 logger = logging.getLogger('django_info')
 
 
-
 class Block(models.Model):
     ''' Our Model for Blocks '''
     # Id block
     hash_block = models.CharField(max_length=255, blank=True, default="")
     previous_hash = models.CharField(max_length=255, blank=True, default="")
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
-    data = JSONField(default={}, blank=True)
+    data = JSONField(default=dict, blank=True)
     merkleroot = models.CharField(max_length=255, default="")
     poetxid = models.CharField(max_length=255, default="", blank=True)
     nonce = models.CharField(max_length=50, default="", blank=True)
@@ -83,20 +82,21 @@ class Block(models.Model):
         return self.hash_block
 
 
-
 class Transaction(models.Model):
     ''' Tx Model '''
     # Cryptographically enabled fields
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
     raw_msg = models.TextField(blank=True, default="")  # Anything can be stored here
     # block information
-    block = models.ForeignKey('blockchain.Block', related_name='transactions', null=True, blank=True)
+    block = models.ForeignKey(
+        'blockchain.Block', on_delete=models.PROTECT,
+        related_name='transactions', null=True, blank=True)
     signature = models.TextField(blank=True, default="")
     is_valid = models.BooleanField(default=False, blank=True)
     txid = models.TextField(blank=True, default="")
     previous_hash = models.TextField(blank=True, default="")
     # Details
-    details = JSONField(default={}, blank=True)
+    details = JSONField(default=dict, blank=True)
     objects = TransactionManager()
 
     # Hashes msg_html with utf-8 encoding, saves this in and hash in _signature
@@ -123,14 +123,15 @@ class Transaction(models.Model):
         return self.txid
 
 
-
 class Payload(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Payload Model '''
     # Owner track
     public_key = models.TextField("An Hex representation of Public Key Object", blank=True,
                                   default=True, db_index=True)
     # For TxTransfer
-    transaction = models.ForeignKey('blockchain.Transaction', related_name='payloads', null=True, blank=True)
+    transaction = models.ForeignKey(
+        'blockchain.Transaction', on_delete=models.PROTECT,
+        related_name='payloads', null=True, blank=True)
     objects = PayloadManager()
 
     def __str__(self):
