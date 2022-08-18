@@ -18,6 +18,9 @@ DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ast.literal_eval(os.environ['DEBUG_STATE'])
 
+# RM Autofield warning by setting a global config
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Check if we are in production
 PRODUCTION = ast.literal_eval(os.environ['PRODUCTION'])
 # Change allowed hosts accordingly
