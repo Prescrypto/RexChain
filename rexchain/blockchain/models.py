@@ -9,7 +9,6 @@ from datetime import timedelta
 from django.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.dateformat import DateFormat
@@ -28,7 +27,7 @@ from .utils import get_merkle_root, pubkey_base64_to_rsa
 logger = logging.getLogger('django_info')
 
 
-@python_2_unicode_compatible
+
 class Block(models.Model):
     ''' Our Model for Blocks '''
     # Id block
@@ -84,7 +83,7 @@ class Block(models.Model):
         return self.hash_block
 
 
-@python_2_unicode_compatible
+
 class Transaction(models.Model):
     ''' Tx Model '''
     # Cryptographically enabled fields
@@ -124,7 +123,7 @@ class Transaction(models.Model):
         return self.txid
 
 
-@python_2_unicode_compatible
+
 class Payload(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Payload Model '''
     # Owner track
