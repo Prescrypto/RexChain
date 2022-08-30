@@ -1,6 +1,6 @@
 """ Nom151 related models  """
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 
 from core.behaviors import Timestampable
 
@@ -21,7 +21,7 @@ class ConservationCertificate(Timestampable, models.Model):
     block = models.OneToOneField("blockchain.Block", on_delete=models.PROTECT, null=True, blank=True)
 
     # Metadata
-    data = JSONField(default={}, blank=True)
+    data = JSONField(default=dict, blank=True)
 
     def __str__(self):
         """ Return custom string for the object

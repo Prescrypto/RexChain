@@ -7,9 +7,10 @@ import hashlib
 import logging
 
 from django.db import models
+from django.db.models import JSONField
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.contrib.postgres.fields import JSONField
+
 
 logger = logging.getLogger('django_info')
 
@@ -35,7 +36,7 @@ class IOBlockchainize(models.Model):
     # Computed data for hashing purpose
     raw_msg = models.TextField("Chaining raw data of Blockchainize object for hashing purpose", blank=True, default="")
 
-    data = JSONField('Raw Data from Payload', blank=True, default={})
+    data = JSONField('Raw Data from Payload', blank=True, default=dict)
 
     class Meta:
         abstract = True
@@ -66,8 +67,8 @@ class IOBlockchainize(models.Model):
         )
         return len(_size) * 8
 
-    @cached_property  # noqa: F811
-    def raw_size(self):
+    @cached_property
+    def raw_size(self):  # noqa: F811
         # Get the size of the raw rx
         # TODO make improvements here
         _size = (
