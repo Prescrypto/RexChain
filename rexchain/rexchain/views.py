@@ -6,13 +6,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
 
 from blockchain.models import Payload, Block
 from .forms import AskCtaEmailForm
 
 logger = logging.getLogger('django_info')
 
+# 60 * 60 = 1 HR then result * 12 = 12hrs
+PAGE_TIMEOUT = 60 * 60 * 12
 
+@cache_page(PAGE_TIMEOUT)
 def home(request):
     ''' Home view'''
 
