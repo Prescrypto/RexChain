@@ -22,6 +22,11 @@ def home(request):
     _now = timezone.now()
     try:
         # Creating context for home view!
+        # TODO check performance of the following queries
+        payloads_total = Payload.objects.all().count()
+        total_medics = Payload.objects.total_medics()
+        rx_by_today = Payload.objects.rx_by_today(_now).count()
+
         context = {
 
             # Render
@@ -29,9 +34,9 @@ def home(request):
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
 
             # Stats
-            "payloads_total": Payload.objects.all().count(),
-            "total_medics": Payload.objects.total_medics(),
-            "rx_by_today": Payload.objects.rx_by_today(_now).count(),
+            "payloads_total": payloads_total,
+            "total_medics": total_medics,
+            "rx_by_today": rx_by_today,
 
             # Deactivated
             # "rx_by_month": Payload.objects.rx_by_month(_now).count(),

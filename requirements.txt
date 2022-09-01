@@ -8,7 +8,7 @@ whitenoise==5.3.0
 psycopg2-binary==2.9.2
 
 # DRF
-django-filter==1.1.0
+django-filter==22.1
 Markdown==2.6.11
 djangorestframework==3.12.4
 django-cors-headers==3.10.0
@@ -26,7 +26,7 @@ pysha3>=1.0.2  #1.0b1
 xmltodict==0.12.0
 
 #QRCode
-Pillow==8.3.2
+Pillow==9.2.0
 qrcode==7.3.1
 
 # Proof of Existence (ETH)
