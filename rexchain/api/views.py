@@ -19,7 +19,7 @@ logger = logging.getLogger('django_info')
 class PayloadSerializer(serializers.ModelSerializer):
     """ Payload serializer """
     previous_hash = serializers.CharField(read_only=False, required=False, default="0")
-    data = serializers.JSONField(binary=False, read_only=False, required=False)
+    data = serializers.JSONField(binary=False, read_only=False, required=True)
 
     class Meta:
         model = Payload
@@ -34,7 +34,10 @@ class PayloadSerializer(serializers.ModelSerializer):
             'public_key',
         )
         read_only_fields = ('hash_id', 'previous_hash', 'is_valid', 'transaction', 'readable')
-
+        extra_kwargs = {
+            "signature": {"required": True},
+            "public_key": {"required": True},
+        }
     def validate(self, data):
         ''' Method to control Extra Keys on Payload!'''
         extra_keys = set(self.initial_data.keys()) - set(self.fields.keys())
