@@ -13,8 +13,12 @@ class PayloadQueryset(models.QuerySet):
         return self.filter(is_valid=True).filter(block=None)
 
     def total_medics(self):
-        ''' Get total medics but performance search with cache '''
+        ''' Get total medics, performance search with cache '''
         return cache.get('total_medics', '90')
+
+    def total_payloads(self):
+        ''' Get total payloads, performance search with cache '''
+        return cache.get('total_payloads', '528990')
 
     def rx_by_today(self, date_filter):
         return self.filter(timestamp__date=date_filter.date())

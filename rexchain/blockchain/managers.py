@@ -267,6 +267,9 @@ class PayloadManager(models.Manager):
     def total_medics(self):
         return self.get_queryset().total_medics()
 
+    def total_payloads(self):
+        return self.get_queryset().total_payloads()
+
     def rx_by_today(self, date_filter):
         return self.get_queryset().rx_by_today(date_filter)
 
