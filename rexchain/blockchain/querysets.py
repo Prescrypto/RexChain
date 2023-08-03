@@ -13,19 +13,16 @@ class PayloadQueryset(models.QuerySet):
         return self.filter(is_valid=True).filter(block=None)
 
     def total_medics(self):
-        ''' Get total medics but performance search with cache '''
+        ''' Get total medics, performance search with cache '''
         return cache.get('total_medics', '90')
 
-    def rx_by_today(self, date_filter):
-        return self.filter(timestamp__date=date_filter.date())
+    def total_payloads(self):
+        ''' Get total payloads, performance search with cache '''
+        return cache.get('total_payloads', '528990')
 
-    def rx_by_month(self, date_filter):
-        _date = date_filter.date()
-        return self.values("timestamp").filter(timestamp__year=_date.year).filter(timestamp__month=_date.month)
-
-    def range_by_last_hour(self, date_filter):
-        _time = date_filter.time()
-        return self.rx_by_today(date_filter).filter(timestamp__hour=_time.hour)
+    def rx_by_today(self):
+        ''' Get total rx by today, with cache'''
+        return cache.get('rx_by_today', '1618')
 
 
 class TransactionQueryset(models.QuerySet):
