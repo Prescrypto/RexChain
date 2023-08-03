@@ -258,9 +258,6 @@ class PayloadManager(models.Manager):
     def get_queryset(self):
         return PayloadQueryset(self.model, using=self._db)
 
-    def range_by_hour(self, date_filter):
-        return self.get_queryset().range_by_hour(date_filter)
-
     def non_validated_rxs(self):
         return self.get_queryset().non_validated_rxs()
 
@@ -270,23 +267,8 @@ class PayloadManager(models.Manager):
     def total_payloads(self):
         return self.get_queryset().total_payloads()
 
-    def rx_by_today(self, date_filter):
-        return self.get_queryset().rx_by_today(date_filter)
-
-    def rx_by_month(self, date_filter):
-        return self.get_queryset().rx_by_month(date_filter)
-
-    def get_stats_last_hours(self, hours=10):
-        ''' Return a list of last rx created by given last hours '''
-        RANGE_HOUR = 1
-        _list = []
-        _time = timezone.now()
-        _list.append([get_timestamp(_time), self.range_by_hour(_time).count()])
-        for i in range(0, hours):
-            _time = _time - timedelta(hours=RANGE_HOUR)
-            _list.append([get_timestamp(_time), self.range_by_hour(_time).count()])
-
-        return _list
+    def rx_by_today(self):
+        return self.get_queryset().rx_by_today()
 
     def check_existence(self, previous_hash):
         return self.get_queryset().check_existence(previous_hash)

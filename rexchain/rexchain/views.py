@@ -31,11 +31,7 @@ def home(request):
             # Stats
             "payloads_total": Payload.objects.total_payloads(),
             "total_medics": Payload.objects.total_medics(),
-            "rx_by_today": Payload.objects.rx_by_today(_now).count(),
-
-            # Deactivated
-            # "rx_by_month": Payload.objects.rx_by_month(_now).count(),
-            # "stats": json.dumps(Payload.objects.get_stats_last_hours(hours=LAST_HOURS)),
+            "rx_by_today": Payload.objects.rx_by_today(),
         }
         return render(request, "home.html", context)
     except Exception as e:
