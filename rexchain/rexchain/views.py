@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.utils import timezone
 from django.contrib import messages
 
 from blockchain.models import Payload, Block
@@ -15,19 +14,14 @@ logger = logging.getLogger('django_info')
 
 def home(request):
     ''' Home view'''
-
     LIMIT_SEARCH = 10
     LIMIT_BLOCK = 5
-    # LAST_HOURS = 10
-    _now = timezone.now()
     try:
         # Creating context for home view!
         context = {
-
             # Render
             "payloads": Payload.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
-
             # Stats
             "payloads_total": Payload.objects.total_payloads(),
             "total_medics": Payload.objects.total_medics(),

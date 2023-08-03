@@ -13,6 +13,6 @@ class Command(BaseCommand):
             better handle it with a cron than a real-time web server request!
         '''
         now = timezone.now()
-        today_total =  self.filter(timestamp__date=now.date())
+        today_total =  Payload.objects.filter(timestamp__date=now.date()).count()
         safe_set_cache("rx_by_today", today_total)
         self.stdout.write('[CRON JOB SUCCESS] Update total payloads by today: {}'.format(today_total))
