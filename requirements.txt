@@ -14,7 +14,7 @@ djangorestframework==3.12.4
 django-cors-headers==3.10.0
 
 # crypto
-pycryptodome==3.14.1
+pycryptodome==3.19.1
 rsa==4.7
 merkletools>=1.0.2
 pysha3>=1.0.2  #1.0b1
