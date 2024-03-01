@@ -35,7 +35,7 @@ blockcypher>=1.0.73
 python-dateutil==2.7.2
 
 # Redis
-redis==4.0.2
+redis==4.4.4
 rq==1.10.0
 django-redis==5.0.0
 django-rq==2.5.1
