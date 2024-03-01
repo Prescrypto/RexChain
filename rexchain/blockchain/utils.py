@@ -246,8 +246,7 @@ def ordered_data(data):
         try:
             _new_dict = OrderedDict(sorted(data.items(), key=lambda x: x[0]))
         except Exception as e:
-            logger.error(
-                "[ordered data ERROR]: {}, type:{}".format(e, type(e)))
+            logger.info(F"[Orderer data Warning]: {e}, type:{e}, data: {data}")
             return data
 
         return _new_dict
