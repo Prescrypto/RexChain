@@ -26,7 +26,7 @@ pysha3>=1.0.2  #1.0b1
 xmltodict==0.12.0
 
 #QRCode
-Pillow==9.3.0
+Pillow==10.3.0
 qrcode==7.3.1
 
 # Proof of Existence (ETH)
