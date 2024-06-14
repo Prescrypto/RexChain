@@ -35,7 +35,7 @@
       <meta property="og:url" content="https://www.rexchain.io">
       <meta property="og:image" content="/static/social_media/og-image.jpg">
   </head>
-  <body class="bg-portrait">
+  <body class="bg-portrait-dark">
     {% include "misc/tagmanager_body.html" %}
     <header class="container-fluid bg-blank">
       <article class="row">
@@ -74,7 +74,7 @@
       </article>
     </header>
     <section class="container-fluid {% if not_show_subtitle %}hidden{% endif %}">
-      <div class="row hero bg-grey">
+      <div class="row hero bg-dark">
         <div class="col-xs-12 col-lg-8 col-lg-offset-1">
           {% block subtitle %}
           {% endblock subtitle %}
