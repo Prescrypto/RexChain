@@ -5,7 +5,7 @@ Django==3.2.25
 gunicorn==22.0.0
 dj-database-url==0.5.0
 whitenoise==5.3.0
-psycopg2-binary==2.9.2
+psycopg2-binary==2.9.6
 
 # DRF
 django-filter==1.1.0
@@ -35,10 +35,10 @@ blockcypher>=1.0.73
 python-dateutil==2.7.2
 
 # Redis
-redis==4.4.4
-rq==1.10.0
-django-redis==5.0.0
-django-rq==2.5.1
+redis==5.0.8
+rq==1.16.2
+django-redis==5.4.0
+django-rq==2.10.2
 
 # Jira
 jira==2.0.0
