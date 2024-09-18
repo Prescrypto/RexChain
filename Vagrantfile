@@ -17,7 +17,8 @@ VAGRANTFILE_API_VERSION = '2'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "generic/debian11"
+  # TODO test this on apple intel chips
+  config.vm.box = "generic/bookworm64"
   config.vm.box_check_update = true
   config.vm.define "RexChain"
 
