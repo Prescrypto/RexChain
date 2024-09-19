@@ -241,9 +241,8 @@ LOGGING = {
         },
         "rq_console": {  # add rq_console hadler
             "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            "class": "rq.utils.ColorizingStreamHandler",
+            "class": "logging.StreamHandler",
             "formatter": "rq_console",
-            "exclude": ["%(asctime)s"],
         },
     },
     'filters': {
@@ -257,7 +256,7 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         "rq.worker": {  # add rq logger
-            "handlers": ["console"],
+            "handlers": ["rq_console"],
             "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },
     },
