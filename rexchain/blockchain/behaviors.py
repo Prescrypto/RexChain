@@ -30,7 +30,7 @@ class IOBlockchainize(models.Model):
     signature = models.TextField("Signature with PK and data transaction ", blank=True, default="")
 
     # For tracking Inputs and Outputs
-    hash_id = models.TextField("Hash for Blockchainize Object", blank=True, default="")
+    hash_id = models.TextField("Hash for Blockchainize Object", db_index=True, blank=True, default="")
     previous_hash = models.TextField("Previous Hash for Blockchainize Object", blank=True, default="0")
 
     # Computed data for hashing purpose
