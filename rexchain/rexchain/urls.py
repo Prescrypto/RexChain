@@ -9,7 +9,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.urls import include, path, re_path
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.staticfiles.urls import static
@@ -23,25 +23,25 @@ from blockchain.views import (
 from nom151.views import validate_certificate
 
 urlpatterns = [
-    url(r'^django-rq/', include('django_rq.urls')),
-    url(r'^jet/', include('jet.urls', 'jet')),
-    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
-    url(r'^admin/', admin.site.urls),
+    path('django-rq/', include('django_rq.urls')),
+    path('jet/', include('jet.urls', 'jet')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    re_path(r'^admin/', admin.site.urls),
     # API
-    url(r'^api/v1/', include('api.urls')),
+    path('api/v1/', include('api.urls')),
     # Explorer
-    url(r'^$', home, name='home'),
-    url(r'^hash/$', tx_detail, name="tx_search"),
-    url(r'^hash/(?P<hash_id>\w+)/$', tx_detail, name="tx_detail"),
-    url(r'^block/$', block_detail, name="block_search"),
-    url(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
+    path('', home, name='home'),
+    path('hash/', tx_detail, name="tx_search"),
+    re_path(r'^hash/(?P<hash_id>\w+)/$', tx_detail, name="tx_detail"),
+    path('block/', block_detail, name="block_search"),
+    re_path(r'^block/(?P<block_hash>\w+)/$', block_detail, name="block_detail"),
     # Attest to certificado NOM151
-    url(r'^validate/(?P<hash_id>\w+)/$', ValidateRxView.as_view(), name="validate"),
-    url(r'^validate_certificate/(?P<merkleroot>\w+)/$', validate_certificate, name="validate_certificate"),
+    re_path(r'^validate/(?P<hash_id>\w+)/$', ValidateRxView.as_view(), name="validate"),
+    re_path(r'^validate_certificate/(?P<merkleroot>\w+)/$', validate_certificate, name="validate_certificate"),
     # Static content
-    url(r'^glosario/$', glossary, name="glosario"),
-    url(r'^humans.txt$', humans_txt, name="humans_txt"),
-    url(r'^robots.txt$', robots_txt, name="robots_txt"),
+    path('glosario/', glossary, name="glosario"),
+    re_path(r'^humans.txt$', humans_txt, name="humans_txt"),
+    re_path(r'^robots.txt$', robots_txt, name="robots_txt"),
 ]
 
 # Show images stored local in dev
