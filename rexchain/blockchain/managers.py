@@ -8,14 +8,13 @@ TXmanager
 import json
 import logging
 
-from datetime import timedelta
 from django.db import models
 from django.apps import apps
 from django.conf import settings
 from django.utils import timezone
 from django.core.cache import cache
 from core.utils import Hashcash
-from core.helpers import safe_set_cache, get_timestamp, logger_debug
+from core.helpers import safe_set_cache, logger_debug
 from core.connectors import ReachCore as PoE
 from nom151.models import ConservationCertificate
 from .helpers import genesis_hash_generator, GENESIS_INIT_DATA, get_genesis_merkle_root, CryptoTools
