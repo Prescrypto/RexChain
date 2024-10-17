@@ -68,19 +68,3 @@
   </div>
 </section>
 {% endblock content %}
-
-{% block jsblock %}
-<script>
-
-  var totalMedic = "{{ total_medics }}";
-  var rxByDay = "{{ rx_by_today }}";
-  var payloads_total = "{{ payloads_total }}";
-
-
-  document.getElementById("total_medic").innerHTML = totalMedic;
-  document.getElementById("prescriptday").innerHTML = rxByDay;
-  document.getElementById("payloads_total").innerHTML = payloads_total;
-</script>
-
-
-{% endblock jsblock %}
