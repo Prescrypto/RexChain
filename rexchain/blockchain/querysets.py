@@ -12,6 +12,7 @@ class PayloadQueryset(models.QuerySet):
     def non_validated_rxs(self):
         return self.filter(is_valid=True).filter(block=None)
 
+    # Note to future: These might not be necessary.
     def total_medics(self):
         ''' Get total medics, performance search with cache '''
         return cache.get('total_medics', '90')
