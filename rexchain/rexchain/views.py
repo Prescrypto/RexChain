@@ -22,10 +22,6 @@ def home(request):
             # Render
             "payloads": Payload.objects.all().order_by('-id')[:LIMIT_SEARCH],
             "rx_blocks": Block.objects.all().order_by('-id')[:LIMIT_BLOCK],
-            # Stats
-            "payloads_total": Payload.objects.total_payloads(),
-            "total_medics": Payload.objects.total_medics(),
-            "rx_by_today": Payload.objects.rx_by_today(),
         }
         return render(request, "home.html", context)
     except Exception as e:
