@@ -1,5 +1,5 @@
 # django
-Django==4.2.16
+Django==4.2.17
 
 # Heroku
 gunicorn==22.0.0
