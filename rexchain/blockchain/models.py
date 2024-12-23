@@ -151,7 +151,6 @@ class Payload(Timestampable, IOBlockchainize, models.Model):
         ''' Fix 6 hours timedelta on rx '''
         return self.timestamp
 
-    @cached_property
     def get_before_hash(self):
         ''' Get before hash Payload '''
         return self.previous_hash
