@@ -114,7 +114,6 @@ class Transaction(models.Model):
         )
         self.raw_msg = msg.encode('utf-8')
 
-    @cached_property
     def get_previous_hash(self):
         ''' Get before hash transaction '''
         return self.previous_hash
@@ -152,7 +151,6 @@ class Payload(Timestampable, IOBlockchainize, models.Model):
         ''' Fix 6 hours timedelta on rx '''
         return self.timestamp
 
-    @cached_property
     def get_before_hash(self):
         ''' Get before hash Payload '''
         return self.previous_hash
