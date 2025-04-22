@@ -5,3 +5,4 @@ temp/
 rexchain/staticfiles/
 .vagrant/
 .coverage
+venv

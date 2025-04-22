@@ -64,6 +64,12 @@ def tx_detail(request, hash_id=False):
             rx = Payload.objects.get(hash_id=hash_id)
         except:  # noqa : F841
             try:
+                # This line filters Payload objects based on the 'txid' of the
+                # related Transaction object. The double underscore ('__')
+                # signifies a lookup across the ForeignKey relationship
+                # ('transaction'). This translates to the SQL query with the
+                # INNER JOIN and the WHERE clause on blockchain_transaction.txid.
+                # For this reason, we use an index on Transaction.txid
                 rx = Payload.objects.get(transaction__txid=hash_id)
             except Exception as e:
                 logger.error("Error :{}, type({})".format(e, type(e)))

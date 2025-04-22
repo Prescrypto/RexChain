@@ -93,7 +93,7 @@ class Transaction(models.Model):
         related_name='transactions', null=True, blank=True)
     signature = models.TextField(blank=True, default="")
     is_valid = models.BooleanField(default=False, blank=True)
-    txid = models.TextField(blank=True, default="")
+    txid = models.TextField(blank=True, default="", db_index=True)
     previous_hash = models.TextField(blank=True, default="")
     # Details
     details = JSONField(default=dict, blank=True)
