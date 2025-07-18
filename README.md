@@ -1,5 +1,5 @@
 
-# RexChain - a Python - SQL based lightweight, cryptographically enabled, centralised blockchain implementation.
+# RexChain - a Python and SQL based lightweight, cryptographically enabled, centralised blockchain implementation.
 
 [![Build Status](https://travis-ci.org/Prescrypto/RexChain.svg?branch=master)](https://travis-ci.org/Prescrypto/RexChain)
 
