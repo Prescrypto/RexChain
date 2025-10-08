@@ -126,7 +126,7 @@ class Payload(Timestampable, IOBlockchainize, models.Model):
     ''' Simplified Payload Model '''
     # Owner track
     public_key = models.TextField("An Hex representation of Public Key Object", blank=True,
-                                  default=True, db_index=True)
+                                  default=True)
     # For TxTransfer
     transaction = models.ForeignKey(
         'blockchain.Transaction', on_delete=models.PROTECT,
