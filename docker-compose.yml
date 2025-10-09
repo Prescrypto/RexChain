@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: vagrant
+      POSTGRES_PASSWORD: vagrant
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Django Web Application
+  web:
+    build: .
+    command: >
+      sh -c "python rexchain/manage.py migrate &&
+             python rexchain/manage.py loaddata ./rexchain/fixtures/initial_data.json &&
+             python rexchain/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - config/docker.env
+    depends_on:
+      - db
+      - redis
+
+  # RQ Worker for background tasks
+  worker:
+    build: .
+    command: python rexchain/manage.py rqworker high default low
+    volumes:
+      - .:/app
+    env_file:
+      - config/docker.env
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+  redis_data:
