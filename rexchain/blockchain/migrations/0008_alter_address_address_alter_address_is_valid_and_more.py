@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='payload',
             name='signature',
-            field=models.TextField(blank=True, default='', verbose_name='Signature with PK and data transaction '),
+            field=models.TextField(blank=True, default='', verbose_name='Signature with PK and data transaction'),
         ),
         migrations.AlterField(
             model_name='payload',
