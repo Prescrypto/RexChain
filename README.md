@@ -27,6 +27,8 @@ All the current implementations of blockchains are tightly coupled with the larg
 
 ### Quick start
 (set up node and mine 1 block)
+
+#### Using Vagrant
 ```
 vagrant up
 get server running and start creating stuff
@@ -41,6 +43,24 @@ Wake Up Redis Worker
 Open a new window console enter to ssh of vagrant and run these commands
 $ cd /vagrant/rexchain
 $ python3 manage.py rqworker high default low
+```
+
+#### Using Docker
+```
+docker-compose up --build
+```
+
+This will automatically:
+- Set up PostgreSQL database
+- Set up Redis cache
+- Run migrations
+- Load initial data
+- Start the Django server on http://localhost:8000
+- Start the RQ worker for background tasks
+
+To stop the services:
+```
+docker-compose down
 ```
 
 
