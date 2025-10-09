@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='payload',
             name='public_key',
-            field=models.TextField(blank=True, default=True, verbose_name='An Hex representation of Public Key Object'),
+            field=models.TextField(blank=True, default=True, verbose_name='A Hex representation of Public Key Object'),
         ),
         migrations.AlterField(
             model_name='payload',
