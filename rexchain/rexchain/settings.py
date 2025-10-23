@@ -70,15 +70,10 @@ WALLET_URL = os.environ["WALLET_URL"]
 # WHITEPAPER_URL
 WHITEPAPER_URL = os.environ["WHITEPAPER_URL"]
 
-# Django JET config
-JET_SIDE_MENU_COMPACT = True
-
 APPEND_SLASH = True
 
 # Application definition
 INSTALLED_APPS = [
-    'jet.dashboard',
-    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

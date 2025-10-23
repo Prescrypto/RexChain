@@ -22,7 +22,7 @@ pysha3>=1.0.2  #1.0b1
 # Others
 # Django 3 Jet, fork for compatibility
 # Remove the reference of the commit when upgrade 4.0
--e git+https://github.com/Barukimang/django-jet.git@dev#egg=django-4-jet
+# -e git+https://github.com/Barukimang/django-jet.git@dev#egg=django-4-jet
 xmltodict==0.12.0
 
 #QRCode

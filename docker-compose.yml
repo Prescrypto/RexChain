@@ -25,8 +25,11 @@ services:
   web:
     build: .
     command: >
-      sh -c "python rexchain/manage.py migrate &&
-             python rexchain/manage.py loaddata ./rexchain/fixtures/initial_data.json &&
+      sh -c "echo 'Starting database setup...' &&
+             python rexchain/manage.py migrate --verbosity=2 &&
+             echo 'Loading fixtures...' &&
+             python rexchain/manage.py loaddata ./rexchain/fixtures/initial_data.json --verbosity=2 &&
+             echo 'Starting server...' &&
              python rexchain/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
