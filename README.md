@@ -27,6 +27,8 @@ All the current implementations of blockchains are tightly coupled with the larg
 
 ### Quick start
 (set up node and mine 1 block)
+
+#### Using Vagrant
 ```
 vagrant up
 get server running and start creating stuff
@@ -42,6 +44,87 @@ Open a new window console enter to ssh of vagrant and run these commands
 $ cd /vagrant/rexchain
 $ python3 manage.py rqworker high default low
 ```
+
+#### Using Docker
+
+##### Initial Setup (First Time)
+```bash
+# Build and start all services
+docker-compose up --build
+
+# This will automatically:
+# - Set up PostgreSQL database
+# - Set up Redis cache  
+# - Run migrations
+# - Load initial data (2 superuser accounts)
+# - Start the Django server on http://localhost:8000
+# - Start the RQ worker for background tasks
+```
+
+##### Regular Use
+```bash
+# Start services (after initial setup)
+docker-compose up
+
+# Start in background (detached mode)
+docker-compose up -d
+
+# Stop all services
+docker-compose down
+
+# Stop and remove volumes (WARNING: deletes all data)
+docker-compose down -v
+
+# View logs
+docker-compose logs -f web
+docker-compose logs -f worker
+```
+
+##### Console Interaction
+
+**Access Django Shell:**
+```bash
+# Interactive Django shell
+docker-compose exec web python rexchain/manage.py shell
+
+**Access Database:**
+```bash
+# PostgreSQL shell
+docker-compose exec db psql -U vagrant -d mydb
+
+# Redis CLI
+docker-compose exec redis redis-cli
+```
+
+**Access Container Shell:**
+```bash
+# Bash shell in web container
+docker-compose exec web bash
+
+##### Troubleshooting
+
+**Reset Everything:**
+```bash
+# Stop, remove containers, volumes, and rebuild
+docker-compose down -v
+docker-compose up --build
+```
+
+**Check Service Status:**
+```bash
+# List running containers
+docker-compose ps
+
+# Check logs for specific service
+docker-compose logs web
+docker-compose logs worker
+docker-compose logs db
+```
+
+**Admin Access:**
+- URL: http://localhost:8000/admin/
+- Default superusers: `everardo@prescrypto.com`, `jesus@prescrypto.com`
+- Password: Use Django shell to reset (see console interaction above)
 
 
 ### HTTP API

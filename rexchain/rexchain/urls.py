@@ -24,8 +24,6 @@ from nom151.views import validate_certificate
 
 urlpatterns = [
     path('django-rq/', include('django_rq.urls')),
-    path('jet/', include('jet.urls', 'jet')),
-    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     re_path(r'^admin/', admin.site.urls),
     # API
     path('api/v1/', include('api.urls')),
